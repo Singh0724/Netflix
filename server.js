@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const cron = require("node-cron");
 const {
+  deduplicateMediaList,
   fetchTrendingAll,
   fetchLatestNetflixReleases,
   fetchNetflixIndiaSeries,
@@ -115,16 +116,16 @@ async function refreshCatalog() {
     ]);
 
     if (trending && trending.length > 0) {
-      cachedCatalog.trending = trending.map(it => formatMediaItem(it));
+      cachedCatalog.trending = deduplicateMediaList(trending.map(it => formatMediaItem(it)));
     }
     if (latest && latest.length > 0) {
-      cachedCatalog.latestDrops = latest.map(it => formatMediaItem(it));
+      cachedCatalog.latestDrops = deduplicateMediaList(latest.map(it => formatMediaItem(it)));
     }
     if (series && series.length > 0) {
-      cachedCatalog.netflixSeries = series.map(it => formatMediaItem(it, "tv"));
+      cachedCatalog.netflixSeries = deduplicateMediaList(series.map(it => formatMediaItem(it, "tv")));
     }
     if (movies && movies.length > 0) {
-      cachedCatalog.netflixMovies = movies.map(it => formatMediaItem(it, "movie"));
+      cachedCatalog.netflixMovies = deduplicateMediaList(movies.map(it => formatMediaItem(it, "movie")));
     }
 
     // Ensure Hero is prominent and has valid backdrop
@@ -171,7 +172,7 @@ app.get("/api/v1/feed/home", async (req, res) => {
 
     if (search) {
       const rawResults = await searchAllMedia(search);
-      const searchItems = rawResults.map(it => formatMediaItem(it));
+      const searchItems = deduplicateMediaList(rawResults).map(it => formatMediaItem(it));
       return res.json({
         status: "success",
         data: {
@@ -210,10 +211,50 @@ app.get("/api/v1/feed/home", async (req, res) => {
     }
 
     let heroItem = cachedCatalog.hero;
-
     if (category === "tv") {
       heroItem = cachedCatalog.netflixSeries[0] || cachedCatalog.hero;
-      const tvTop10 = cachedCatalog.netflixSeries.slice(0, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
+    } else if (category === "movie") {
+      heroItem = cachedCatalog.netflixMovies[0] || cachedCatalog.hero;
+    } else if (category === "new") {
+      heroItem = cachedCatalog.latestDrops[0] || cachedCatalog.hero;
+    }
+
+    // Cross-row deduplication to guarantee 0 duplicate cards across the entire page
+    const feedSeen = new Set();
+    if (heroItem && heroItem.id) {
+      feedSeen.add(String(heroItem.id));
+      const heroNorm = (heroItem.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+      if (heroNorm) feedSeen.add(heroNorm);
+    }
+
+    // Register continue watching items in feedSeen
+    continueWatchingItems.forEach(it => {
+      if (it.tmdbId) feedSeen.add(String(it.tmdbId));
+      const norm = (it.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+      if (norm) feedSeen.add(norm);
+    });
+
+    function pickUnique(items, limit = 25) {
+      const result = [];
+      for (const item of items) {
+        if (!item || !item.id) continue;
+        const normTitle = (item.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+        const idKey = String(item.id);
+
+        if (feedSeen.has(idKey) || (normTitle && feedSeen.has(normTitle))) {
+          continue;
+        }
+
+        feedSeen.add(idKey);
+        if (normTitle) feedSeen.add(normTitle);
+        result.push(item);
+        if (result.length >= limit) break;
+      }
+      return result;
+    }
+
+    if (category === "tv") {
+      const tvTop10 = pickUnique(cachedCatalog.netflixSeries, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
       rows.push(
         {
           id: "top_10_tv",
@@ -224,17 +265,16 @@ app.get("/api/v1/feed/home", async (req, res) => {
         {
           id: "popular_series",
           title: "Binge-Worthy TV Shows",
-          items: cachedCatalog.netflixSeries.slice(0, 30)
+          items: pickUnique(cachedCatalog.netflixSeries, 30)
         },
         {
           id: "trending_series",
           title: "Trending Dramas & Crime Series",
-          items: cachedCatalog.trending.filter(it => it.type === "tv").slice(0, 25)
+          items: pickUnique(cachedCatalog.trending.filter(it => it.type === "tv"), 25)
         }
       );
     } else if (category === "movie") {
-      heroItem = cachedCatalog.netflixMovies[0] || cachedCatalog.hero;
-      const movieTop10 = cachedCatalog.netflixMovies.slice(0, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
+      const movieTop10 = pickUnique(cachedCatalog.netflixMovies, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
       rows.push(
         {
           id: "top_10_movies",
@@ -245,26 +285,25 @@ app.get("/api/v1/feed/home", async (req, res) => {
         {
           id: "hit_movies",
           title: "Blockbuster Movies on Netflix",
-          items: cachedCatalog.netflixMovies.slice(0, 30)
+          items: pickUnique(cachedCatalog.netflixMovies, 30)
         },
         {
           id: "trending_movies",
           title: "Trending Feature Films",
-          items: cachedCatalog.trending.filter(it => it.type === "movie").slice(0, 25)
+          items: pickUnique(cachedCatalog.trending.filter(it => it.type === "movie"), 25)
         }
       );
     } else if (category === "new") {
-      heroItem = cachedCatalog.latestDrops[0] || cachedCatalog.hero;
       rows.push(
         {
           id: "new_on_netflix",
           title: "New on Netflix (Released This Week)",
-          items: cachedCatalog.latestDrops.slice(0, 25)
+          items: pickUnique(cachedCatalog.latestDrops, 30)
         },
         {
           id: "trending_now",
           title: "Trending Now Globally",
-          items: cachedCatalog.trending.slice(0, 25)
+          items: pickUnique(cachedCatalog.trending, 30)
         }
       );
     } else if (category === "mylist") {
@@ -273,10 +312,10 @@ app.get("/api/v1/feed/home", async (req, res) => {
         id: "my_list_row",
         title: userList.length > 0 ? "My List" : "My List (Empty - Add titles by clicking +)",
         isMyList: true,
-        items: userList.length > 0 ? userList : cachedCatalog.trending.slice(0, 8)
+        items: userList.length > 0 ? userList : pickUnique(cachedCatalog.trending, 8)
       });
     } else {
-      const top10 = cachedCatalog.trending.slice(0, 10).map((it, idx) => ({
+      const top10 = pickUnique(cachedCatalog.trending, 10).map((it, idx) => ({
         ...it,
         rank: idx + 1
       }));
@@ -291,22 +330,22 @@ app.get("/api/v1/feed/home", async (req, res) => {
         {
           id: "new_on_netflix",
           title: "New on Netflix (Released This Week)",
-          items: cachedCatalog.latestDrops.slice(0, 25)
+          items: pickUnique(cachedCatalog.latestDrops, 25)
         },
         {
           id: "trending_now",
           title: "Trending Now Globally",
-          items: cachedCatalog.trending.slice(10, 35)
+          items: pickUnique(cachedCatalog.trending, 25)
         },
         {
           id: "popular_series",
           title: "Binge-Worthy TV Shows",
-          items: cachedCatalog.netflixSeries.slice(0, 30)
+          items: pickUnique(cachedCatalog.netflixSeries, 25)
         },
         {
           id: "hit_movies",
           title: "Blockbuster Movies on Netflix",
-          items: cachedCatalog.netflixMovies.slice(0, 30)
+          items: pickUnique(cachedCatalog.netflixMovies, 25)
         }
       );
     }

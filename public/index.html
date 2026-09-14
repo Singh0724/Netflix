@@ -762,13 +762,41 @@
       const container = document.getElementById('rowsContainer');
       container.innerHTML = "";
 
+      const clientSeen = new Set();
+      if (currentHero && currentHero.id) {
+        clientSeen.add(String(currentHero.id));
+        const heroNorm = (currentHero.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+        if (heroNorm) clientSeen.add(heroNorm);
+      }
+
       rows.forEach(row => {
         const rowEl = document.createElement('section');
         rowEl.className = "category-row";
 
+        const filteredItems = [];
+        (row.items || []).forEach(item => {
+          if (!item || !item.id) return;
+          const idKey = String(item.id);
+          const normTitle = (item.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+          if (row.isContinueWatching || row.isMyList) {
+            clientSeen.add(idKey);
+            if (normTitle) clientSeen.add(normTitle);
+            filteredItems.push(item);
+          } else {
+            if (clientSeen.has(idKey) || (normTitle && clientSeen.has(normTitle))) {
+              return;
+            }
+            clientSeen.add(idKey);
+            if (normTitle) clientSeen.add(normTitle);
+            filteredItems.push(item);
+          }
+        });
+
+        if (filteredItems.length === 0) return;
+
         let cardsHtml = "";
         if (row.isTop10) {
-          cardsHtml = row.items.map((item, idx) => {
+          cardsHtml = filteredItems.map((item, idx) => {
             registerItem(item);
             return `
               <div class="top10-item-wrap" onclick="openDetailModalById('${item.id}')">
@@ -780,7 +808,7 @@
             `;
           }).join('');
         } else if (row.isContinueWatching) {
-          cardsHtml = row.items.map(item => {
+          cardsHtml = filteredItems.map(item => {
             registerItem(item);
             return `
               <div class="continue-card-wrap" onclick="launchPlayerById('${item.id}')">
@@ -796,7 +824,7 @@
             `;
           }).join('');
         } else {
-          cardsHtml = row.items.map(item => {
+          cardsHtml = filteredItems.map(item => {
             registerItem(item);
             const inList = myListSet.has(Number(item.id));
             return `

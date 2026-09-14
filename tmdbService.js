@@ -48,53 +48,129 @@ async function fetchMultiPage(endpoint, params = {}, maxPages = 3) {
   return items;
 }
 
-// 1. Trending in India & Global Today
-async function fetchTrendingAll() {
-  return fetchMultiPage("/trending/all/day", {}, 3);
+// -------------------------------------------------------------
+// Strict Multi-Factor Deduplication Engine
+// -------------------------------------------------------------
+function deduplicateMediaList(items) {
+  if (!Array.isArray(items)) return [];
+  const seenIds = new Set();
+  const seenTitles = new Set();
+  const unique = [];
+
+  for (const it of items) {
+    if (!it) continue;
+    const rawTitle = it.title || it.name || it.original_title || it.original_name;
+    if (!rawTitle) continue;
+    if (!it.poster_path && !it.posterUrl && !it.backdrop_path && !it.backdropUrl) continue;
+
+    const id = it.id ? Number(it.id) : null;
+    const normTitle = rawTitle.toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+
+    if (id && seenIds.has(id)) continue;
+    if (normTitle && seenTitles.has(normTitle)) continue;
+
+    if (id) seenIds.add(id);
+    if (normTitle) seenTitles.add(normTitle);
+    unique.push(it);
+  }
+  return unique;
 }
 
-// 2. Netflix India & Global Latest Releases (New yesterday & today)
+// 1. Trending in India & Global (Day & Week, Deduplicated)
+async function fetchTrendingAll() {
+  const [day, week] = await Promise.all([
+    fetchMultiPage("/trending/all/day", {}, 3),
+    fetchMultiPage("/trending/all/week", {}, 2)
+  ]);
+  return deduplicateMediaList([...day, ...week]);
+}
+
+// 2. Comprehensive Latest Netflix Drops (Originals + Licensed Hits)
 async function fetchLatestNetflixReleases() {
   const today = new Date().toISOString().split("T")[0];
-  const [tvNew, movieNew] = await Promise.all([
+  const [tvOrig, tvLicIn, tvLicUs, movIn, movUs] = await Promise.all([
     fetchMultiPage("/discover/tv", {
       with_networks: "213",
       "first_air_date.lte": today,
       sort_by: "first_air_date.desc"
-    }, 3),
+    }, 2),
+    fetchMultiPage("/discover/tv", {
+      with_watch_providers: "8",
+      watch_region: "IN",
+      "first_air_date.lte": today,
+      sort_by: "first_air_date.desc"
+    }, 2),
+    fetchMultiPage("/discover/tv", {
+      with_watch_providers: "8",
+      watch_region: "US",
+      "first_air_date.lte": today,
+      sort_by: "first_air_date.desc"
+    }, 2),
     fetchMultiPage("/discover/movie", {
       with_watch_providers: "8",
       watch_region: "IN",
       "primary_release_date.lte": today,
       sort_by: "primary_release_date.desc"
-    }, 3)
-  ]);
-  return [...tvNew, ...movieNew];
-}
-
-// 3. Popular Netflix India Series (e.g., Kota Factory, Delhi Crime, Sacred Games, The Railway Men)
-async function fetchNetflixIndiaSeries() {
-  return fetchMultiPage("/discover/tv", {
-    with_networks: "213",
-    sort_by: "popularity.desc"
-  }, 4);
-}
-
-// 4. Hit Blockbuster Movies on Netflix (India & Global)
-async function fetchNetflixMovies() {
-  const [inMovies, usMovies] = await Promise.all([
-    fetchMultiPage("/discover/movie", {
-      with_watch_providers: "8",
-      watch_region: "IN",
-      sort_by: "popularity.desc"
     }, 2),
     fetchMultiPage("/discover/movie", {
       with_watch_providers: "8",
       watch_region: "US",
-      sort_by: "popularity.desc"
+      "primary_release_date.lte": today,
+      sort_by: "primary_release_date.desc"
     }, 2)
   ]);
-  return [...inMovies, ...usMovies];
+
+  return deduplicateMediaList([...tvOrig, ...tvLicIn, ...movIn, ...tvLicUs, ...movUs]);
+}
+
+// 3. Complete Netflix Series (Both Originals AND Big Hit Licensed Shows)
+async function fetchNetflixIndiaSeries() {
+  const [originals, licensedIn, licensedUs] = await Promise.all([
+    fetchMultiPage("/discover/tv", {
+      with_networks: "213",
+      sort_by: "popularity.desc"
+    }, 3),
+    fetchMultiPage("/discover/tv", {
+      with_watch_providers: "8",
+      watch_region: "IN",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 5
+    }, 3),
+    fetchMultiPage("/discover/tv", {
+      with_watch_providers: "8",
+      watch_region: "US",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 5
+    }, 2)
+  ]);
+
+  return deduplicateMediaList([...originals, ...licensedIn, ...licensedUs]);
+}
+
+// 4. Hit Blockbuster Movies on Netflix (India & Global)
+async function fetchNetflixMovies() {
+  const [inMovies, usMovies, topRated] = await Promise.all([
+    fetchMultiPage("/discover/movie", {
+      with_watch_providers: "8",
+      watch_region: "IN",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 10
+    }, 3),
+    fetchMultiPage("/discover/movie", {
+      with_watch_providers: "8",
+      watch_region: "US",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 10
+    }, 3),
+    fetchMultiPage("/discover/movie", {
+      with_watch_providers: "8",
+      watch_region: "IN",
+      sort_by: "vote_average.desc",
+      "vote_count.gte": 500
+    }, 2)
+  ]);
+
+  return deduplicateMediaList([...inMovies, ...usMovies, ...topRated]);
 }
 
 // 5. Search Across All Titles
@@ -118,6 +194,7 @@ async function fetchSeasonEpisodes(tvId, seasonNumber) {
 }
 
 module.exports = {
+  deduplicateMediaList,
   fetchTrendingAll,
   fetchLatestNetflixReleases,
   fetchNetflixIndiaSeries,
