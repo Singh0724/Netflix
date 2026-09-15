@@ -9,23 +9,23 @@
 
 class StreamExtractor {
   constructor() {
-    // Verified Embed & Stream Provider Cascade Pool (Multi-Audio & 1080p Prioritized)
+    // Verified Embed & Stream Provider Cascade Pool (Crystal 1080p/4K, Clean UI, Autoplay)
     this.providers = [
       {
-        id: "autoembed",
-        name: "Server 1: AutoEmbed VIP (1080p Multi-Audio / Hindi)",
-        badge: "1080P FULL HD • MULTI-AUDIO",
+        id: "vidlink",
+        name: "Server 1: VidLink Cinema 4K UHD",
+        badge: "4K ULTRA HD • HIGH BITRATE",
         priority: 1,
         supportsHindi: true,
-        quality: "1080p",
+        quality: "4K",
         buildUrl: (tmdbId, s, ep, isTv) => isTv 
-          ? `https://autoembed.co/tv/tmdb/${tmdbId}-${s}-${ep}`
-          : `https://autoembed.co/movie/tmdb/${tmdbId}`
+          ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`
+          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`
       },
       {
         id: "vidsrc",
-        name: "Server 2: VidSrc Pro (1080p Ultra HD / Multi-Lang)",
-        badge: "1080P HQ • DUAL AUDIO",
+        name: "Server 2: VidSrc Pro 1080p",
+        badge: "1080P FULL HD • MULTI-LANG",
         priority: 2,
         supportsHindi: true,
         quality: "1080p",
@@ -35,8 +35,8 @@ class StreamExtractor {
       },
       {
         id: "twoembed",
-        name: "Server 3: 2Embed Ultra (1080p Fast Stream)",
-        badge: "1080P HIGH BITRATE",
+        name: "Server 3: 2Embed Ultra HD",
+        badge: "1080P ULTRA",
         priority: 3,
         supportsHindi: true,
         quality: "1080p",
@@ -45,26 +45,26 @@ class StreamExtractor {
           : `https://2embed.skin/embed/${tmdbId}`
       },
       {
-        id: "vidlink",
-        name: "Server 4: VidLink 4K UHD (Global / Hollywood)",
-        badge: "4K ULTRA HD",
-        priority: 4,
-        supportsHindi: false,
-        quality: "4K",
-        buildUrl: (tmdbId, s, ep, isTv) => isTv 
-          ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
-          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
-      },
-      {
         id: "multiembed",
-        name: "Server 5: SuperStream (Direct Multi-Audio Hindi/Eng)",
+        name: "Server 4: SuperStream Multi-Audio",
         badge: "1080P DUAL AUDIO",
-        priority: 5,
+        priority: 4,
         supportsHindi: true,
         quality: "1080p",
         buildUrl: (tmdbId, s, ep, isTv) => isTv
           ? `https://multiembed.mov/directstream.php?video_id=${tmdbId}&s=${s}&e=${ep}&tmdb=1`
           : `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`
+      },
+      {
+        id: "autoembed",
+        name: "Server 5: AutoEmbed Fallback",
+        badge: "720P HD",
+        priority: 5,
+        supportsHindi: true,
+        quality: "720p",
+        buildUrl: (tmdbId, s, ep, isTv) => isTv 
+          ? `https://autoembed.co/tv/tmdb/${tmdbId}-${s}-${ep}`
+          : `https://autoembed.co/movie/tmdb/${tmdbId}`
       }
     ];
   }

@@ -176,12 +176,18 @@ async function refreshCatalog() {
     if (indian && indian.length > 0) {
       cachedCatalog.indianCinema = deduplicateMediaList(indian.map(it => formatMediaItem(it, "movie")));
     }
-    if (top10Mov && top10Mov.length > 0) {
-      cachedCatalog.top10Movies = top10Mov.map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
+    const todayDate = new Date().toISOString().slice(0, 10);
+    if (!cachedCatalog.top10LastUpdatedDate || cachedCatalog.top10LastUpdatedDate !== todayDate || !cachedCatalog.top10Movies || cachedCatalog.top10Movies.length === 0) {
+      if (top10Mov && top10Mov.length > 0) {
+        cachedCatalog.top10Movies = top10Mov.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
+      }
+      if (top10Tv && top10Tv.length > 0) {
+        cachedCatalog.top10TV = top10Tv.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true }));
+      }
+      cachedCatalog.top10LastUpdatedDate = todayDate;
+      console.log(`[Engine] 🏆 Top 10 Today Frozen for date: ${todayDate}`);
     }
-    if (top10Tv && top10Tv.length > 0) {
-      cachedCatalog.top10TV = top10Tv.map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true }));
-    }
+
     if (kdrama && kdrama.length > 0) {
       cachedCatalog.kdramas = deduplicateMediaList(kdrama.map(it => formatMediaItem(it, "tv")));
     }
@@ -204,8 +210,12 @@ async function refreshCatalog() {
       cachedCatalog.romance = deduplicateMediaList(romance.map(it => formatMediaItem(it, "movie")));
     }
 
-    // Preserve Master Hero (Turning Point: Generation 9/11)
+    // Curated Hero Rotation Pool (P0.4)
     cachedCatalog.hero = MASTER_CATALOG.hero;
+    cachedCatalog.heroRotation = [
+      MASTER_CATALOG.hero,
+      ...(cachedCatalog.trending || []).slice(0, 4).map(it => formatMediaItem(it))
+    ];
     cachedCatalog.lastUpdated = new Date().toISOString();
 
     const totalTitles = (cachedCatalog.trending?.length || 0) + 
@@ -656,6 +666,7 @@ app.get("/api/v1/feed/home", async (req, res) => {
       status: "success",
       data: {
         hero: heroItem,
+        heroRotation: cachedCatalog.heroRotation || [heroItem],
         rows: rows
       }
     });
@@ -719,42 +730,86 @@ app.delete("/api/v1/user/mylist/:id", (req, res) => {
   res.json({ status: "success", data: list });
 });
 
+// Live Search Typeahead & Instant Suggestions
+app.get("/api/v1/search/suggest", async (req, res) => {
+  const query = (req.query.q || "").trim();
+  if (!query || query.length < 2) {
+    return res.json({ status: "success", data: [] });
+  }
+
+  try {
+    const rawResults = await searchAllMedia(query);
+    const formatted = deduplicateMediaList(rawResults).slice(0, 8).map(it => formatMediaItem(it));
+    res.json({ status: "success", data: formatted });
+  } catch (err) {
+    console.error("[Search] Suggestion error:", err.message);
+    res.json({ status: "success", data: [] });
+  }
+});
+
+// User Profiles API (Multi-Profile Support)
+app.get("/api/v1/user/profiles", (req, res) => {
+  res.json({
+    status: "success",
+    data: [
+      {
+        id: "profile_1",
+        name: "User 1",
+        avatarColor: "#E50914",
+        avatarType: "red-smile",
+        isKids: false,
+        isActive: true
+      },
+      {
+        id: "profile_2",
+        name: "Children",
+        avatarColor: "#FFAA00",
+        avatarType: "kids",
+        isKids: true,
+        isActive: false
+      },
+      {
+        id: "profile_3",
+        name: "Guest",
+        avatarColor: "#0071EB",
+        avatarType: "blue-smile",
+        isKids: false,
+        isActive: false
+      }
+    ]
+  });
+});
+
 // Media Details Endpoint
 app.get("/api/v1/media/:type/:id", async (req, res) => {
   const { type, id } = req.params;
 
-  // 1. Check MASTER_CATALOG first for 1:1 fidelity with user screenshots
+  // 1. Fetch live details from TMDb (with credits, cast, director, and similar)
+  let details = null;
+  try {
+    details = await fetchItemDetails(type, id);
+  } catch (err) {}
+
+  // 2. Check MASTER_CATALOG for metadata augmentation
   const allMaster = [
     MASTER_CATALOG.hero,
     ...MASTER_CATALOG.rows.flatMap(r => r.items || [])
   ];
   const masterMatch = allMaster.find(it => it && String(it.id) === String(id));
-  if (masterMatch) {
-    const isTv = masterMatch.type === "tv" || type === "tv";
-    return res.json({
-      status: "success",
-      data: {
-        id: masterMatch.id,
-        title: masterMatch.title,
-        type: masterMatch.type || type,
-        overview: masterMatch.overview || "A celebrated story on Netflix.",
-        posterUrl: masterMatch.posterUrl,
-        backdropUrl: masterMatch.backdropUrl,
-        rating: masterMatch.rating || 8.8,
-        matchPercentage: masterMatch.matchPercentage || "98% Match",
-        maturityRating: masterMatch.maturityRating || "U/A 16+",
-        genres: masterMatch.genres || ["Drama"],
-        duration: masterMatch.duration || masterMatch.runtimeDisplay || (isTv ? "1 Season" : "1h 56m"),
-        numberOfSeasons: isTv ? 2 : 1,
-        seasons: isTv ? [
-          { seasonNumber: 1, name: "Season 1", episodeCount: 5 },
-          { seasonNumber: 2, name: "Season 2", episodeCount: 5 }
-        ] : []
-      }
-    });
-  }
 
-  let details = await fetchItemDetails(type, id);
+  if (!details && masterMatch) {
+    details = {
+      id: masterMatch.id,
+      title: masterMatch.title,
+      overview: masterMatch.overview,
+      posterUrl: masterMatch.posterUrl,
+      backdropUrl: masterMatch.backdropUrl,
+      vote_average: masterMatch.rating || 8.8,
+      genres: (masterMatch.genres || ["Drama"]).map(name => ({ name })),
+      runtime: 114,
+      number_of_seasons: masterMatch.numberOfSeasons || 1
+    };
+  }
 
   // If details not reachable from network, lookup from seeded/cached catalog
   if (!details) {
@@ -804,6 +859,20 @@ app.get("/api/v1/media/:type/:id", async (req, res) => {
       episodeCount: s.episode_count || 8
     }));
 
+  const castList = (details.credits && details.credits.cast)
+    ? details.credits.cast.slice(0, 6).map(c => c.name)
+    : ["Acclaimed Cast Ensemble"];
+
+  const directorName = (details.credits && details.credits.crew)
+    ? (details.credits.crew.find(c => c.job === "Director") || {}).name || "Visionary Director"
+    : (details.created_by && details.created_by[0] ? details.created_by[0].name : "Visionary Creator");
+
+  const similarList = (details.similar && details.similar.results)
+    ? details.similar.results.slice(0, 9).map(it => formatMediaItem(it, type))
+    : [];
+
+  const releaseYear = (details.release_date || details.first_air_date || "2026").substring(0, 4);
+
   res.json({
     status: "success",
     data: {
@@ -814,12 +883,36 @@ app.get("/api/v1/media/:type/:id", async (req, res) => {
       posterUrl: details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : (details.posterUrl || null),
       backdropUrl: details.backdrop_path ? `https://image.tmdb.org/t/p/original${details.backdrop_path}` : (details.backdropUrl || null),
       rating: details.vote_average ? Number(details.vote_average.toFixed(1)) : 8.5,
+      matchPercentage: `${Math.min(99, Math.max(88, Math.round((details.vote_average || 8) * 10 + 12)))}% Match`,
+      maturityRating: details.adult ? "A" : (type === "tv" ? "U/A 16+" : "U/A 13+"),
       genres: (details.genres || []).map(g => g.name || g),
       duration: duration,
+      year: releaseYear,
+      audioQuality: "DOLBY ATMOS 5.1",
+      videoQuality: "4K ULTRA HD",
+      cast: castList,
+      director: directorName,
+      similar: similarList,
       numberOfSeasons: details.number_of_seasons || 1,
       seasons: seasonsList
     }
   });
+});
+
+// Recommendations / More Like This Endpoint
+app.get("/api/v1/media/:type/:id/more-like-this", async (req, res) => {
+  const { type, id } = req.params;
+  try {
+    const details = await fetchItemDetails(type, id);
+    if (details && details.similar && details.similar.results && details.similar.results.length > 0) {
+      const items = details.similar.results.slice(0, 12).map(it => formatMediaItem(it, type));
+      return res.json({ status: "success", data: items });
+    }
+  } catch (e) {}
+
+  // Fallback to cached catalog items
+  const fallback = (cachedCatalog.trending || []).slice(0, 9).map(it => formatMediaItem(it));
+  res.json({ status: "success", data: fallback });
 });
 
 app.get("/api/v1/tv/:tvId/season/:seasonNumber", async (req, res) => {
