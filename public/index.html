@@ -47,48 +47,52 @@
     .netflix-header {
       position: fixed; top: 0; left: 0; right: 0; height: 68px; z-index: 1000;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 3.5%; background: linear-gradient(180deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 65%, transparent 100%);
+      padding: 0 4%; background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
       transition: background-color 0.4s ease;
     }
     .netflix-header.scrolled { background-color: rgba(20,20,20,0.98); box-shadow: 0 4px 20px rgba(0,0,0,0.85); }
 
-    .header-left { display: flex; align-items: center; gap: 32px; }
+    .header-left { display: flex; align-items: center; gap: 36px; }
     .netflix-brand-logo {
       font-family: 'Outfit', sans-serif;
-      font-size: 27px; font-weight: 900; color: var(--netflix-red);
+      font-size: 28px; font-weight: 900; color: var(--netflix-red);
       letter-spacing: 1.5px; text-decoration: none; text-transform: uppercase; cursor: pointer;
       user-select: none; display: flex; align-items: center;
     }
 
-    .nav-pills-list { display: flex; align-items: center; gap: 12px; list-style: none; }
+    .nav-pills-list { display: flex; align-items: center; gap: 20px; list-style: none; }
     .nav-pills-list li a {
-      color: #e5e5e5; text-decoration: none; font-size: 13.5px; font-weight: 500;
-      padding: 6px 14px; border-radius: 9999px; transition: all 0.25s ease; cursor: pointer;
-      user-select: none; display: inline-block;
+      color: #e5e5e5; text-decoration: none; font-size: 14px; font-weight: 400;
+      padding: 0; border-radius: 0; transition: color 0.25s ease; cursor: pointer;
+      user-select: none; display: inline-block; background: none;
     }
-    .nav-pills-list li a:hover { color: #fff; background-color: rgba(255,255,255,0.1); }
+    .nav-pills-list li a:hover { color: #b3b3b3; background: none; }
     .nav-pills-list li a.active {
-      color: #fff; background-color: #333333; font-weight: 700; cursor: default;
+      color: #fff; font-weight: 700; cursor: default; background: none;
     }
 
-    .header-right { display: flex; align-items: center; gap: 18px; position: relative; }
+    .header-right { display: flex; align-items: center; gap: 22px; position: relative; }
     
-    /* Search Box */
+    /* Expandable Search Box */
     .search-wrap {
-      display: flex; align-items: center; background: rgba(0,0,0,0.65);
-      border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 5px 9px;
-      transition: border-color 0.3s, background-color 0.3s;
+      display: flex; align-items: center; background: transparent;
+      border: 1px solid transparent; border-radius: 4px; padding: 4px 6px;
+      transition: all 0.3s ease;
     }
-    .search-wrap:focus-within { border-color: #fff; background: rgba(0,0,0,0.95); }
+    .search-wrap.expanded {
+      background: rgba(0,0,0,0.85); border-color: rgba(255,255,255,0.7);
+    }
     .search-icon-btn {
-      background: transparent; border: none; color: #fff; font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; padding: 4px;
     }
     .search-input-field {
-      background: transparent; border: none; outline: none; color: #fff; font-size: 13px;
-      width: 130px; margin-left: 8px; transition: width 0.3s ease;
+      background: transparent; border: none; outline: none; color: #fff; font-size: 13.5px;
+      width: 0; opacity: 0; margin-left: 0; transition: all 0.3s ease;
     }
-    .search-input-field:focus { width: 210px; }
+    .search-wrap.expanded .search-input-field {
+      width: 220px; opacity: 1; margin-left: 8px;
+    }
     .search-input-field::placeholder { color: #888; }
     .search-clear-btn {
       background: transparent; border: none; color: #888; font-size: 13px; cursor: pointer;
@@ -96,25 +100,25 @@
     }
     .search-clear-btn:hover { color: #fff; }
 
-    /* Notification Bell with Badge "11" */
+    /* Notification Bell */
     .bell-btn-wrap {
       position: relative; background: transparent; border: none; color: #fff; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; padding: 4px;
+      display: flex; align-items: center; justify-content: center; padding: 4px; font-size: 17px;
     }
     .bell-badge-count {
-      position: absolute; top: -3px; right: -7px; background-color: var(--netflix-red);
+      position: absolute; top: -2px; right: -6px; background-color: var(--netflix-red);
       color: #fff; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 1px 5px;
       line-height: 1.2; box-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
 
-    /* Red Smiley Profile Avatar with Dropdown Caret */
+    /* Red Smiley Profile Avatar */
     .profile-pill-wrap { display: flex; align-items: center; gap: 7px; cursor: pointer; }
     .profile-smiley-box {
       width: 32px; height: 32px; border-radius: 4px; background-color: #e50914;
       display: flex; align-items: center; justify-content: center; position: relative;
     }
     .profile-smiley-svg { width: 20px; height: 20px; fill: #000; }
-    .profile-caret-icon { font-size: 9px; color: #fff; transition: transform 0.2s; }
+    .profile-caret-icon { font-size: 10px; color: #fff; transition: transform 0.2s; }
 
     /* ============================================================= */
     /* 1B. SEARCH SUGGESTIONS, NOTIFICATION & PROFILE DROPDOWNS      */
@@ -147,9 +151,6 @@
       font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 8px;
     }
     .search-suggest-match { color: #46d369; font-weight: 800; }
-    .search-suggest-pill {
-      background: rgba(255,255,255,0.15); border-radius: 2px; padding: 0 4px; font-size: 10px; font-weight: 700;
-    }
 
     .notification-dropdown-panel {
       position: absolute; top: 60px; right: 60px; width: 380px; max-height: 480px;
@@ -159,7 +160,7 @@
     }
     .notification-dropdown-panel.active { display: flex; }
     .notif-header {
-      padding: 12px 18px; font-size: 14px; font-weight: 800; color: #aaa;
+      padding: 12px 18px; font-size: 13px; font-weight: 800; color: #aaa;
       border-bottom: 1px solid #282828; text-transform: uppercase; letter-spacing: 0.5px;
     }
     .notif-item-row {
@@ -187,67 +188,11 @@
     .profile-item-row:hover { background: #262626; color: #fff; }
     .profile-divider-line { height: 1px; background: #333; margin: 6px 0; }
 
-    /* Row Header & Slider Pagination Indicators */
-    .row-header-wrap {
-      display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; padding: 0 4px;
-    }
-    .row-pagination-indicators {
-      display: flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.25s ease;
-    }
-    .content-section-row:hover .row-pagination-indicators { opacity: 1; }
-    .indicator-dash {
-      width: 14px; height: 2px; background: rgba(255,255,255,0.25); border-radius: 1px; transition: background 0.25s;
-    }
-    .indicator-dash.active { background: rgba(255,255,255,0.95); }
-
-    /* Skip Intro Button */
-    .skip-intro-btn {
-      position: absolute; bottom: 105px; right: 40px; background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; color: #fff;
-      font-size: 13.5px; font-weight: 700; padding: 8px 20px; cursor: pointer;
-      backdrop-filter: blur(8px); z-index: 95; transition: all 0.2s;
-      display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.8);
-    }
-    .skip-intro-btn:hover { background: rgba(255,255,255,0.25); border-color: #fff; transform: scale(1.04); }
-
-    /* Episode Drawer Panel */
-    .episode-drawer-panel {
-      position: absolute; top: 0; right: -420px; width: 400px; bottom: 0;
-      background: rgba(18,18,18,0.98); border-left: 1px solid #333; z-index: 250;
-      box-shadow: -8px 0 30px rgba(0,0,0,0.9); transition: right 0.35s ease;
-      display: flex; flex-direction: column; backdrop-filter: blur(16px);
-    }
-    .episode-drawer-panel.open { right: 0; }
-    .drawer-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 22px 24px; border-bottom: 1px solid #282828;
-    }
-    .drawer-title { font-size: 18px; font-weight: 800; color: #fff; }
-    .drawer-close-btn { background: none; border: none; color: #aaa; font-size: 20px; cursor: pointer; }
-    .drawer-close-btn:hover { color: #fff; }
-    .drawer-list { flex: 1; overflow-y: auto; padding: 14px 20px; }
-    .drawer-ep-item {
-      display: flex; gap: 14px; padding: 12px; border-radius: 6px; cursor: pointer;
-      border-bottom: 1px solid #242424; transition: background 0.2s; align-items: center;
-    }
-    .drawer-ep-item:hover { background: #262626; }
-    .drawer-ep-item.active { background: rgba(229,9,20,0.18); border-left: 3px solid var(--netflix-red); }
-    .drawer-thumb { width: 100px; height: 58px; border-radius: 4px; object-fit: cover; background: #111; flex-shrink: 0; }
-    .drawer-ep-info { flex: 1; min-width: 0; }
-    .drawer-ep-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 3px; }
-    .drawer-ep-desc { font-size: 11px; color: #aaa; line-height: 1.35; max-height: 30px; overflow: hidden; }
-
-    /* Kids Mode Badge */
-    .kids-nav-pill {
-      background: #ffaa00; color: #000; font-size: 11px; font-weight: 900;
-      padding: 2px 7px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;
-    }
-
     /* ============================================================= */
-    /* 2. SUBHEADER: GENRES & LANGUAGE FILTERS (Shows / Movies tabs) */
+    /* 2. SUBHEADER: GENRES & LANGUAGE FILTERS                       */
     /* ============================================================= */
     .genre-filter-subheader {
-      position: relative; z-index: 900; padding: 80px 3.5% 10px; display: none;
+      position: relative; z-index: 900; padding: 80px 4% 10px; display: none;
       align-items: center; justify-content: space-between;
     }
     .genre-filter-subheader.active { display: flex; }
@@ -259,9 +204,8 @@
     }
     .genre-select-box:hover { border-color: #fff; }
 
-    /* Language Filter Tabs (Browse by Languages) */
     .languages-filter-bar {
-      padding: 85px 3.5% 20px; display: none; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding: 85px 4% 20px; display: none; align-items: center; gap: 14px; flex-wrap: wrap;
     }
     .languages-filter-bar.active { display: flex; }
     .lang-chip-btn {
@@ -272,54 +216,40 @@
     .lang-chip-btn.active { background: #fff; color: #000; font-weight: 700; border-color: #fff; }
 
     /* ============================================================= */
-    /* 3. AUTHENTIC EDGE-TO-EDGE NETFLIX HERO BILLBOARD              */
+    /* 3. 100% FULL-BLEED NETFLIX HERO BILLBOARD                     */
     /* ============================================================= */
     .hero-container-outer {
-      padding: 0; position: relative; z-index: 10; width: 100%; margin: 0;
+      padding: 0; position: relative; z-index: 10; width: 100vw; margin: 0; left: 50%; right: 50%;
+      margin-left: -50vw; margin-right: -50vw;
     }
     .billboard-framed-card {
-      position: relative; height: 80vh; min-height: 560px; max-height: 820px;
+      position: relative; height: 85vh; min-height: 600px; max-height: 850px;
       width: 100%; overflow: hidden; background-size: cover; background-position: center 20%;
       display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 4% 130px 4%;
+      padding: 0 4% 120px 4%;
     }
     .billboard-vignette-overlay {
       position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(90deg, rgba(14,14,14,0.96) 0%, rgba(14,14,14,0.85) 32%, rgba(14,14,14,0.3) 55%, transparent 80%),
-                  linear-gradient(180deg, rgba(20,20,20,0.7) 0%, transparent 20%, transparent 55%, rgba(20,20,20,0.85) 85%, #141414 100%);
+      background: linear-gradient(77deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 85%),
+                  linear-gradient(180deg, rgba(20,20,20,0.7) 0%, transparent 15%, transparent 55%, rgba(20,20,20,0.9) 85%, #141414 100%);
     }
-    .billboard-top-controls {
-      position: absolute; top: 80px; left: 4%; right: 4%; display: flex;
-      justify-content: space-between; align-items: center; z-index: 20;
-    }
-    .billboard-n-brand {
-      font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; color: var(--netflix-red);
-      line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.9);
-    }
-    .sound-circle-btn {
-      width: 42px; height: 42px; border-radius: 50%; background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 17px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px);
-      transition: all 0.25s ease;
-    }
-    .sound-circle-btn:hover { background: rgba(0,0,0,0.8); border-color: #fff; transform: scale(1.08); }
 
-    .billboard-inner-content { position: relative; z-index: 20; max-width: 680px; }
+    .billboard-inner-content { position: relative; z-index: 20; max-width: 650px; }
     
-    .billboard-title-group { margin-bottom: 12px; }
+    .billboard-title-group { margin-bottom: 14px; }
     .title-upper-tag {
-      font-size: clamp(20px, 2.4vw, 30px); font-weight: 800; letter-spacing: 2px;
-      text-transform: uppercase; color: #f0f0f0; margin-bottom: 2px; text-shadow: 1px 1px 8px rgba(0,0,0,0.9);
+      font-size: 14px; font-weight: 800; letter-spacing: 3px;
+      text-transform: uppercase; color: #e50914; margin-bottom: 4px;
     }
     .title-lower-bold {
       font-family: 'Outfit', sans-serif;
-      font-size: clamp(34px, 4.4vw, 56px); font-weight: 900; line-height: 1;
-      text-transform: uppercase; color: #fff; text-shadow: 2px 2px 14px rgba(0,0,0,0.9);
+      font-size: clamp(38px, 5vw, 64px); font-weight: 900; line-height: 1.05;
+      text-transform: uppercase; color: #fff; text-shadow: 2px 2px 14px rgba(0,0,0,0.8);
     }
 
     .billboard-meta-bullets {
-      display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
-      color: #e5e5e5; margin-bottom: 14px; flex-wrap: wrap; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+      display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600;
+      color: #e5e5e5; margin-bottom: 16px; flex-wrap: wrap; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
     }
     .meta-bullet-dot { color: #888; font-size: 12px; }
     .meta-maturity-pill {
@@ -328,63 +258,72 @@
     }
 
     .billboard-overview-text {
-      font-size: 14.5px; line-height: 1.48; color: #ddd; margin-bottom: 22px; max-width: 620px;
-      text-shadow: 1px 1px 6px rgba(0,0,0,0.8);
+      font-size: 15px; line-height: 1.5; color: #ddd; margin-bottom: 24px; max-width: 600px;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
     }
 
     .billboard-btns-row { display: flex; align-items: center; gap: 14px; }
-    .btn-netflix-pill {
-      display: inline-flex; align-items: center; gap: 10px; padding: 10px 26px; border-radius: 9999px;
-      font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s ease;
-      text-decoration: none; user-select: none; outline: none;
+    
+    /* Authentic 4px Rounded Netflix Buttons */
+    .btn-netflix-play {
+      display: inline-flex; align-items: center; gap: 10px; padding: 10px 26px; border-radius: 4px;
+      font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease, transform 0.15s;
+      text-decoration: none; user-select: none; outline: none; background-color: #fff; color: #000;
     }
-    .btn-play-white { background-color: #fff; color: #000; }
-    .btn-play-white:hover { background-color: rgba(255,255,255,0.85); transform: scale(1.03); }
-    .btn-more-info { background-color: rgba(109,109,110,0.7); color: #fff; backdrop-filter: blur(8px); }
-    .btn-more-info:hover { background-color: rgba(109,109,110,0.45); transform: scale(1.03); }
+    .btn-netflix-play:hover { background-color: rgba(255,255,255,0.75); transform: scale(1.02); }
 
-    .billboard-bottom-tags {
-      position: absolute; right: 35px; bottom: 35px; display: flex; align-items: center; gap: 10px; z-index: 25;
+    .btn-netflix-info {
+      display: inline-flex; align-items: center; gap: 10px; padding: 10px 26px; border-radius: 4px;
+      font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease, transform 0.15s;
+      text-decoration: none; user-select: none; outline: none; background-color: rgba(109,109,110,0.7); color: #fff;
+      backdrop-filter: blur(8px);
     }
-    .badge-recently-added {
-      background: var(--netflix-red); color: #fff; font-size: 11px; font-weight: 800;
-      padding: 5px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    .btn-netflix-info:hover { background-color: rgba(109,109,110,0.4); transform: scale(1.02); }
+
+    /* Right Edge Maturity & Audio Bar */
+    .billboard-right-edge-controls {
+      position: absolute; right: 0; bottom: 130px; display: flex; align-items: center; gap: 14px; z-index: 25;
     }
-    .badge-insight-chip {
-      background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.25);
-      backdrop-filter: blur(8px); color: #fff; font-size: 12px; font-weight: 600;
-      padding: 6px 14px; border-radius: 9999px; display: flex; align-items: center; gap: 6px;
+    .sound-circle-btn {
+      width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.5); color: #fff; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+    .sound-circle-btn:hover { background: rgba(0,0,0,0.7); border-color: #fff; }
+    .billboard-maturity-stripe {
+      background: rgba(51,51,51,0.6); border-left: 3px solid #dcdcdc; color: #fff;
+      font-size: 13.5px; font-weight: 700; padding: 6px 14px 6px 10px;
     }
 
     /* ============================================================= */
     /* 4. MAIN ROWS CONTAINER & CARD STYLING                         */
     /* ============================================================= */
-    .netflix-content-body { padding: 0 3.5% 80px; position: relative; z-index: 30; margin-top: -80px; }
+    .netflix-content-body { padding: 0 4% 80px; position: relative; z-index: 30; margin-top: -60px; }
     .category-section-row { margin-bottom: 48px; position: relative; }
     .section-title {
-      font-size: 21px; font-weight: 700; color: #e5e5e5; margin-bottom: 14px;
+      font-size: 20px; font-weight: 700; color: #e5e5e5; margin-bottom: 12px;
       display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: color 0.2s;
     }
     .section-title:hover { color: #fff; }
 
     .slider-track-container { position: relative; overflow: visible; }
     .slider-scroll-track {
-      display: flex; gap: 12px; overflow-x: auto; scroll-behavior: smooth;
+      display: flex; gap: 8px; overflow-x: auto; scroll-behavior: smooth;
       padding: 15px 0 25px 0; scrollbar-width: none;
     }
     .slider-scroll-track::-webkit-scrollbar { display: none; }
 
     .scroll-arrow-nav {
       position: absolute; top: 15px; bottom: 25px; width: 3.5%; z-index: 40;
-      background: rgba(20,20,20,0.65); border: none; color: #fff; font-size: 30px;
+      background: rgba(20,20,20,0.7); border: none; color: #fff; font-size: 28px;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       opacity: 0; transition: opacity 0.3s, background-color 0.2s; user-select: none;
     }
-    .scroll-arrow-left { left: -3.5%; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
-    .scroll-arrow-right { right: -3.5%; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+    .scroll-arrow-left { left: -4%; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+    .scroll-arrow-right { right: -4%; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
     .category-section-row:hover .scroll-arrow-nav { opacity: 1; }
-    .scroll-arrow-nav:hover { background: rgba(20,20,20,0.92); }
+    .scroll-arrow-nav:hover { background: rgba(20,20,20,0.95); }
 
     /* Standard Card */
     .standard-media-card {
@@ -396,32 +335,6 @@
       width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block;
     }
 
-    .top10-badge-corner {
-      position: absolute; top: 0; left: 0; background: var(--netflix-red); color: #fff;
-      font-size: 9px; font-weight: 900; line-height: 1.1; padding: 4px 6px;
-      text-align: center; border-top-left-radius: 4px; border-bottom-right-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.8); letter-spacing: 0.5px; z-index: 2;
-    }
-    .bottom-tag-pill {
-      position: absolute; top: 8px; right: 8px; background: var(--netflix-red);
-      color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 3px;
-      z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
-    }
-    .tag-combo-row {
-      position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 2;
-    }
-    .tag-combo-pill {
-      background: var(--netflix-red); color: #fff; font-size: 9px; font-weight: 800;
-      padding: 2px 6px; border-radius: 3px;
-    }
-    .tag-combo-dark {
-      background: rgba(20,20,20,0.85); color: #fff; font-size: 9px; font-weight: 700;
-      padding: 2px 6px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.3);
-    }
-    .continue-watch-card .bottom-tag-pill,
-    .continue-watch-card .tag-combo-row {
-      bottom: 38px; top: auto; left: 8px; right: auto;
-    }
     .card-title-overlay {
       position: absolute; inset: 0; pointer-events: none;
       background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%);
@@ -434,7 +347,7 @@
 
     /* Continue Watching Card */
     .continue-watch-card {
-      flex: 0 0 245px; height: 165px; border-radius: 6px; position: relative;
+      flex: 0 0 245px; height: 165px; border-radius: 4px; position: relative;
       background-color: var(--netflix-card-bg); cursor: pointer; overflow: hidden;
       box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     }
@@ -464,548 +377,390 @@
       letter-spacing: -12px; flex-shrink: 0;
     }
     .top10-poster-card {
-      width: 135px; height: 200px; border-radius: 6px; overflow: hidden;
+      width: 135px; height: 200px; border-radius: 4px; overflow: hidden;
       position: relative; z-index: 2; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
       background-color: var(--netflix-card-bg); margin-bottom: 12px;
     }
     .top10-poster-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .top10-numbered-item:hover .top10-huge-num { -webkit-text-stroke: 4.5px var(--netflix-red); }
 
-    /* Game Card */
-    .game-card-item {
-      flex: 0 0 230px; height: 220px; border-radius: 8px; background: #202020;
-      cursor: pointer; overflow: hidden; position: relative; transition: transform 0.25s ease;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.7); display: flex; flex-direction: column;
-    }
-    .game-card-item:hover { transform: scale(1.05); }
-    .game-thumb-box { height: 130px; width: 100%; overflow: hidden; }
-    .game-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-    .game-info-box { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .game-title-text { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 2px; }
-    .game-category-text { font-size: 11px; color: #aaa; }
-    .game-play-tag { font-size: 11px; font-weight: 700; color: var(--netflix-red); }
-
-    /* My List Grid */
-    .my-list-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 18px;
-    }
-
     /* ============================================================= */
     /* 5. INTERACTIVE HOVER PREVIEW POPOVER                           */
     /* ============================================================= */
     .hover-popover-card {
       position: fixed; z-index: 2000; width: 330px; background: #181818;
-      border-radius: 8px; box-shadow: 0 16px 40px rgba(0,0,0,0.95);
+      border-radius: 6px; box-shadow: 0 16px 40px rgba(0,0,0,0.95);
       overflow: hidden; pointer-events: auto; opacity: 0; transform: scale(0.95);
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
-    .hover-popover-card.visible { opacity: 1; transform: scale(1); }
-    
+    .hover-popover-card.active { opacity: 1; transform: scale(1); }
     .hover-preview-media {
-      position: relative; height: 180px; width: 100%; background-color: #000;
+      position: relative; height: 185px; width: 100%; background: #000;
     }
-    .hover-preview-media img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
+    .hover-preview-media img { width: 100%; height: 100%; object-fit: cover; }
     .hover-top-n {
-      position: absolute; top: 8px; left: 10px; font-family: 'Outfit', sans-serif;
+      position: absolute; top: 10px; left: 10px; font-family: 'Outfit', sans-serif;
       font-size: 22px; font-weight: 900; color: var(--netflix-red);
     }
-    .hover-mute-btn {
-      position: absolute; bottom: 10px; right: 10px; width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.4); color: #fff;
-      font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer;
-    }
-
     .hover-content-body { padding: 14px 16px 18px; }
-    .hover-actions-row {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
-    }
+    .hover-actions-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .hover-left-actions { display: flex; align-items: center; gap: 8px; }
+    
     .hover-btn-round {
-      width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5);
-      background: rgba(35,35,35,0.8); color: #fff; font-size: 13px; display: flex;
-      align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
-    }
-    .hover-btn-round:hover { border-color: #fff; background: #383838; transform: scale(1.1); }
-    .hover-btn-round.btn-play-solid { background: #fff; color: #000; border-color: #fff; font-size: 14px; }
-    .hover-btn-round.btn-play-solid:hover { background: #e6e6e6; }
-
-    .hover-meta-line {
-      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; margin-bottom: 8px;
-    }
-    .hover-match-text { color: #46d369; }
-    .hover-box-rating {
-      border: 1px solid rgba(255,255,255,0.4); padding: 1px 5px; border-radius: 2px;
-      font-size: 10px; font-weight: 800;
-    }
-    .hover-duration-text { color: #ddd; }
-    .hover-hd-badge {
-      border: 1px solid rgba(255,255,255,0.4); padding: 1px 4px; border-radius: 2px;
-      font-size: 10px; font-weight: 800; color: #ddd;
-    }
-    .hover-audio-text {
-      display: flex; align-items: center; gap: 4px; font-size: 11px; color: #ccc;
-    }
-    .hover-genres-text { font-size: 11.5px; color: #ddd; font-weight: 500; line-height: 1.3; }
-
-    /* ============================================================= */
-    /* 6. FULLSCREEN 1:1 NETFLIX VIDEO PLAYER (Screenshot 4)         */
-    /* ============================================================= */
-    .netflix-player-screen {
-      position: fixed; inset: 0; z-index: 99999; background: #000;
-      display: none; flex-direction: column; justify-content: space-between;
-      user-select: none; overflow: hidden;
-    }
-    .netflix-player-screen.active { display: flex; }
-
-    .player-video-viewport {
-      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; background: #000;
-    }
-    .player-video-element {
-      width: 100%; height: 100%; object-fit: contain; background: #000; display: block;
-    }
-    .player-iframe-element {
-      width: 100%; height: 100%; border: none; display: none; background: #000;
-    }
-
-    /* Authentic Center Subtitle (Screenshot 4: "Don't grin like an idiot at her stupid joke.") */
-    .netflix-subtitle-overlay {
-      position: absolute; bottom: 130px; left: 50%; transform: translateX(-50%);
-      width: 85%; max-width: 960px; text-align: center; pointer-events: none; z-index: 30;
-    }
-    .netflix-subtitle-text {
-      font-size: clamp(22px, 2.6vw, 36px); font-weight: 700; color: #ffffff;
-      text-shadow: 0 0 5px #000, 0 0 10px #000, 0 2px 4px #000, 0 0 15px rgba(0,0,0,0.9);
-      letter-spacing: 0.3px; line-height: 1.35; display: inline-block;
-    }
-
-    .player-top-bar {
-      position: absolute; top: 0; left: 0; right: 0; height: 90px; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 35px; background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, transparent 100%);
-      transition: opacity 0.35s ease;
-    }
-    .player-top-left-group { display: flex; align-items: center; gap: 18px; }
-    .player-exit-arrow-btn {
-      background: transparent; border: none; color: #fff; font-size: 30px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
-    }
-    .player-exit-arrow-btn:hover { transform: scale(1.15); }
-
-    .player-top-right-group { display: flex; align-items: center; gap: 12px; }
-    .player-control-pill {
-      background: rgba(20,20,20,0.85); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 4px;
-      padding: 6px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: flex;
-      align-items: center; gap: 8px; transition: all 0.2s; backdrop-filter: blur(12px);
-    }
-    .player-control-pill:hover, .player-control-pill.active {
-      background: rgba(40,40,40,0.95); border-color: rgba(255,255,255,0.6); transform: translateY(-1px);
-    }
-    .provider-toggle-select {
-      background: rgba(20,20,20,0.85); color: #fff; border: 1px solid #444; border-radius: 4px;
-      padding: 6px 10px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer;
-    }
-
-    /* Authentic Netflix Stream Buffering Watchdog HUD */
-    .stream-buffering-hud {
-      position: absolute; inset: 0; z-index: 90;
-      background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.88) 100%);
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s ease, visibility 0.4s ease; pointer-events: auto;
-    }
-    .stream-buffering-hud.hidden {
-      opacity: 0; visibility: hidden; pointer-events: none;
-    }
-    .hud-center-card {
-      text-align: center; max-width: 500px; padding: 26px 34px;
-      background: rgba(18, 18, 18, 0.92); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px; backdrop-filter: blur(16px); box-shadow: 0 16px 45px rgba(0,0,0,0.95);
-    }
-    .hud-netflix-spinner {
-      width: 48px; height: 48px; margin: 0 auto 16px;
-      border: 4px solid rgba(255,255,255,0.12); border-top-color: var(--netflix-red);
-      border-radius: 50%; animation: hudSpin 0.85s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    }
-    @keyframes hudSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .hud-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .hud-subtitle { font-size: 13px; color: #aaa; margin-bottom: 14px; }
-    .hud-failover-box {
-      margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);
-      animation: fadeInPopover 0.3s ease;
-    }
-    .hud-btn-switch {
-      background: rgba(229, 9, 20, 0.88); color: #fff; border: none; border-radius: 6px;
-      padding: 9px 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .hud-btn-switch:hover { background: var(--netflix-red); transform: scale(1.04); }
-
-    /* Audio & Subtitles Popover Modal */
-    .player-popover-panel {
-      position: absolute; top: 80px; right: 35px; width: 440px; background: rgba(20,20,20,0.97);
-      border: 1px solid #333; border-radius: 8px; padding: 20px; box-shadow: 0 12px 35px rgba(0,0,0,0.95);
-      backdrop-filter: blur(16px); z-index: 200; font-size: 14px; animation: fadeInPopover 0.2s ease;
-    }
-    @keyframes fadeInPopover {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .popover-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-      border-bottom: 1px solid #333; padding-bottom: 10px;
-    }
-    .popover-header h3 { font-size: 16px; font-weight: 800; color: #fff; margin: 0; }
-    .popover-close-btn { background: none; border: none; color: #888; font-size: 18px; cursor: pointer; }
-    .popover-close-btn:hover { color: #fff; }
-    
-    .audio-subs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .popover-col-title { font-size: 12px; font-weight: 800; color: #888; letter-spacing: 1px; margin-bottom: 12px; }
-    
-    .popover-option-item {
-      display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 4px;
-      cursor: pointer; transition: background 0.15s; margin-bottom: 4px; user-select: none;
-    }
-    .popover-option-item:hover { background: rgba(255,255,255,0.08); }
-    .popover-option-item.selected { background: rgba(229,9,20,0.2); font-weight: 700; color: #fff; }
-    .popover-radio { accent-color: var(--netflix-red); width: 16px; height: 16px; cursor: pointer; }
-    
-    .popover-footer-note {
-      margin-top: 14px; border-top: 1px solid #2a2a2a; padding-top: 10px;
-      font-size: 11px; color: #888; display: flex; align-items: center; gap: 6px;
-    }
-
-    .player-bottom-bar {
-      position: absolute; bottom: 0; left: 0; right: 0; z-index: 100;
-      padding: 0 35px 30px; background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
-      transition: opacity 0.35s ease;
-    }
-    
-    .player-scrubber-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .scrubber-track-bar {
-      flex: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;
-      position: relative; cursor: pointer; transition: height 0.15s;
-    }
-    .scrubber-track-bar:hover { height: 6px; }
-    .scrubber-fill-red {
-      position: absolute; top: 0; left: 0; height: 100%; background: var(--netflix-red);
-      border-radius: 2px; width: 65%;
-    }
-    .scrubber-dot-handle {
-      position: absolute; top: 50%; right: -6px; transform: translateY(-50%);
-      width: 14px; height: 14px; border-radius: 50%; background: var(--netflix-red);
-      box-shadow: 0 0 6px rgba(0,0,0,0.8); cursor: pointer;
-    }
-    .time-remaining-label {
-      font-size: 13px; font-weight: 700; color: #fff; min-width: 45px; text-align: right;
-    }
-
-    .player-controls-row { display: flex; align-items: center; justify-content: space-between; }
-    .controls-left-side { display: flex; align-items: center; gap: 24px; }
-    .controls-right-side { display: flex; align-items: center; gap: 24px; }
-
-    .player-icon-action {
-      background: transparent; border: none; color: #fff; font-size: 22px; cursor: pointer;
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(42,42,42,0.8);
+      border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 15px; cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
-    .player-icon-action:hover { opacity: 0.8; transform: scale(1.1); }
-    .player-icon-action.play-pause-btn { font-size: 26px; }
-    
-    .skip-ten-btn {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; font-size: 20px;
-    }
-    .skip-ten-num {
-      position: absolute; font-size: 9px; font-weight: 900; top: 52%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
+    .hover-btn-round:hover { border-color: #fff; background: rgba(255,255,255,0.25); transform: scale(1.08); }
+    .btn-play-solid { background: #fff; color: #000; border: none; font-size: 16px; }
+    .btn-play-solid:hover { background: rgba(255,255,255,0.85); color: #000; }
 
-    .volume-control-wrap { display: flex; align-items: center; gap: 8px; position: relative; }
-    .volume-slider-range {
-      width: 0; opacity: 0; transition: width 0.25s ease, opacity 0.25s ease;
-      accent-color: var(--netflix-red); cursor: pointer; height: 4px;
+    .hover-meta-line { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+    .hover-match-text { color: #46d369; font-weight: 800; }
+    .hover-box-rating {
+      border: 1px solid rgba(255,255,255,0.4); padding: 0 4px; font-size: 10.5px; font-weight: 700;
     }
-    .volume-control-wrap:hover .volume-slider-range { width: 70px; opacity: 1; }
+    .hover-duration-text { color: #aaa; }
+    .hover-hd-badge {
+      border: 1px solid rgba(255,255,255,0.4); border-radius: 2px; padding: 0 4px; font-size: 10px; font-weight: 700;
+    }
+    .hover-genres-text { font-size: 12px; color: #ddd; }
 
-    .playing-title-display { font-size: 15px; font-weight: 700; color: #fff; margin-left: 12px; }
-
-    .netflix-player-screen.idle-hidden .player-top-bar,
-    .netflix-player-screen.idle-hidden .player-bottom-bar {
+    /* ============================================================= */
+    /* 6. AUTHENTIC FULLSCREEN NETFLIX CADMIUM PLAYER                */
+    /* ============================================================= */
+    .netflix-player-screen {
+      position: fixed; inset: 0; z-index: 5000; background: #000;
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .netflix-player-screen.active { display: flex; }
+    .netflix-player-screen.user-idle { cursor: none; }
+    .netflix-player-screen.user-idle .player-top-bar,
+    .netflix-player-screen.user-idle .player-bottom-bar {
       opacity: 0; pointer-events: none;
     }
 
+    .player-video-viewport {
+      position: absolute; inset: 0; width: 100%; height: 100%; background: #000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .player-video-element {
+      width: 100%; height: 100%; object-fit: contain; background: #000;
+    }
+    .player-iframe-element {
+      width: 100%; height: 100%; border: none; background: #000;
+    }
+
+    .player-top-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 90px; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 4%;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+    .player-top-left-group { display: flex; align-items: center; gap: 20px; }
+    .player-exit-arrow-btn {
+      background: none; border: none; color: #fff; font-size: 32px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: transform 0.2s;
+    }
+    .player-exit-arrow-btn:hover { transform: scale(1.15); }
+    .player-top-right-group { display: flex; align-items: center; gap: 12px; }
+
+    .player-control-pill {
+      background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px;
+      color: #fff; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; backdrop-filter: blur(8px); transition: all 0.2s;
+    }
+    .player-control-pill:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
+
+    .player-bottom-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 50;
+      padding: 0 4% 30px 4%; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+    .player-scrubber-row {
+      display: flex; align-items: center; gap: 18px; margin-bottom: 12px;
+    }
+    .scrubber-track-bar {
+      flex: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px;
+      position: relative; cursor: pointer; transition: height 0.15s ease;
+    }
+    .scrubber-track-bar:hover { height: 8px; }
+    .scrubber-fill-red {
+      height: 100%; width: 0%; background: var(--netflix-red); border-radius: 2px; position: relative;
+    }
+    .scrubber-dot-handle {
+      position: absolute; right: -6px; top: 50%; transform: translateY(-50%) scale(0);
+      width: 14px; height: 14px; border-radius: 50%; background: var(--netflix-red);
+      transition: transform 0.15s ease;
+    }
+    .scrubber-track-bar:hover .scrubber-dot-handle { transform: translateY(-50%) scale(1); }
+    .time-remaining-label { font-size: 13px; font-weight: 600; color: #ddd; min-width: 50px; text-align: right; }
+
+    .player-controls-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .controls-left-side { display: flex; align-items: center; gap: 20px; }
+    .controls-right-side { display: flex; align-items: center; gap: 20px; }
+
+    .player-icon-action {
+      background: none; border: none; color: #fff; font-size: 22px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: transform 0.15s;
+    }
+    .player-icon-action:hover { transform: scale(1.15); }
+    .play-pause-btn { font-size: 26px; }
+
+    .skip-ten-btn { position: relative; }
+    .skip-ten-num {
+      position: absolute; font-size: 9px; font-weight: 900; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .volume-control-wrap { display: flex; align-items: center; gap: 10px; }
+    .volume-slider-range {
+      width: 80px; -webkit-appearance: none; appearance: none; background: rgba(255,255,255,0.3);
+      height: 4px; border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .volume-slider-range::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 12px; height: 12px;
+      border-radius: 50%; background: #fff; cursor: pointer;
+    }
+
+    .playing-title-display {
+      font-size: 14.5px; font-weight: 700; color: #fff; margin-left: 10px;
+    }
+
+    /* Player Popovers */
+    .player-popover-panel {
+      position: absolute; bottom: 95px; right: 4%; background: rgba(20,20,20,0.98);
+      border: 1px solid #333; border-radius: 6px; box-shadow: 0 14px 40px rgba(0,0,0,0.95);
+      z-index: 60; backdrop-filter: blur(16px); padding: 18px 20px;
+    }
+    .popover-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px; border-bottom: 1px solid #282828; padding-bottom: 8px;
+    }
+    .popover-header h3 { font-size: 15px; font-weight: 800; color: #fff; }
+    .popover-close-btn { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; }
+    .popover-close-btn:hover { color: #fff; }
+
+    .popover-option-item {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 4px;
+      cursor: pointer; transition: background 0.15s; margin-bottom: 4px;
+    }
+    .popover-option-item:hover { background: #262626; }
+    .popover-option-item.selected { background: rgba(229,9,20,0.15); border-left: 3px solid var(--netflix-red); }
+    .popover-radio { accent-color: var(--netflix-red); }
+
+    .audio-subs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 440px; }
+    .popover-col-title { font-size: 12px; font-weight: 800; color: #888; text-transform: uppercase; margin-bottom: 10px; }
+
     .player-toast-box {
       position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
-      background: rgba(20,20,20,0.95); border: 1px solid var(--netflix-red); border-radius: 6px;
-      color: #fff; padding: 10px 22px; font-size: 13.5px; font-weight: 700; z-index: 500;
-      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+      background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.3);
+      padding: 10px 22px; border-radius: 4px; font-size: 14px; font-weight: 700;
+      color: #fff; z-index: 70; opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
-    .player-toast-box.show { opacity: 1; }
+    .player-toast-box.visible { opacity: 1; }
 
     /* ============================================================= */
-    /* 7. DETAIL QUICKVIEW MODAL                                     */
+    /* 7. AUTHENTIC DETAIL QUICKVIEW MODAL                           */
     /* ============================================================= */
     .detail-modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
-      z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px;
+      position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px); display: none; align-items: flex-start;
+      justify-content: center; overflow-y: auto; padding: 40px 0;
     }
     .detail-modal-backdrop.active { display: flex; }
     .detail-modal-card {
-      width: 100%; max-width: 860px; max-height: 92vh; background: #181818;
-      border-radius: 10px; overflow-y: auto; position: relative; box-shadow: 0 16px 50px rgba(0,0,0,0.95);
-    }
-    .modal-hero-cover {
-      position: relative; height: 380px; background-size: cover; background-position: center;
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 35px;
-    }
-    .modal-hero-cover::after {
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 40%, #181818 100%);
+      width: 850px; max-width: 92vw; background: #181818; border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.95); position: relative; overflow: hidden; margin-bottom: 40px;
     }
     .modal-dismiss-btn {
       position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%;
       background: #181818; border: none; color: #fff; font-size: 18px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; z-index: 30;
+      display: flex; align-items: center; justify-content: center; z-index: 20;
     }
-    .modal-dismiss-btn:hover { background: #333; }
+    .modal-hero-cover {
+      height: 440px; position: relative; background-size: cover; background-position: center;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 0 40px 40px;
+    }
+    .modal-hero-cover::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, #181818 100%);
+    }
 
-    .modal-content-details { padding: 25px 35px 40px; }
-    .modal-meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .modal-episodes-list { margin-top: 25px; border-top: 1px solid #333; padding-top: 20px; }
-    .episode-card-item {
-      display: flex; gap: 16px; padding: 14px; border-radius: 6px; cursor: pointer;
-      transition: background 0.2s; border-bottom: 1px solid #262626; align-items: center;
-    }
-    .episode-card-item:hover { background: #262626; }
-    .ep-order-num { font-size: 18px; font-weight: 700; color: #777; width: 25px; text-align: center; }
-    .ep-thumb-box { width: 130px; height: 75px; border-radius: 4px; overflow: hidden; background: #222; flex-shrink: 0; }
-    .ep-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-    .ep-detail-text { flex: 1; }
-    .ep-header-line { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-    .ep-desc-snippet { font-size: 12px; color: #aaa; line-height: 1.4; }
+    .modal-content-details { padding: 20px 40px 40px; }
+    .modal-two-columns { display: grid; grid-template-columns: 2fr 1fr; gap: 36px; }
+    .modal-meta-row { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+    .modal-info-sidebar-item { font-size: 13px; color: #777; margin-bottom: 10px; line-height: 1.45; }
+    .modal-info-sidebar-item .highlight { color: #ddd; }
 
-    /* Netflix 1:1 Modal Two-Column & Detailed Sections */
-    .modal-two-columns {
-      display: grid; grid-template-columns: 1.8fr 1fr; gap: 36px; margin-bottom: 30px;
+    /* Episode list items */
+    .modal-ep-card {
+      display: flex; gap: 16px; padding: 16px; border-radius: 6px; cursor: pointer;
+      border-bottom: 1px solid #282828; align-items: center; transition: background 0.2s;
     }
-    .modal-main-column { display: flex; flex-direction: column; }
-    .modal-info-sidebar {
-      font-size: 13px; line-height: 1.6; color: #777; display: flex; flex-direction: column; gap: 14px;
-    }
-    .modal-info-sidebar-item { font-size: 13px; color: #777; }
-    .modal-info-sidebar-item span.highlight { color: #ddd; font-weight: 500; }
-    .modal-season-select {
-      background: #242424; color: #fff; border: 1px solid #444; border-radius: 4px;
-      padding: 7px 14px; font-weight: 700; font-size: 14px; outline: none; cursor: pointer;
-    }
-    .modal-season-select:hover { border-color: #777; }
+    .modal-ep-card:hover { background: #262626; }
+    .modal-ep-num { font-size: 22px; font-weight: 800; color: #888; width: 30px; text-align: center; }
+    .modal-ep-thumb { width: 130px; height: 75px; border-radius: 4px; object-fit: cover; background: #111; flex-shrink: 0; }
+    .modal-ep-info { flex: 1; min-width: 0; }
+    .modal-ep-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .modal-ep-title { font-size: 14.5px; font-weight: 700; color: #fff; }
+    .modal-ep-runtime { font-size: 13px; color: #aaa; }
+    .modal-ep-desc { font-size: 12.5px; color: #aaa; line-height: 1.4; }
+
+    /* More Like This 3-column Grid */
     .more-like-this-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; margin-top: 16px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 14px;
     }
     .more-like-card {
-      background: #282828; border-radius: 6px; overflow: hidden; cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s; position: relative;
+      background: #2a2a2a; border-radius: 4px; overflow: hidden; cursor: pointer;
+      display: flex; flex-direction: column; transition: transform 0.2s;
     }
-    .more-like-card:hover { transform: translateY(-4px); background: #323232; }
-    .more-like-thumb-box { position: relative; height: 135px; width: 100%; background: #1c1c1c; }
-    .more-like-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-    .more-like-info { padding: 14px; }
-    .more-like-meta-row {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 700;
-    }
-    .more-like-overview {
-      font-size: 12px; color: #bbb; line-height: 1.45;
-      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .modal-about-section {
-      margin-top: 35px; border-top: 1px solid #333; padding-top: 24px; font-size: 13px; line-height: 1.7; color: #777;
-    }
-    .modal-about-row { margin-bottom: 8px; }
-    .modal-about-row span.highlight { color: #ddd; font-weight: 500; }
-
-    /* Skeleton Loading Placeholder (Zero CLS - P0.3) */
-    @keyframes skeletonShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    .skeleton-shimmer-box {
-      background: linear-gradient(90deg, #181818 25%, #282828 50%, #181818 75%);
-      background-size: 200% 100%;
-      animation: skeletonShimmer 1.5s infinite;
-      border-radius: 4px;
-    }
-
-    @media (max-width: 900px) {
-      .nav-pills-list { display: none; }
-      .billboard-framed-card { height: 55vh; padding: 25px; }
-      .title-lower-bold { font-size: 32px; }
-      .billboard-bottom-tags { display: none; }
-      .top10-huge-num { font-size: 120px; margin-right: -24px; }
-      .top10-poster-card { width: 100px; height: 150px; }
-      :root { --poster-w: 140px; --poster-h: 210px; }
-      .player-top-bar, .player-bottom-bar { padding: 0 16px 20px; }
-    }
+    .more-like-card:hover { transform: scale(1.02); }
+    .more-like-thumb { height: 140px; width: 100%; object-fit: cover; }
+    .more-like-body { padding: 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
   </style>
 </head>
 <body>
 
   <!-- ============================================================= -->
-  <!-- 1. TOP NAVIGATION HEADER                                      -->
+  <!-- 1. HEADER                                                     -->
   <!-- ============================================================= -->
-  <header class="netflix-header" id="mainNavbar">
+  <header class="netflix-header" id="mainHeader">
     <div class="header-left">
       <a class="netflix-brand-logo" onclick="switchNavCategory('all')">NETFLIX</a>
       <ul class="nav-pills-list">
-        <li><a class="active" onclick="switchNavCategory('all')" id="nav-all">Home</a></li>
-        <li><a onclick="switchNavCategory('tv')" id="nav-tv">Shows</a></li>
-        <li><a onclick="switchNavCategory('movie')" id="nav-movie">Movies</a></li>
-        <li><a onclick="switchNavCategory('games')" id="nav-games">Games</a></li>
-        <li><a onclick="switchNavCategory('new')" id="nav-new">New & Popular</a></li>
-        <li><a onclick="switchNavCategory('mylist')" id="nav-mylist">My List</a></li>
-        <li><a onclick="switchNavCategory('languages')" id="nav-languages">Browse by Languages</a></li>
+        <li><a class="active" id="nav-all" onclick="switchNavCategory('all')">Home</a></li>
+        <li><a id="nav-tv" onclick="switchNavCategory('tv')">Shows</a></li>
+        <li><a id="nav-movie" onclick="switchNavCategory('movie')">Movies</a></li>
+        <li><a id="nav-games" onclick="switchNavCategory('games')">Games</a></li>
+        <li><a id="nav-new" onclick="switchNavCategory('new')">New & Popular</a></li>
+        <li><a id="nav-mylist" onclick="switchNavCategory('mylist')">My List</a></li>
+        <li><a id="nav-languages" onclick="switchNavCategory('languages')">Browse by Languages</a></li>
       </ul>
     </div>
+
     <div class="header-right">
-      <div class="search-wrap">
-        <button class="search-icon-btn" onclick="document.getElementById('navSearchInput').focus()">🔍</button>
-        <input type="text" class="search-input-field" id="navSearchInput" placeholder="Titles, people, genres" autocomplete="off">
-        <button class="search-clear-btn" id="searchClearBtn" onclick="resetSearch()">✕</button>
+      <!-- Animated Expanding Search Bar -->
+      <div class="search-wrap" id="searchWrap">
+        <button class="search-icon-btn" onclick="toggleSearchBar()" title="Search">🔍</button>
+        <input type="text" class="search-input-field" id="searchInput" placeholder="Titles, people, genres" oninput="handleSearchInput(this.value)">
+        <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()">✕</button>
       </div>
 
-      <!-- Live Search Suggestions Typeahead Panel -->
-      <div class="search-suggestions-panel" id="searchSuggestionsPanel">
-        <div class="search-suggest-header">Top Results</div>
-        <div id="searchSuggestionsList"></div>
-      </div>
-      
-      <!-- Notification Bell with Red Badge "11" -->
-      <button class="bell-btn-wrap" onclick="toggleNotificationPanel()" title="11 Unread Notifications">
-        <span style="font-size: 18px;">🔔</span>
-        <span class="bell-badge-count">11</span>
+      <!-- Notifications -->
+      <button class="bell-btn-wrap" onclick="toggleNotificationsDropdown()" title="Notifications">
+        <span>🔔</span>
+        <span class="bell-badge-count" id="notifBadge">4</span>
       </button>
 
-      <!-- Red Smiley Profile Avatar with Dropdown Caret -->
-      <div class="profile-pill-wrap" onclick="toggleProfilePanel()" title="Profile 5">
-        <div class="profile-smiley-box" id="navProfileAvatarBox">
+      <!-- Profile Avatar -->
+      <div class="profile-pill-wrap" onclick="toggleProfileDropdown()">
+        <div class="profile-smiley-box">
           <svg class="profile-smiley-svg" viewBox="0 0 24 24">
-            <rect x="5" y="7" width="3.5" height="3.5" rx="0.5"/>
-            <rect x="15.5" y="7" width="3.5" height="3.5" rx="0.5"/>
-            <path d="M7 14.5 C9 17, 15 17, 17 14.5" stroke="#000" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="9" cy="9" r="1.5"/>
+            <circle cx="15" cy="9" r="1.5"/>
+            <path d="M7 14c1.5 2 3.5 3 5 3s3.5-1 5-3" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="profile-caret-icon">▼</span>
+        <span class="profile-caret-icon" id="profileCaret">▼</span>
       </div>
 
-      <!-- Notification Dropdown Panel (11 items) -->
-      <div class="notification-dropdown-panel" id="notifPanel">
-        <div class="notif-header">Notifications (11)</div>
+      <!-- Search Suggestions Dropdown -->
+      <div class="search-suggestions-panel" id="searchSuggestionsPanel"></div>
+
+      <!-- Notification Dropdown -->
+      <div class="notification-dropdown-panel" id="notifDropdown">
+        <div class="notif-header">Notifications</div>
         <div id="notifListContainer"></div>
       </div>
 
-      <!-- Profile Dropdown Panel -->
-      <div class="profile-dropdown-panel" id="profilePanel">
-        <div class="profile-item-row" onclick="switchUserProfile('profile_1');">
-          <div class="profile-smiley-box" style="width: 24px; height: 24px; background: #E50914;">
-            <svg class="profile-smiley-svg" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
-              <rect x="5" y="7" width="3.5" height="3.5" rx="0.5"/><rect x="15.5" y="7" width="3.5" height="3.5" rx="0.5"/><path d="M7 14.5 C9 17, 15 17, 17 14.5" stroke="#000" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            </svg>
-          </div>
-          <span id="profileName1">User 1 (Active)</span>
+      <!-- Profile Dropdown -->
+      <div class="profile-dropdown-panel" id="profileDropdown">
+        <div class="profile-item-row" onclick="switchProfile('profile_1')">
+          <div class="profile-smiley-box" style="background:#e50914; width:26px; height:26px;"></div>
+          <span>User 1</span>
         </div>
-        <div class="profile-item-row" onclick="switchUserProfile('profile_2');">
-          <div style="width: 24px; height: 24px; border-radius: 4px; background: #ffaa00; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #000;">K</div>
-          <span>Children & Kids</span>
-        </div>
-        <div class="profile-item-row" onclick="switchUserProfile('profile_3');">
-          <div style="width: 24px; height: 24px; border-radius: 4px; background: #0071eb; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff;">G</div>
-          <span>Guest</span>
+        <div class="profile-item-row" onclick="switchProfile('profile_2')">
+          <div class="profile-smiley-box" style="background:#ffaa00; width:26px; height:26px;"></div>
+          <span>Kids</span>
         </div>
         <div class="profile-divider-line"></div>
-        <div class="profile-item-row" onclick="flashToast('Manage Profiles'); toggleProfilePanel();">Manage Profiles</div>
-        <div class="profile-item-row" onclick="flashToast('Account Settings'); toggleProfilePanel();">Account</div>
-        <div class="profile-item-row" onclick="flashToast('Help Center'); toggleProfilePanel();">Help Center</div>
-        <div class="profile-divider-line"></div>
-        <div class="profile-item-row" onclick="flashToast('Signed out of Netflix'); toggleProfilePanel();">Sign out of Netflix</div>
+        <div class="profile-item-row" onclick="flashToast('Account Settings')">Account</div>
+        <div class="profile-item-row" onclick="flashToast('Help Center')">Help Center</div>
       </div>
-
     </div>
   </header>
 
-  <!-- ============================================================= -->
-  <!-- 2. SUBHEADERS: GENRES & LANGUAGE FILTERS                     -->
-  <!-- ============================================================= -->
-  <!-- TV Shows / Movies Subheader with Genre Dropdown -->
+  <!-- Subheaders for Genres & Languages -->
   <div class="genre-filter-subheader" id="genreSubheader">
-    <div class="genre-title-big" id="genreSectionTitle">TV Shows</div>
-    <select class="genre-select-box" id="genreDropdown" onchange="filterByGenre(this.value)">
-      <option value="">Genres</option>
+    <div class="genre-title-big" id="genreCategoryTitle">TV Shows</div>
+    <select class="genre-select-box" id="genreSelectBox" onchange="filterByGenre(this.value)">
+      <option value="all">All Genres</option>
       <option value="Action">Action & Adventure</option>
-      <option value="Comedies">Comedies</option>
-      <option value="Dramas">Dramas</option>
-      <option value="Crime">Crime & Thrillers</option>
-      <option value="Romantic">Romantic</option>
+      <option value="Drama">Dramas</option>
+      <option value="Comedy">Comedies</option>
       <option value="Sci-Fi">Sci-Fi & Fantasy</option>
+      <option value="Crime">Crime & Thrillers</option>
+      <option value="Romance">Romance</option>
       <option value="Documentary">Documentaries</option>
     </select>
   </div>
 
-  <!-- Browse by Languages Subheader -->
   <div class="languages-filter-bar" id="languagesFilterBar">
     <span style="font-size: 14px; font-weight: 700; color: #888;">Select Language:</span>
-    <button class="lang-chip-btn active" onclick="filterByLanguage('Hindi', this)">Hindi</button>
-    <button class="lang-chip-btn" onclick="filterByLanguage('English', this)">English</button>
-    <button class="lang-chip-btn" onclick="filterByLanguage('Tamil', this)">Tamil</button>
-    <button class="lang-chip-btn" onclick="filterByLanguage('Telugu', this)">Telugu</button>
-    <button class="lang-chip-btn" onclick="filterByLanguage('Korean', this)">Korean</button>
-    <button class="lang-chip-btn" onclick="filterByLanguage('Spanish', this)">Spanish</button>
+    <button class="lang-chip-btn active" onclick="switchLanguageFilter('Hindi', this)">Hindi</button>
+    <button class="lang-chip-btn" onclick="switchLanguageFilter('English', this)">English</button>
+    <button class="lang-chip-btn" onclick="switchLanguageFilter('Tamil', this)">Tamil</button>
+    <button class="lang-chip-btn" onclick="switchLanguageFilter('Telugu', this)">Telugu</button>
+    <button class="lang-chip-btn" onclick="switchLanguageFilter('Korean', this)">Korean</button>
+    <button class="lang-chip-btn" onclick="switchLanguageFilter('Spanish', this)">Spanish</button>
   </div>
 
   <!-- ============================================================= -->
-  <!-- 3. INSET FRAMED HERO BILLBOARD (Screenshot 1)                 -->
+  <!-- 3. FULL-BLEED HERO BILLBOARD                                  -->
   <!-- ============================================================= -->
-  <div class="hero-container-outer" id="heroOuterContainer">
-    <div class="billboard-framed-card" id="heroFramedCard">
+  <div class="hero-container-outer" id="heroSection">
+    <div class="billboard-framed-card" id="billboardCard" style="background-image: url('https://image.tmdb.org/t/p/original/2meX1nMdScFOoV4370rqHWKmXhY.jpg');">
       <div class="billboard-vignette-overlay"></div>
       
-      <div class="billboard-top-controls">
-        <div class="billboard-n-brand">N</div>
-        <button class="sound-circle-btn" id="heroAudioToggleBtn" onclick="toggleHeroMute()" title="Audio Mute Toggle">🔊</button>
-      </div>
-
       <div class="billboard-inner-content">
         <div class="billboard-title-group">
-          <div class="title-upper-tag" id="heroTitleUpper">TURNING POINT</div>
-          <div class="title-lower-bold" id="heroTitleLower">GENERATION 9/11</div>
+          <div class="title-upper-tag" id="heroUpperTag">NETFLIX ORIGINAL</div>
+          <h1 class="title-lower-bold" id="heroLowerTitle">SQUID GAME</h1>
         </div>
 
         <div class="billboard-meta-bullets" id="heroMetaBullets">
-          <span>Film</span>
+          <span style="color: #46d369; font-weight: 800;" id="heroMatchPct">99% Match</span>
           <span class="meta-bullet-dot">•</span>
-          <span>Documentary</span>
+          <span id="heroYear">2024</span>
           <span class="meta-bullet-dot">•</span>
-          <span>2026</span>
+          <span class="meta-maturity-pill" id="heroMaturity">U/A 16+</span>
           <span class="meta-bullet-dot">•</span>
-          <span>1h 39m</span>
+          <span id="heroDuration">2 Seasons</span>
           <span class="meta-bullet-dot">•</span>
-          <span class="meta-maturity-pill">A</span>
+          <span class="hover-hd-badge">4K ULTRA HD</span>
+          <span class="hover-hd-badge">DOLBY ATMOS</span>
         </div>
 
         <p class="billboard-overview-text" id="heroOverview">
-          From the first moments of the attacks to the harrowing final days in Kabul two decades later, this gripping documentary examines the legacy of 9/11.
+          Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.
         </p>
 
         <div class="billboard-btns-row">
-          <button class="btn-netflix-pill btn-play-white" id="heroPlayBtn">
-            <span style="font-size: 16px;">▶</span> Play
+          <button class="btn-netflix-play" id="heroPlayBtn" onclick="launchHeroPlay()">
+            <span style="font-size: 20px;">▶</span> Play
           </button>
-          <button class="btn-netflix-pill btn-more-info" id="heroMoreInfoBtn">
-            <span style="font-size: 18px;">ⓘ</span> More Info
+          <button class="btn-netflix-info" id="heroMoreInfoBtn" onclick="launchHeroMoreInfo()">
+            <span style="font-size: 20px;">ⓘ</span> More Info
           </button>
         </div>
       </div>
 
-      <div class="billboard-bottom-tags">
-        <span class="badge-recently-added">Recently added</span>
-        <span class="badge-insight-chip">💡 Want unflinching historical insights?</span>
+      <div class="billboard-right-edge-controls">
+        <button class="sound-circle-btn" id="heroSoundBtn" onclick="toggleHeroMute()" title="Mute/Unmute">🔊</button>
+        <div class="billboard-maturity-stripe" id="heroMaturityStripe">U/A 16+</div>
       </div>
     </div>
   </div>
@@ -1013,20 +768,15 @@
   <!-- ============================================================= -->
   <!-- 4. MAIN CONTENT ROWS                                          -->
   <!-- ============================================================= -->
-  <main class="netflix-content-body" id="catalogRowsContainer">
-    <!-- Dynamic rows injected here -->
-  </main>
+  <main class="netflix-content-body" id="catalogRowsContainer"></main>
 
   <!-- ============================================================= -->
-  <!-- 5. FLOATING QUICK-PREVIEW HOVER CARD (Screenshot 2 & 3)       -->
+  <!-- 5. FLOATING QUICK-PREVIEW HOVER CARD                          -->
   <!-- ============================================================= -->
   <div class="hover-popover-card" id="hoverPreviewCard" onmouseleave="hideHoverCard()">
     <div class="hover-preview-media">
       <img id="hoverThumbImg" src="" alt="preview">
-      <div class="hover-top-n" id="hoverNLogo">N</div>
-      <div class="top10-badge-corner" id="hoverTop10Badge" style="display: none;">TOP<br>10</div>
-      <div class="bottom-tag-pill" id="hoverRecentPill" style="display: none;">Recently added</div>
-      <button class="hover-mute-btn" onclick="event.stopPropagation();">🔊</button>
+      <div class="hover-top-n">N</div>
     </div>
     <div class="hover-content-body">
       <div class="hover-actions-row">
@@ -1041,15 +791,14 @@
         <span class="hover-match-text" id="hoverMatchText">98% Match</span>
         <span class="hover-box-rating" id="hoverRatingBox">U/A 16+</span>
         <span class="hover-duration-text" id="hoverDurationText">1h 56m</span>
-        <span class="hover-hd-badge">HD</span>
-        <span class="hover-audio-text"><span>🔊</span> Spatial Audio</span>
+        <span class="hover-hd-badge">4K ULTRA HD</span>
       </div>
       <div class="hover-genres-text" id="hoverGenresText">Ominous • Dark • Mystery</div>
     </div>
   </div>
 
   <!-- ============================================================= -->
-  <!-- 6. 1:1 AUTHENTIC FULLSCREEN NETFLIX PLAYER (Screenshot 4)     -->
+  <!-- 6. AUTHENTIC FULLSCREEN NETFLIX CADMIUM PLAYER                -->
   <!-- ============================================================= -->
   <div class="netflix-player-screen" id="netflixPlayer">
     
@@ -1057,18 +806,12 @@
       <div class="player-top-left-group">
         <button class="player-exit-arrow-btn" onclick="exitNetflixPlayer()" title="Back to Browse">←</button>
         <div>
-          <div style="font-size: 18px; font-weight: 800;" id="playerHeaderTitle">Chumbak</div>
-          <div style="font-size: 13px; color: #aaa;" id="playerHeaderSubtitle">E1 Episode 1</div>
+          <div style="font-size: 18px; font-weight: 800;" id="playerHeaderTitle">Squid Game</div>
+          <div style="font-size: 13px; color: #aaa;" id="playerHeaderSubtitle">S1:E1 Episode 1</div>
         </div>
       </div>
 
-      <div class="player-top-right-group" id="playerTopRightControls">
-        <button class="player-control-pill" id="playerServerBtn" onclick="toggleServerModal(event)" title="Change Streaming Server">
-          <span style="color: #e50914;">⚡</span>
-          <span id="playerServerBadge">Server 1: VidLink 4K</span>
-          <span style="font-size: 10px; opacity: 0.7;">▼</span>
-        </button>
-
+      <div class="player-top-right-group">
         <button class="player-control-pill" id="playerAudioBtn" onclick="toggleAudioSubtitlesModal(event)" title="Audio & Subtitles">
           <span>💬</span>
           <span id="playerAudioBadge">Audio: Hindi [5.1]</span>
@@ -1083,67 +826,10 @@
           <span>↻</span>
           <span>Reload</span>
         </button>
-
-        <select class="provider-toggle-select" id="playerSourceSelect" style="display: none;" onchange="changePlayerEngine(this.value)">
-          <option value="0">Server 1: VidLink 4K UHD</option>
-          <option value="1">Server 2: VidSrc Pro</option>
-          <option value="2">Server 3: 2Embed Ultra</option>
-          <option value="3">Server 4: SuperStream</option>
-          <option value="4">Server 5: AutoEmbed</option>
-          <option value="direct">Native HTML5</option>
-        </select>
       </div>
     </div>
 
-    <!-- Authentic Netflix Server Switcher Popover Modal -->
-    <div class="player-popover-panel" id="serverModal" style="display:none; width:380px;" onclick="event.stopPropagation()">
-      <div class="popover-header">
-        <h3>Streaming Servers</h3>
-        <button class="popover-close-btn" onclick="toggleServerModal(event)">✕</button>
-      </div>
-      <div>
-        <div class="popover-option-item selected" id="srvOpt-0" onclick="selectServerEngine('0')">
-          <input type="radio" class="popover-radio" name="serverTrack" id="radio-srv-0" checked>
-          <div>
-            <div style="font-weight:700;">Server 1: VidLink Cinema (Default)</div>
-            <div style="font-size:11px; color:#aaa;">Pristine 1080p / 4K UHD • High Bitrate • Ad-Free</div>
-          </div>
-        </div>
-        <div class="popover-option-item" id="srvOpt-1" onclick="selectServerEngine('1')">
-          <input type="radio" class="popover-radio" name="serverTrack" id="radio-srv-1">
-          <div>
-            <div style="font-weight:700;">Server 2: VidSrc Pro (Fast CDN)</div>
-            <div style="font-size:11px; color:#aaa;">Ultra-Fast Mirror • Multi-Region Edge</div>
-          </div>
-        </div>
-        <div class="popover-option-item" id="srvOpt-2" onclick="selectServerEngine('2')">
-          <input type="radio" class="popover-radio" name="serverTrack" id="radio-srv-2">
-          <div>
-            <div style="font-weight:700;">Server 3: 2Embed Ultra</div>
-            <div style="font-size:11px; color:#aaa;">1080p Stream Mirror</div>
-          </div>
-        </div>
-        <div class="popover-option-item" id="srvOpt-4" onclick="selectServerEngine('4')">
-          <input type="radio" class="popover-radio" name="serverTrack" id="radio-srv-4">
-          <div>
-            <div style="font-weight:700;">Server 4: AutoEmbed VIP (Multi-Audio)</div>
-            <div style="font-size:11px; color:#aaa;">Hindi Dubbed / Multi-Language Audio</div>
-          </div>
-        </div>
-        <div class="popover-option-item" id="srvOpt-direct" onclick="selectServerEngine('direct')">
-          <input type="radio" class="popover-radio" name="serverTrack" id="radio-srv-direct">
-          <div>
-            <div style="font-weight:700;">Server 5: Official High-Res Teaser / Preview</div>
-            <div style="font-size:11px; color:#aaa;">Native HTML5 Player with Full Scrubber</div>
-          </div>
-        </div>
-      </div>
-      <div class="popover-footer-note">
-        <span>⚡</span> Switch server instantly if buffering is slow or stream fails
-      </div>
-    </div>
-
-    <!-- Authentic Netflix Audio & Subtitles Popover Modal -->
+    <!-- Audio & Subtitles Popover Modal -->
     <div class="player-popover-panel" id="audioSubsModal" style="display:none;" onclick="event.stopPropagation()">
       <div class="popover-header">
         <h3>Audio & Subtitles</h3>
@@ -1169,14 +855,14 @@
           <div class="popover-option-item" id="audioOpt-ta" onclick="selectAudioTrack('ta')">
             <input type="radio" class="popover-radio" name="audioTrack" id="radio-audio-ta">
             <div>
-              <div style="font-weight:700;">Tamil [Original / Dubbed]</div>
-              <div style="font-size:11px; color:#aaa;">Spatial Audio</div>
+              <div style="font-weight:700;">Tamil [Dubbed]</div>
+              <div style="font-size:11px; color:#aaa;">5.1 Surround</div>
             </div>
           </div>
           <div class="popover-option-item" id="audioOpt-te" onclick="selectAudioTrack('te')">
             <input type="radio" class="popover-radio" name="audioTrack" id="radio-audio-te">
             <div>
-              <div style="font-weight:700;">Telugu [Original / Dubbed]</div>
+              <div style="font-weight:700;">Telugu [Dubbed]</div>
               <div style="font-size:11px; color:#aaa;">5.1 Surround</div>
             </div>
           </div>
@@ -1206,87 +892,62 @@
           </div>
         </div>
       </div>
-      <div class="popover-footer-note">
-        <span>✓</span> Preference saved across all movies and shows
-      </div>
     </div>
 
-    <!-- Authentic Netflix Stream Quality Popover Modal -->
+    <!-- Stream Quality Popover Modal -->
     <div class="player-popover-panel" id="qualityModal" style="display:none; width:360px;" onclick="event.stopPropagation()">
       <div class="popover-header">
         <h3>Stream Quality</h3>
         <button class="popover-close-btn" onclick="toggleQualityModal(event)">✕</button>
       </div>
       <div>
-        <div class="popover-option-item selected" id="qOpt-1080p" onclick="selectQualityRendition('1080p')">
-          <input type="radio" class="popover-radio" name="qualityTrack" id="radio-q-1080p" checked>
-          <div>
-            <div style="font-weight:700;">1080p Full HD (High Bitrate)</div>
-            <div style="font-size:11px; color:#aaa;">1920x1080 • 8.5 Mbps • High Fidelity 60 FPS</div>
-          </div>
-        </div>
         <div class="popover-option-item" id="qOpt-4k" onclick="selectQualityRendition('4k')">
           <input type="radio" class="popover-radio" name="qualityTrack" id="radio-q-4k">
           <div>
             <div style="font-weight:700;">4K Ultra HD (2160p Cinema Master)</div>
-            <div style="font-size:11px; color:#aaa;">3840x2160 • 24 Mbps (Hollywood / Global)</div>
+            <div style="font-size:11px; color:#aaa;">3840x2160 • 24 Mbps • Highest Bitrate</div>
+          </div>
+        </div>
+        <div class="popover-option-item selected" id="qOpt-1080p" onclick="selectQualityRendition('1080p')">
+          <input type="radio" class="popover-radio" name="qualityTrack" id="radio-q-1080p" checked>
+          <div>
+            <div style="font-weight:700;">1080p Full HD (High Bitrate)</div>
+            <div style="font-size:11px; color:#aaa;">1920x1080 • 8.5 Mbps • High Fidelity</div>
           </div>
         </div>
         <div class="popover-option-item" id="qOpt-720p" onclick="selectQualityRendition('720p')">
           <input type="radio" class="popover-radio" name="qualityTrack" id="radio-q-720p">
           <div>
             <div style="font-weight:700;">720p HD (Data Saver)</div>
-            <div style="font-size:11px; color:#aaa;">1280x720 • 4.5 Mbps • Fast buffer</div>
+            <div style="font-size:11px; color:#aaa;">1280x720 • 4.5 Mbps • Fast Buffer</div>
           </div>
         </div>
         <div class="popover-option-item" id="qOpt-auto" onclick="selectQualityRendition('auto')">
           <input type="radio" class="popover-radio" name="qualityTrack" id="radio-q-auto">
           <div>
             <div style="font-weight:700;">Auto (Adaptive Bitrate)</div>
-            <div style="font-size:11px; color:#aaa;">Dynamic adaptation to current bandwidth</div>
-          </div>
-        </div>
-      </div>
-      <div class="popover-footer-note">
-        <span>✓</span> High Bitrate 1080p stream active by default
-      </div>
-    </div>
-
-    <!-- Authentic Netflix Stream Buffering Watchdog HUD -->
-    <div class="stream-buffering-hud hidden" id="streamBufferingHUD" onclick="dismissBufferingHUD()">
-      <div class="hud-center-card" onclick="event.stopPropagation()">
-        <div class="hud-netflix-spinner"></div>
-        <div class="hud-title" id="hudStatusTitle">Connecting to High-Speed Stream...</div>
-        <div class="hud-subtitle" id="hudStatusSubtitle">Resolving 1080p stream from Server 1 (VidLink Cinema)...</div>
-        <div class="hud-failover-box" id="hudFailoverBox" style="display:none;">
-          <div style="font-size:12.5px; color:#ffb0b0; margin-bottom:12px;">Buffering taking longer than expected on this server?</div>
-          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-            <button class="hud-btn-switch" onclick="selectServerEngine('1')">⚡ Switch to Server 2 (VidSrc Fast)</button>
-            <button class="hud-btn-switch" onclick="selectServerEngine('4')">🎬 Switch to AutoEmbed</button>
-            <button class="hud-btn-switch" style="background:rgba(255,255,255,0.18);" onclick="dismissBufferingHUD()">Dismiss & Wait</button>
+            <div style="font-size:11px; color:#aaa;">Dynamic adaptation to bandwidth</div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Video Area -->
-    <div class="player-video-viewport" id="playerViewport">
-      <iframe class="player-iframe-element" id="mainEmbedIframe" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="width: 100%; height: 100%; border: none; display: block; background: #000;"></iframe>
-      <video class="player-video-element" id="mainHtml5Video" playsinline crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain; display: none; background: #000;">
-        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4">
-      </video>
+    <div class="player-video-viewport" id="playerViewport" onclick="togglePlayPause()">
+      <video class="player-video-element" id="mainHtml5Video" playsinline crossorigin="anonymous"></video>
+      <iframe class="player-iframe-element" id="mainEmbedIframe" allowfullscreen allow="autoplay; fullscreen; encrypted-media" style="display: none;"></iframe>
     </div>
 
     <div class="player-toast-box" id="playerToastBox"></div>
 
-    <div class="player-bottom-bar" id="playerBottomBar">
-      
+    <!-- Bottom Controls Bar -->
+    <div class="player-bottom-bar" id="playerBottomBar" onclick="event.stopPropagation()">
       <div class="player-scrubber-row">
         <div class="scrubber-track-bar" id="scrubberTrackBar" onclick="seekVideo(event)">
           <div class="scrubber-fill-red" id="scrubberFill"></div>
           <div class="scrubber-dot-handle" id="scrubberHandle"></div>
         </div>
-        <div class="time-remaining-label" id="playerRemainingTime">8:16</div>
+        <div class="time-remaining-label" id="playerRemainingTime">0:00</div>
       </div>
 
       <div class="player-controls-row">
@@ -1308,35 +969,18 @@
             <input type="range" class="volume-slider-range" id="playerVolumeSlider" min="0" max="1" step="0.05" value="1" oninput="setPlayerVolume(this.value)">
           </div>
 
-          <div class="playing-title-display" id="playerMediaTitleDisplay">Chumbak E1 Episode 1</div>
+          <div class="playing-title-display" id="playerMediaTitleDisplay">Squid Game</div>
         </div>
 
         <div class="controls-right-side">
           <button class="player-icon-action" onclick="playNextEpisode()" title="Next Episode">⏭</button>
           <button class="player-icon-action" onclick="toggleEpisodeDrawer()" title="Episodes Drawer">📑</button>
-          <button class="player-icon-action" onclick="toggleSubtitleLanguage()" title="Audio & Subtitles">💬</button>
+          <button class="player-icon-action" onclick="toggleAudioSubtitlesModal(event)" title="Audio & Subtitles">💬</button>
           <button class="player-icon-action" onclick="togglePlaybackSpeed()" id="speedBtn" title="Speed" style="font-size: 15px; font-weight: 800;">1.0x</button>
           <button class="player-icon-action" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
         </div>
       </div>
-
     </div>
-
-    <!-- Authentic Netflix Floating Skip Intro Button -->
-    <button class="skip-intro-btn" id="skipIntroBtn" onclick="skipIntro()" style="display:none;">
-      <span>⏭</span>
-      <span>Skip Intro</span>
-    </button>
-
-    <!-- Authentic Netflix Slide-in Episode Drawer -->
-    <div class="episode-drawer-panel" id="episodeDrawerPanel">
-      <div class="drawer-header">
-        <div class="drawer-title" id="drawerSeriesTitle">Episodes</div>
-        <button class="drawer-close-btn" onclick="toggleEpisodeDrawer()">✕</button>
-      </div>
-      <div class="drawer-list" id="drawerEpisodesList"></div>
-    </div>
-
   </div>
 
   <!-- ============================================================= -->
@@ -1349,7 +993,7 @@
         <div style="position: relative; z-index: 10;">
           <h2 style="font-size: 38px; font-weight: 900; margin-bottom: 14px;" id="modalHeroTitle">Title</h2>
           <div class="billboard-btns-row">
-            <button class="btn-netflix-pill btn-play-white" id="modalHeroPlayBtn">▶ Play</button>
+            <button class="btn-netflix-play" id="modalHeroPlayBtn">▶ Play</button>
             <button class="hover-btn-round" id="modalListBtn" title="My List">+</button>
             <button class="hover-btn-round" onclick="flashToast('Liked 👍')" title="Like">👍</button>
           </div>
@@ -1360,9 +1004,9 @@
           <div class="modal-main-column">
             <div class="modal-meta-row">
               <span style="color: #46d369; font-weight: 700;" id="modalMatchPct">98% Match</span>
-              <span style="color: #aaa;" id="modalYearTag">2026</span>
+              <span style="color: #aaa;" id="modalYearTag">2024</span>
               <span class="meta-maturity-pill" id="modalMaturityTag">U/A 16+</span>
-              <span style="color: #aaa;" id="modalDurationTag">1h 56m</span>
+              <span style="color: #aaa;" id="modalDurationTag">2 Seasons</span>
               <span class="hover-hd-badge" id="modalVideoQuality">4K ULTRA HD</span>
               <span class="hover-hd-badge" id="modalAudioQuality">DOLBY ATMOS</span>
             </div>
@@ -1384,9 +1028,9 @@
         </div>
 
         <div class="modal-episodes-list" id="modalEpisodesSection">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; margin-top: 24px;">
             <h3 style="font-size: 22px; font-weight: 800;">Episodes</h3>
-            <select class="modal-season-select" id="modalSeasonSelect" onchange="switchModalSeason(this.value)">
+            <select class="genre-select-box" id="modalSeasonSelect" onchange="switchModalSeason(this.value)">
               <option value="1">Season 1</option>
             </select>
           </div>
@@ -1398,235 +1042,116 @@
           <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 16px;">More Like This</h3>
           <div class="more-like-this-grid" id="modalMoreLikeThisGrid"></div>
         </div>
-
-        <!-- About [Title] Credits Section -->
-        <div class="modal-about-section">
-          <h3 style="font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 16px;" id="modalAboutTitle">About Title</h3>
-          <div class="modal-about-row">Director: <span class="highlight" id="modalDirectorText">Acclaimed Director</span></div>
-          <div class="modal-about-row">Cast: <span class="highlight" id="modalAboutCastText">Cast members...</span></div>
-          <div class="modal-about-row">Genres: <span class="highlight" id="modalAboutGenresText">Dramas, Thrillers</span></div>
-          <div class="modal-about-row">Maturity Rating: <span class="meta-maturity-pill" id="modalAboutMaturityPill" style="margin-left: 6px;">U/A 16+</span> <span style="margin-left: 8px;" id="modalMaturityReason">Recommended for ages 16 and up. Contains violence, language.</span></div>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- ============================================================= -->
-  <!-- 8. APPLICATION LOGIC JAVASCRIPT                               -->
-  <!-- ============================================================= -->
   <script src="/js/router.js"></script>
   <script>
     const API_BASE = window.location.origin;
-    const DEVICE_ID = "web_user_" + (localStorage.getItem("nf_device_id") || "demo_5");
-    localStorage.setItem("nf_device_id", DEVICE_ID);
+    const DEVICE_ID = "web_user_" + (localStorage.getItem('netflix_device_id') || Math.random().toString(36).substring(2, 9));
+    localStorage.setItem('netflix_device_id', DEVICE_ID);
 
-    let currentNavCat = "all";
-    let activeHero = null;
-    let activeHeroRotation = [];
-    let heroRotationIndex = 0;
     let catalogCache = new Map();
-    let myListIds = new Set();
-    let hoverTimeout = null;
-    let activeHoverItem = null;
-    let currentVideoData = null;
+    let currentCategory = "all";
     let activeMediaItem = null;
+    let currentVideoData = null;
+    let hoverTimeout = null;
     let playerIdleTimer = null;
-    let currentSpeedIndex = 0;
-    const speedList = [1.0, 1.25, 1.5, 0.75];
+    let speedList = [0.5, 0.75, 1.0, 1.25, 1.5];
+    let currentSpeedIndex = 2;
 
     const videoEl = document.getElementById('mainHtml5Video');
     const iframeEl = document.getElementById('mainEmbedIframe');
     const playerScreen = document.getElementById('netflixPlayer');
-    const subtitleLine = document.getElementById('netflixSubtitleLine');
 
-    function renderSkeletonRows() {
-      const container = document.getElementById('catalogRowsContainer');
-      if (!container) return;
-      let html = '';
-      for (let r = 0; r < 3; r++) {
-        html += `
-          <section class="category-section-row" style="margin-bottom: 28px;">
-            <div class="row-header-wrap" style="margin-bottom: 12px;">
-              <div class="skeleton-shimmer-box" style="width: 220px; height: 22px; border-radius: 4px;"></div>
-            </div>
-            <div style="display: flex; gap: 8px; overflow: hidden;">
-              ${Array(6).fill(0).map(() => `
-                <div class="skeleton-shimmer-box" style="width: var(--poster-w); height: var(--poster-h); border-radius: 4px; flex-shrink: 0;"></div>
-              `).join('')}
-            </div>
-          </section>
-        `;
-      }
-      container.innerHTML = html;
-    }
-
-    // -------------------------------------------------------------
-    // 1. Navigation & Feed Loader
-    // -------------------------------------------------------------
-    async function loadNetflixFeed(category = "all", searchQuery = "", extraParam = "") {
-      try {
-        currentNavCat = category;
-        const subheader = document.getElementById('genreSubheader');
-        const langBar = document.getElementById('languagesFilterBar');
-        const heroOuter = document.getElementById('heroOuterContainer');
-
-        if (category === "tv") {
-          subheader.classList.add('active');
-          document.getElementById('genreSectionTitle').innerText = "TV Shows";
-          langBar.classList.remove('active');
-          heroOuter.style.display = "block";
-        } else if (category === "movie") {
-          subheader.classList.add('active');
-          document.getElementById('genreSectionTitle').innerText = "Movies";
-          langBar.classList.remove('active');
-          heroOuter.style.display = "block";
-        } else if (category === "languages") {
-          subheader.classList.remove('active');
-          langBar.classList.add('active');
-          heroOuter.style.display = "block";
-        } else if (category === "games") {
-          subheader.classList.remove('active');
-          langBar.classList.remove('active');
-          heroOuter.style.display = "block";
+    // =============================================================
+    // INITIALIZATION & FEED LOADING
+    // =============================================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      window.addEventListener('scroll', () => {
+        const header = document.getElementById('mainHeader');
+        if (window.scrollY > 40) {
+          header.classList.add('scrolled');
         } else {
-          subheader.classList.remove('active');
-          langBar.classList.remove('active');
-          heroOuter.style.display = "block";
+          header.classList.remove('scrolled');
         }
+      });
 
+      await loadCatalogFeed('all');
+      loadNotifications();
+
+      if (window.netflixRouter) {
+        window.netflixRouter.init();
+      }
+    });
+
+    async function loadCatalogFeed(category = 'all', searchQuery = '') {
+      currentCategory = category;
+      const container = document.getElementById('catalogRowsContainer');
+      container.innerHTML = '<div style="padding: 60px 0; text-align: center; color: #888;">Loading Netflix catalog...</div>';
+
+      try {
         let url = `${API_BASE}/api/v1/feed/home?category=${category}&deviceId=${DEVICE_ID}`;
         if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
-        if (extraParam) url += extraParam;
-
-        if (catalogCache.size === 0 && !searchQuery) {
-          renderSkeletonRows();
-        }
 
         const res = await fetch(url);
-        const data = await res.json();
-        if (data.status !== "success") return;
+        const json = await res.json();
+        const data = json.data;
 
-        const { hero, rows, heroRotation } = data.data;
-        if (heroRotation && heroRotation.length > 0) {
-          activeHeroRotation = heroRotation;
-          setupHeroRotation();
+        if (data.hero) {
+          renderHeroBillboard(data.hero);
         }
-        if (hero) {
-          activeHero = hero;
-          catalogCache.set(String(hero.id), hero);
-          renderHeroBanner(hero);
-        }
-        renderRows(rows, category);
+
+        renderCatalogRows(data.rows || []);
       } catch (err) {
-        console.error("[NetflixEngine] Feed error:", err);
+        console.error("Feed error:", err);
+        container.innerHTML = '<div style="padding: 40px; color: #ff5555;">Unable to load content. Please refresh.</div>';
       }
     }
 
-    let heroRotationTimer = null;
-    function setupHeroRotation() {
-      if (heroRotationTimer) clearInterval(heroRotationTimer);
-      if (!activeHeroRotation || activeHeroRotation.length <= 1) return;
-      heroRotationTimer = setInterval(() => {
-        if (playerScreen && playerScreen.classList.contains('active')) return;
-        const modal = document.getElementById('detailQuickviewModal');
-        if (modal && modal.classList.contains('active')) return;
+    function renderHeroBillboard(hero) {
+      activeMediaItem = hero;
+      catalogCache.set(String(hero.id), hero);
 
-        heroRotationIndex = (heroRotationIndex + 1) % activeHeroRotation.length;
-        const nextHero = activeHeroRotation[heroRotationIndex];
-        if (nextHero) {
-          activeHero = nextHero;
-          renderHeroBanner(nextHero);
-        }
-      }, 30000);
-    }
-
-    function renderHeroBanner(hero) {
-      const card = document.getElementById('heroFramedCard');
-      card.style.backgroundImage = `url('${hero.backdropUrl || hero.posterUrl}')`;
-      
-      let titleUpper = hero.heroTitleUpper;
-      let titleLower = hero.heroTitleLower;
-      if (!titleUpper) {
-        const fullTitle = hero.title || "NETFLIX";
-        const split = fullTitle.split(/[:\–\-]/);
-        if (split.length > 1) {
-          titleUpper = split[0].trim().toUpperCase();
-          titleLower = split.slice(1).join(' ').trim().toUpperCase();
-        } else {
-          titleUpper = fullTitle.toUpperCase();
-          titleLower = "";
-        }
-      }
-
-      document.getElementById('heroTitleUpper').innerText = titleUpper;
-      document.getElementById('heroTitleLower').innerText = titleLower;
+      document.getElementById('billboardCard').style.backgroundImage = `url('${hero.backdropUrl}')`;
+      document.getElementById('heroUpperTag').innerText = hero.heroTitleUpper || "NETFLIX ORIGINAL";
+      document.getElementById('heroLowerTitle').innerText = hero.heroTitleLower || hero.title;
+      document.getElementById('heroMatchPct').innerText = hero.matchPercentage || "99% Match";
+      document.getElementById('heroYear').innerText = hero.year || "2024";
+      document.getElementById('heroMaturity').innerText = hero.maturityRating || "U/A 16+";
+      document.getElementById('heroMaturityStripe').innerText = hero.maturityRating || "U/A 16+";
+      document.getElementById('heroDuration').innerText = hero.duration || (hero.type === "tv" ? "2 Seasons" : "2h 10m");
       document.getElementById('heroOverview').innerText = hero.overview || "";
-      
-      document.getElementById('heroPlayBtn').onclick = () => launchNetflixPlayer(hero);
-      document.getElementById('heroMoreInfoBtn').onclick = () => openQuickviewModal(hero);
     }
 
-    function renderRows(rows, category) {
+    function renderCatalogRows(rows) {
       const container = document.getElementById('catalogRowsContainer');
-      container.innerHTML = "";
-
-      if (category === "games") {
-        rows.forEach(row => {
-          const section = document.createElement('section');
-          section.className = "category-section-row";
-          const cardsHtml = (row.items || []).map(game => {
-            catalogCache.set(String(game.id), game);
-            return `
-              <div class="game-card-item" onclick="openQuickviewModalById('${game.id}')">
-                <div class="game-thumb-box">
-                  <img src="${game.posterUrl || game.backdropUrl}" alt="${game.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-                </div>
-                <div class="game-info-box">
-                  <div>
-                    <div class="game-title-text">${game.title}</div>
-                    <div class="game-category-text">${game.category || 'Mobile Game'}</div>
-                  </div>
-                  <div class="game-play-tag">▶ Play Game</div>
-                </div>
-              </div>
-            `;
-          }).join('');
-
-          section.innerHTML = `
-            <h2 class="section-title">${row.title}</h2>
-            <div class="slider-track-container">
-              <div class="slider-scroll-track">${cardsHtml}</div>
-            </div>
-          `;
-          container.appendChild(section);
-        });
-        return;
-      }
+      container.innerHTML = '';
 
       rows.forEach(row => {
         const section = document.createElement('section');
-        section.className = "category-section-row";
+        section.className = 'category-section-row';
+        section.id = `section-${row.id}`;
 
-        let cardsHtml = "";
+        let cardsHtml = '';
+
         if (row.isTop10) {
-          // Giant Stylized Outlined Numbers (Screenshot 3)
-          cardsHtml = (row.items || []).map((item, idx) => {
+          cardsHtml = (row.items || []).slice(0, 10).map((item, idx) => {
             catalogCache.set(String(item.id), item);
             return `
               <div class="top10-numbered-item" 
                    onmouseenter="showHoverCard(event, '${item.id}')" 
                    onmouseleave="startHoverLeaveTimer()"
                    onclick="openQuickviewModalById('${item.id}')">
-                <div class="top10-huge-num">${item.rank || idx + 1}</div>
+                <div class="top10-huge-num">${idx + 1}</div>
                 <div class="top10-poster-card">
                   <img src="${item.posterUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-                  ${item.recentlyAdded ? '<div class="bottom-tag-pill">Recently added</div>' : ''}
                 </div>
               </div>
             `;
           }).join('');
         } else if (row.isContinueWatching) {
-          // Continue Watching Row with Red Progress Bar (Screenshot 2)
           cardsHtml = (row.items || []).map(item => {
             catalogCache.set(String(item.id), item);
             return `
@@ -1634,10 +1159,7 @@
                    onmouseenter="showHoverCard(event, '${item.id}')" 
                    onmouseleave="startHoverLeaveTimer()"
                    onclick="launchNetflixPlayerById('${item.id}')">
-                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYEQypROD7P.jpg'">
-                ${item.isTop10 ? '<div class="top10-badge-corner">TOP<br>10</div>' : ''}
-                ${item.liveBadge ? `<div class="bottom-tag-pill">${item.liveBadge}</div>` : ''}
-                ${item.newEpisode ? '<div class="tag-combo-row"><span class="tag-combo-pill">New Episode</span><span class="tag-combo-dark">Watch Now</span></div>' : ''}
+                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy">
                 <div class="continue-progress-track">
                   <div class="continue-progress-red" style="width: ${item.progressPercentage || 45}%;"></div>
                 </div>
@@ -1651,20 +1173,12 @@
         } else {
           cardsHtml = (row.items || []).map(item => {
             catalogCache.set(String(item.id), item);
-            let badgeHtml = '';
-            if (item.recentlyAdded) badgeHtml = '<div class="bottom-tag-pill">Recently added</div>';
-            else if (item.newSeason) badgeHtml = '<div class="bottom-tag-pill">New Season</div>';
-            else if (item.newEpisode) badgeHtml = '<div class="bottom-tag-pill">New Episode</div>';
-            else if (item.releaseTag) badgeHtml = `<div class="bottom-tag-pill">${item.releaseTag}</div>`;
-
             return `
               <div class="standard-media-card" 
                    onmouseenter="showHoverCard(event, '${item.id}')" 
                    onmouseleave="startHoverLeaveTimer()"
                    onclick="openQuickviewModalById('${item.id}')">
-                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-                ${row.isTop10 ? '<div class="top10-badge-corner">TOP<br>10</div>' : ''}
-                ${badgeHtml}
+                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy">
                 <div class="card-title-overlay">
                   <div class="card-title-caption">${item.title}</div>
                 </div>
@@ -1674,527 +1188,279 @@
         }
 
         section.innerHTML = `
-          <div class="row-header-wrap">
-            <h2 class="section-title">${row.title}</h2>
-            <div class="row-pagination-indicators" id="indicators-${row.id}">
-              <span class="indicator-dash active"></span>
-              <span class="indicator-dash"></span>
-              <span class="indicator-dash"></span>
-              <span class="indicator-dash"></span>
+          <h2 class="section-title">${row.title}</h2>
+          <div class="slider-track-container">
+            <button class="scroll-arrow-nav scroll-arrow-left" onclick="scrollRowTrack('${row.id}', -1)">‹</button>
+            <div class="slider-scroll-track" id="track-${row.id}">
+              ${cardsHtml}
             </div>
-          </div>
-          <div class="slider-track-container" data-row-id="${row.id}">
-            <button class="scroll-arrow-nav scroll-arrow-left" style="display:none;" onclick="slideRowTrack(this, -1, '${row.id}')">‹</button>
-            <div class="slider-scroll-track" onscroll="updateSliderIndicator(this, '${row.id}')">${cardsHtml}</div>
-            <button class="scroll-arrow-nav scroll-arrow-right" onclick="slideRowTrack(this, 1, '${row.id}')">›</button>
+            <button class="scroll-arrow-nav scroll-arrow-right" onclick="scrollRowTrack('${row.id}', 1)">›</button>
           </div>
         `;
+
         container.appendChild(section);
       });
     }
 
-    function slideRowTrack(btn, dir, rowId) {
-      const container = btn.closest('.slider-track-container');
-      const track = container.querySelector('.slider-scroll-track');
-      const scrollAmount = track.clientWidth * 0.82 * dir;
-      track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-
-    function updateSliderIndicator(track, rowId) {
-      const indicatorsWrap = document.getElementById(`indicators-${rowId}`);
-      if (indicatorsWrap) {
-        const dashes = indicatorsWrap.querySelectorAll('.indicator-dash');
-        if (dashes && dashes.length > 0) {
-          const maxScroll = track.scrollWidth - track.clientWidth;
-          if (maxScroll > 0) {
-            const progress = Math.min(1, Math.max(0, track.scrollLeft / maxScroll));
-            const activeIdx = Math.min(dashes.length - 1, Math.round(progress * (dashes.length - 1)));
-            dashes.forEach((d, i) => {
-              if (i === activeIdx) d.classList.add('active');
-              else d.classList.remove('active');
-            });
-          }
-        }
-      }
-      const leftArrow = track.parentElement.querySelector('.scroll-arrow-left');
-      if (leftArrow) {
-        if (track.scrollLeft > 15) leftArrow.style.display = 'flex';
-        else leftArrow.style.display = 'none';
+    function scrollRowTrack(rowId, direction) {
+      const track = document.getElementById(`track-${rowId}`);
+      if (track) {
+        track.scrollBy({ left: direction * (window.innerWidth * 0.75), behavior: 'smooth' });
       }
     }
 
-    function switchNavCategory(cat, pushRouter = true) {
-      closeAllDropdowns();
-      document.querySelectorAll('.nav-pills-list a').forEach(a => a.classList.remove('active'));
-      const activePill = document.getElementById(`nav-${cat}`);
-      if (activePill) activePill.classList.add('active');
-      loadNetflixFeed(cat);
-      if (pushRouter && window.netflixRouter && !window.netflixRouter.isNavigatingProgrammatically) {
-        window.netflixRouter.navigate(cat === 'all' ? '#/browse' : `#/browse?category=${cat}`);
+    // =============================================================
+    // NAVIGATION & CATEGORY SWITCHING
+    // =============================================================
+    function switchNavCategory(cat, pushHistory = true) {
+      document.querySelectorAll('.nav-pills-list li a').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById(`nav-${cat}`);
+      if (activeEl) activeEl.classList.add('active');
+
+      const hero = document.getElementById('heroSection');
+      const genreSubheader = document.getElementById('genreSubheader');
+      const langFilter = document.getElementById('languagesFilterBar');
+
+      if (cat === 'tv' || cat === 'movie') {
+        genreSubheader.classList.add('active');
+        document.getElementById('genreCategoryTitle').innerText = cat === 'tv' ? 'TV Shows' : 'Movies';
+        langFilter.classList.remove('active');
+        hero.style.display = 'block';
+      } else if (cat === 'languages') {
+        genreSubheader.classList.remove('active');
+        langFilter.classList.add('active');
+        hero.style.display = 'none';
+      } else {
+        genreSubheader.classList.remove('active');
+        langFilter.classList.remove('active');
+        hero.style.display = 'block';
+      }
+
+      loadCatalogFeed(cat);
+      if (pushHistory && window.netflixRouter) {
+        window.netflixRouter.navigate(`#/browse?category=${cat}`);
       }
     }
 
-    function filterByGenre(genre) {
-      const query = genre ? `&genre=${encodeURIComponent(genre)}` : '';
-      loadNetflixFeed(currentNavCat, "", query);
-      if (genre) flashToast(`Filtered by ${genre}`);
+    function toggleSearchBar() {
+      const wrap = document.getElementById('searchWrap');
+      const input = document.getElementById('searchInput');
+      wrap.classList.toggle('expanded');
+      if (wrap.classList.contains('expanded')) {
+        input.focus();
+      }
     }
 
-    function filterByLanguage(lang, btn) {
-      document.querySelectorAll('.lang-chip-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      loadNetflixFeed("languages", "", `&lang=${encodeURIComponent(lang)}`);
-      flashToast(`Showing ${lang} titles`);
+    function handleSearchInput(val) {
+      const clearBtn = document.getElementById('searchClearBtn');
+      clearBtn.style.display = val ? 'block' : 'none';
+
+      if (val.trim().length >= 2) {
+        loadCatalogFeed(currentCategory, val.trim());
+      } else if (val.trim().length === 0) {
+        loadCatalogFeed(currentCategory);
+      }
     }
 
-    // -------------------------------------------------------------
-    // 2. Dropdown Panels (Notifications & Profile)
-    // -------------------------------------------------------------
-    async function toggleNotificationPanel() {
-      const panel = document.getElementById('notifPanel');
-      const isVisible = panel.classList.contains('active');
-      closeAllDropdowns();
-      if (!isVisible) {
-        panel.classList.add('active');
-        try {
-          const res = await fetch(`${API_BASE}/api/v1/user/notifications`);
-          const json = await res.json();
-          const list = document.getElementById('notifListContainer');
-          list.innerHTML = (json.data || []).map(n => `
-            <div class="notif-item-row" onclick="closeAllDropdowns(); flashToast('Opening ${n.title}');">
-              <img class="notif-thumb" src="${n.thumb}" alt="thumb">
-              <div class="notif-content">
-                <div class="notif-title">${n.title}</div>
-                <div class="notif-desc">${n.message}</div>
-                <div class="notif-time">${n.time}</div>
-              </div>
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      document.getElementById('searchClearBtn').style.display = 'none';
+      loadCatalogFeed(currentCategory);
+    }
+
+    function toggleNotificationsDropdown() {
+      document.getElementById('notifDropdown').classList.toggle('active');
+      document.getElementById('profileDropdown').classList.remove('active');
+    }
+
+    function toggleProfileDropdown() {
+      document.getElementById('profileDropdown').classList.toggle('active');
+      document.getElementById('notifDropdown').classList.remove('active');
+    }
+
+    async function loadNotifications() {
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/user/notifications`);
+        const json = await res.json();
+        const items = json.data || [];
+        const container = document.getElementById('notifListContainer');
+        container.innerHTML = items.map(it => `
+          <div class="notif-item-row" onclick="flashToast('${it.title}')">
+            <img class="notif-thumb" src="${it.thumb}" alt="thumb">
+            <div class="notif-content">
+              <div class="notif-title">${it.title}</div>
+              <div class="notif-desc">${it.message}</div>
+              <div class="notif-time">${it.time}</div>
             </div>
-          `).join('');
-        } catch (e) {}
-      }
+          </div>
+        `).join('');
+      } catch (e) {}
     }
 
-    function toggleProfilePanel() {
-      const panel = document.getElementById('profilePanel');
-      const isVisible = panel.classList.contains('active');
-      closeAllDropdowns();
-      if (!isVisible) panel.classList.add('active');
-    }
-
-    function closeAllDropdowns() {
-      document.getElementById('notifPanel').classList.remove('active');
-      document.getElementById('profilePanel').classList.remove('active');
-    }
-
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.header-right')) closeAllDropdowns();
-    });
-
-    // -------------------------------------------------------------
-    // 3. Interactive Quick-Preview Hover Popover Card (Screenshot 2 & 3)
-    // -------------------------------------------------------------
-    const hoverCard = document.getElementById('hoverPreviewCard');
-
-    function showHoverCard(e, itemId) {
+    // =============================================================
+    // HOVER PREVIEW CARD
+    // =============================================================
+    function showHoverCard(e, id) {
       clearTimeout(hoverTimeout);
-      const item = catalogCache.get(String(itemId));
-      if (!item) return;
-
-      activeHoverItem = item;
       hoverTimeout = setTimeout(() => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        
-        let left = rect.left - 25;
-        let top = rect.top - 30;
+        const item = catalogCache.get(String(id));
+        if (!item) return;
 
-        if (left + 330 > window.innerWidth) left = window.innerWidth - 340;
-        if (left < 10) left = 10;
-        if (top < 70) top = 70;
-        if (top + 340 > window.innerHeight) top = Math.max(70, window.innerHeight - 350);
-
-        hoverCard.style.left = `${left}px`;
-        hoverCard.style.top = `${top}px`;
-
+        const card = document.getElementById('hoverPreviewCard');
         document.getElementById('hoverThumbImg').src = item.backdropUrl || item.posterUrl;
         document.getElementById('hoverMatchText').innerText = item.matchPercentage || "98% Match";
         document.getElementById('hoverRatingBox').innerText = item.maturityRating || "U/A 16+";
-        document.getElementById('hoverDurationText').innerText = item.duration || "1h 56m";
-        document.getElementById('hoverGenresText').innerText = (item.genres || ["Drama", "Thriller"]).join(" • ");
+        document.getElementById('hoverDurationText').innerText = item.duration || (item.type === "tv" ? "2 Seasons" : "2h 10m");
+        document.getElementById('hoverGenresText').innerText = (item.genres || ["Drama"]).join(" • ");
 
-        document.getElementById('hoverTop10Badge').style.display = item.isTop10 ? 'block' : 'none';
-        document.getElementById('hoverRecentPill').style.display = item.recentlyAdded ? 'block' : 'none';
+        document.getElementById('hoverPlayBtn').onclick = () => launchNetflixPlayerById(item.id);
+        document.getElementById('hoverExpandBtn').onclick = () => openQuickviewModalById(item.id);
 
-        document.getElementById('hoverPlayBtn').onclick = (ev) => {
-          ev.stopPropagation();
-          hideHoverCard();
-          launchNetflixPlayer(item);
-        };
-        document.getElementById('hoverExpandBtn').onclick = (ev) => {
-          ev.stopPropagation();
-          hideHoverCard();
-          openQuickviewModal(item);
-        };
-        document.getElementById('hoverLikeBtn').onclick = (ev) => {
-          ev.stopPropagation();
-          flashToast(`Rated 👍 for ${item.title}`);
-        };
+        const rect = e.currentTarget.getBoundingClientRect();
+        let top = rect.top + window.scrollY - 30;
+        let left = rect.left + window.scrollX - 25;
 
-        const inList = myListIds.has(item.id);
-        const listBtn = document.getElementById('hoverListBtn');
-        listBtn.innerText = inList ? "✓" : "+";
-        listBtn.onclick = (ev) => {
-          ev.stopPropagation();
-          toggleMyList(item, listBtn);
-        };
-
-        hoverCard.classList.add('visible');
-      }, 320);
+        card.style.top = `${top}px`;
+        card.style.left = `${left}px`;
+        card.classList.add('active');
+      }, 350);
     }
 
     function startHoverLeaveTimer() {
       clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(hideHoverCard, 250);
     }
 
     function hideHoverCard() {
       clearTimeout(hoverTimeout);
-      hoverCard.classList.remove('visible');
+      document.getElementById('hoverPreviewCard').classList.remove('active');
     }
 
-    // -------------------------------------------------------------
-    // 4. Detail Quickview Modal
-    // -------------------------------------------------------------
-    const modal = document.getElementById('detailQuickviewModal');
-
+    // =============================================================
+    // MORE INFO MODAL
+    // =============================================================
     async function openQuickviewModalById(id) {
-      let item = catalogCache.get(String(id));
-      if (!item) {
-        try {
-          let res = await fetch(`${API_BASE}/api/v1/media/movie/${id}`);
-          let json = await res.json();
-          if (json.status === "success" && json.data) {
-            item = { ...json.data, id: id, type: "movie" };
-            catalogCache.set(String(id), item);
-          } else {
-            res = await fetch(`${API_BASE}/api/v1/media/tv/${id}`);
-            json = await res.json();
-            if (json.status === "success" && json.data) {
-              item = { ...json.data, id: id, type: "tv" };
-              catalogCache.set(String(id), item);
-            }
-          }
-        } catch (e) {}
-      }
-      if (item) openQuickviewModal(item);
-    }
+      hideHoverCard();
+      const modal = document.getElementById('detailQuickviewModal');
+      modal.classList.add('active');
 
-    async function openQuickviewModal(item) {
-      activeMediaItem = item;
+      if (window.netflixRouter && !window.netflixRouter.isNavigatingProgrammatically) {
+        window.netflixRouter.navigate('#/title/' + id);
+      }
+
+      let item = catalogCache.get(String(id));
+
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/media/${item?.type || 'movie'}/${id}`);
+        const json = await res.json();
+        if (json.data) item = json.data;
+      } catch (e) {}
+
+      if (!item) return;
+
       document.getElementById('modalHeroCover').style.backgroundImage = `url('${item.backdropUrl || item.posterUrl}')`;
       document.getElementById('modalHeroTitle').innerText = item.title;
       document.getElementById('modalMatchPct').innerText = item.matchPercentage || "98% Match";
-      document.getElementById('modalYearTag').innerText = item.year || "2026";
+      document.getElementById('modalYearTag').innerText = item.year || "2024";
       document.getElementById('modalMaturityTag').innerText = item.maturityRating || "U/A 16+";
-      document.getElementById('modalDurationTag').innerText = item.duration || "1h 56m";
-      document.getElementById('modalOverviewText').innerText = item.overview || "A gripping story on Netflix.";
-      
-      const castStr = (item.cast && Array.isArray(item.cast)) ? item.cast.join(', ') : "Ensemble Cast";
-      const genreStr = (item.genres && Array.isArray(item.genres)) ? item.genres.join(', ') : "Dramas, Thrillers";
-      document.getElementById('modalCastText').innerText = castStr;
-      document.getElementById('modalGenresText').innerText = genreStr;
-      document.getElementById('modalMoodText').innerText = item.mood || "Gritty, Exciting, Suspenseful";
-
-      document.getElementById('modalAboutTitle').innerText = `About ${item.title}`;
-      document.getElementById('modalDirectorText').innerText = item.director || "Acclaimed Director";
-      document.getElementById('modalAboutCastText').innerText = castStr;
-      document.getElementById('modalAboutGenresText').innerText = genreStr;
-      document.getElementById('modalAboutMaturityPill').innerText = item.maturityRating || "U/A 16+";
-      document.getElementById('modalMaturityReason').innerText = item.maturityRating === "A" 
-        ? "Suitable for adults. Strong language, violence, mature themes."
-        : "Suitable for ages 16 and above. Violence, language, intense sequences.";
+      document.getElementById('modalDurationTag').innerText = item.duration || (item.type === "tv" ? "2 Seasons" : "2h 10m");
+      document.getElementById('modalOverviewText').innerText = item.overview || "";
+      document.getElementById('modalCastText').innerText = (item.cast || ["Acclaimed Ensemble Cast"]).join(", ");
+      document.getElementById('modalGenresText').innerText = (item.genres || ["Drama", "Thriller"]).join(", ");
+      document.getElementById('modalMoodText').innerText = "Suspenseful, Exciting, Emotional";
 
       document.getElementById('modalHeroPlayBtn').onclick = () => {
-        closeDetailModal(false, true);
+        document.getElementById('detailQuickviewModal').classList.remove('active');
         launchNetflixPlayer(item);
       };
 
-      const inList = myListIds.has(item.id);
-      const listBtn = document.getElementById('modalListBtn');
-      listBtn.innerText = inList ? "✓" : "+";
-      listBtn.onclick = () => toggleMyList(item, listBtn);
-
-      const epContainer = document.getElementById('modalEpisodesContainer');
-      epContainer.innerHTML = '<div style="padding:15px; color:#888;">Loading episodes...</div>';
-      
-      const epSection = document.getElementById('modalEpisodesSection');
-      const isTv = item.type === "tv" || item.title === "Chumbak" || String(item.duration || '').includes('Season');
-
-      if (isTv) {
-        epSection.style.display = "block";
-        const seasonSelect = document.getElementById('modalSeasonSelect');
-        seasonSelect.innerHTML = `
-          <option value="1">Season 1</option>
-          <option value="2">Season 2</option>
-        `;
-        loadModalEpisodes(item.id, item.title, 1);
+      // Handle TV Show Episodes list
+      const episodesSection = document.getElementById('modalEpisodesSection');
+      if (item.type === "tv" || item.numberOfSeasons) {
+        episodesSection.style.display = 'block';
+        loadModalEpisodes(item.id, 1);
       } else {
-        epSection.style.display = "none";
+        episodesSection.style.display = 'none';
       }
 
-      modal.classList.add('active');
-      if (window.netflixRouter && !window.netflixRouter.isNavigatingProgrammatically) {
-        window.netflixRouter.navigate('#/title/' + item.id);
-      }
-
-      // Async fetch full media details & recommendations
-      try {
-        const res = await fetch(`${API_BASE}/api/v1/media/${item.type || (isTv ? 'tv' : 'movie')}/${item.id}`);
-        const json = await res.json();
-        if (json.status === "success" && json.data) {
-          const det = json.data;
-          if (det.overview) document.getElementById('modalOverviewText').innerText = det.overview;
-          if (det.cast && det.cast.length > 0) {
-            const fullCast = det.cast.join(', ');
-            document.getElementById('modalCastText').innerText = fullCast;
-            document.getElementById('modalAboutCastText').innerText = fullCast;
-          }
-          if (det.director) document.getElementById('modalDirectorText').innerText = det.director;
-          if (det.genres && det.genres.length > 0) {
-            const fullGenres = det.genres.join(', ');
-            document.getElementById('modalGenresText').innerText = fullGenres;
-            document.getElementById('modalAboutGenresText').innerText = fullGenres;
-          }
-          if (det.seasons && det.seasons.length > 0) {
-            const seasonSelect = document.getElementById('modalSeasonSelect');
-            seasonSelect.innerHTML = det.seasons.map(s => `
-              <option value="${s.seasonNumber}">${s.name} (${s.episodeCount || 8} Episodes)</option>
-            `).join('');
-          }
-          if (det.similar && det.similar.length > 0) {
-            renderMoreLikeThisGrid(det.similar);
-          }
-        }
-      } catch (e) {}
-
-      // Fallback recommendations if none loaded yet
-      const moreGrid = document.getElementById('modalMoreLikeThisGrid');
-      if (!moreGrid.children || moreGrid.children.length === 0) {
-        renderMoreLikeThisGrid(Array.from(catalogCache.values()).filter(it => it && String(it.id) !== String(item.id)).slice(0, 9));
-      }
+      // Load More Like This
+      loadMoreLikeThis(item);
     }
 
-    async function loadModalEpisodes(tvId, title, seasonNum) {
-      const epContainer = document.getElementById('modalEpisodesContainer');
+    async function loadModalEpisodes(tvId, seasonNum = 1) {
+      const container = document.getElementById('modalEpisodesContainer');
+      container.innerHTML = '<div style="padding:20px; color:#aaa;">Loading episodes...</div>';
+
       try {
         const res = await fetch(`${API_BASE}/api/v1/tv/${tvId}/season/${seasonNum}`);
         const json = await res.json();
         const eps = json.data || [];
-        if (eps.length > 0) {
-          epContainer.innerHTML = eps.map(ep => `
-            <div class="episode-card-item" onclick='playSpecificEpisode(${tvId}, "${(title || '').replace(/'/g, "\\'")}", ${seasonNum}, ${ep.episodeNumber}, "${(ep.name || '').replace(/'/g, "\\'")}")'>
-              <div class="ep-order-num">${ep.episodeNumber}</div>
-              <div class="ep-thumb-box">
-                <img src="${ep.stillUrl || (activeMediaItem && activeMediaItem.backdropUrl) || ''}" alt="${ep.name}">
-              </div>
-              <div class="ep-detail-text">
-                <div class="ep-header-line">
-                  <span>${ep.name}</span>
-                  <span style="color: #aaa;">${ep.runtime || '45m'}</span>
-                </div>
-                <div class="ep-desc-snippet">${ep.overview || 'An engaging episode in this acclaimed season.'}</div>
-              </div>
-            </div>
-          `).join('');
-        } else {
-          epContainer.innerHTML = '<div style="padding:15px; color:#888;">No episodes found for this season.</div>';
-        }
-      } catch (e) {
-        epContainer.innerHTML = '<div style="padding:15px; color:#888;">Episodes currently ready for stream.</div>';
-      }
-    }
 
-    function switchModalSeason(seasonNum) {
-      if (!activeMediaItem) return;
-      loadModalEpisodes(activeMediaItem.id, activeMediaItem.title, seasonNum);
-    }
-
-    function renderMoreLikeThisGrid(items) {
-      const grid = document.getElementById('modalMoreLikeThisGrid');
-      grid.innerHTML = (items || []).slice(0, 9).map(it => {
-        catalogCache.set(String(it.id), it);
-        return `
-          <div class="more-like-card" onclick="openQuickviewModalById('${it.id}')">
-            <div class="more-like-thumb-box">
-              <img src="${it.backdropUrl || it.posterUrl}" alt="${it.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-              <button class="hover-btn-round btn-play-solid" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:40px; height:40px; font-size:16px; opacity:0; transition:opacity 0.2s;" onmouseenter="this.style.opacity=1" onclick="event.stopPropagation(); closeDetailModal(false, true); launchNetflixPlayerById('${it.id}');">▶</button>
-            </div>
-            <div class="more-like-info">
-              <div class="more-like-meta-row">
-                <span style="color:#46d369;">${it.matchPercentage || '98% Match'}</span>
-                <span class="meta-maturity-pill">${it.maturityRating || 'U/A 16+'}</span>
-                <span style="color:#aaa;">${it.year || '2026'}</span>
+        container.innerHTML = eps.map(ep => `
+          <div class="modal-ep-card" onclick="document.getElementById('detailQuickviewModal').classList.remove('active'); launchNetflixPlayer({ id: '${tvId}', title: '${ep.name}', season: ${seasonNum}, episode: ${ep.episodeNumber}, type: 'tv' })">
+            <div class="modal-ep-num">${ep.episodeNumber}</div>
+            <img class="modal-ep-thumb" src="${ep.stillUrl || 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'}" alt="ep">
+            <div class="modal-ep-info">
+              <div class="modal-ep-title-row">
+                <span class="modal-ep-title">${ep.name}</span>
+                <span class="modal-ep-runtime">${ep.runtime}</span>
               </div>
-              <div style="font-weight:700; font-size:13.5px; margin-bottom:6px;">${it.title}</div>
-              <div class="more-like-overview">${it.overview || 'A gripping, must-watch production on Netflix.'}</div>
+              <div class="modal-ep-desc">${ep.overview}</div>
             </div>
           </div>
-        `;
-      }).join('');
-    }
-
-    function closeDetailModal(fromRouter = false, isLaunchingPlayer = false) {
-      modal.classList.remove('active');
-      if (!fromRouter && !isLaunchingPlayer && window.netflixRouter && !window.netflixRouter.isNavigatingProgrammatically) {
-        window.netflixRouter.navigate(currentNavCat === 'all' ? '#/browse' : `#/browse?category=${currentNavCat}`);
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="padding:20px; color:#aaa;">Episodes ready to stream.</div>';
       }
     }
 
-    function playSpecificEpisode(tvId, title, season, episode, epTitle) {
-      closeDetailModal(false, true);
-      const media = {
-        id: tvId,
-        type: "tv",
-        title: title,
-        season: season,
-        episode: episode,
-        episodeTitle: `${title} S${season}:E${episode}`,
-        episodeName: epTitle
-      };
-      launchNetflixPlayer(media);
+    async function loadMoreLikeThis(item) {
+      const grid = document.getElementById('modalMoreLikeThisGrid');
+      const allItems = Array.from(catalogCache.values()).filter(it => it.id !== item.id).slice(0, 6);
+
+      grid.innerHTML = allItems.map(it => `
+        <div class="more-like-card" onclick="openQuickviewModalById('${it.id}')">
+          <img class="more-like-thumb" src="${it.backdropUrl || it.posterUrl}" alt="${it.title}">
+          <div class="more-like-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="color:#46d369; font-size:12px; font-weight:800;">${it.matchPercentage || '98% Match'}</span>
+              <button class="hover-btn-round" style="width:28px; height:28px; font-size:12px;">+</button>
+            </div>
+            <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">${it.title}</div>
+            <div style="font-size:11px; color:#aaa; line-height:1.3; overflow:hidden; max-height:42px;">${it.overview}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
-    // -------------------------------------------------------------
-    // 5. 1:1 AUTHENTIC NETFLIX PLAYER (Screenshot 4)
-    // -------------------------------------------------------------
-    async function launchNetflixPlayerById(id) {
-      let item = catalogCache.get(String(id));
-      if (!item) {
-        try {
-          let res = await fetch(`${API_BASE}/api/v1/media/movie/${id}`);
-          let json = await res.json();
-          if (json.status === "success" && json.data) {
-            item = { ...json.data, id: id, type: "movie" };
-            catalogCache.set(String(id), item);
-          } else {
-            res = await fetch(`${API_BASE}/api/v1/media/tv/${id}`);
-            json = await res.json();
-            if (json.status === "success" && json.data) {
-              item = { ...json.data, id: id, type: "tv" };
-              catalogCache.set(String(id), item);
-            }
-          }
-        } catch (e) {}
+    function closeDetailModal(fromRouter = false) {
+      document.getElementById('detailQuickviewModal').classList.remove('active');
+      if (!fromRouter && window.netflixRouter) {
+        window.netflixRouter.navigate('#/browse');
       }
+    }
+
+    // =============================================================
+    // CADMIUM VIDEO PLAYER & MULTI-AUDIO/QUALITY CONTROLS
+    // =============================================================
+    function launchHeroPlay() {
+      if (activeMediaItem) launchNetflixPlayer(activeMediaItem);
+    }
+    function launchHeroMoreInfo() {
+      if (activeMediaItem) openQuickviewModalById(activeMediaItem.id);
+    }
+
+    function launchNetflixPlayerById(id) {
+      const item = catalogCache.get(String(id));
       if (item) launchNetflixPlayer(item);
-    }
-
-    let hudWatchdogTimer = null;
-    let hudDismissTimer = null;
-
-    function showBufferingHUD(serverIdx = 0) {
-      const hud = document.getElementById('streamBufferingHUD');
-      const failoverBox = document.getElementById('hudFailoverBox');
-      const titleEl = document.getElementById('hudStatusTitle');
-      const subEl = document.getElementById('hudStatusSubtitle');
-      if (!hud) return;
-
-      const serverNames = {
-        '0': "Server 1: VidLink Cinema (4K UHD)",
-        '1': "Server 2: VidSrc Pro (Fast CDN)",
-        '2': "Server 3: 2Embed Ultra",
-        '4': "Server 4: AutoEmbed VIP (Multi-Audio)",
-        'direct': "Server 5: Official High-Res Teaser"
-      };
-      const sName = serverNames[String(serverIdx)] || "Server 1: VidLink Cinema";
-
-      if (titleEl) titleEl.innerText = activeMediaItem ? `Connecting to ${activeMediaItem.title}...` : "Connecting to Stream...";
-      if (subEl) subEl.innerText = `Resolving 1080p stream from ${sName}`;
-      if (failoverBox) failoverBox.style.display = 'none';
-
-      hud.classList.remove('hidden');
-
-      if (hudWatchdogTimer) clearTimeout(hudWatchdogTimer);
-      if (hudDismissTimer) clearTimeout(hudDismissTimer);
-
-      // Watchdog: after 4.5 seconds of buffering, show failover switcher options
-      hudWatchdogTimer = setTimeout(() => {
-        if (!hud.classList.contains('hidden') && failoverBox) {
-          failoverBox.style.display = 'block';
-        }
-      }, 4500);
-
-      // Dismiss HUD after 7 seconds so it never blocks video interaction
-      hudDismissTimer = setTimeout(() => {
-        dismissBufferingHUD();
-      }, 7000);
-    }
-
-    function dismissBufferingHUD() {
-      const hud = document.getElementById('streamBufferingHUD');
-      if (hud) hud.classList.add('hidden');
-      if (hudWatchdogTimer) clearTimeout(hudWatchdogTimer);
-      if (hudDismissTimer) clearTimeout(hudDismissTimer);
-    }
-
-    if (iframeEl) {
-      iframeEl.addEventListener('load', () => {
-        setTimeout(() => {
-          dismissBufferingHUD();
-        }, 1200);
-      });
-    }
-
-    function toggleServerModal(e) {
-      if (e) e.stopPropagation();
-      const s = document.getElementById('serverModal');
-      const m = document.getElementById('audioSubsModal');
-      const q = document.getElementById('qualityModal');
-      if (m) m.style.display = 'none';
-      if (q) q.style.display = 'none';
-      if (s) {
-        s.style.display = (s.style.display === 'none' || !s.style.display) ? 'block' : 'none';
-      }
-    }
-
-    function selectServerEngine(srvKey) {
-      const srvNames = {
-        '0': 'Server 1: VidLink 4K',
-        '1': 'Server 2: VidSrc Pro',
-        '2': 'Server 3: 2Embed',
-        '4': 'Server 4: AutoEmbed VIP',
-        'direct': 'Server 5: Native Preview'
-      };
-
-      const badge = document.getElementById('playerServerBadge');
-      if (badge) badge.innerText = srvNames[srvKey] || `Server ${srvKey}`;
-
-      const radio = document.getElementById(`radio-srv-${srvKey}`);
-      if (radio) radio.checked = true;
-      document.querySelectorAll('[id^="srvOpt-"]').forEach(el => el.classList.remove('selected'));
-      const item = document.getElementById(`srvOpt-${srvKey}`);
-      if (item) item.classList.add('selected');
-
-      const selectEl = document.getElementById('playerSourceSelect');
-      if (selectEl) selectEl.value = srvKey;
-
-      changePlayerEngine(srvKey);
-
-      const s = document.getElementById('serverModal');
-      if (s) s.style.display = 'none';
-    }
-
-    function reloadCurrentStream() {
-      const currentVal = document.getElementById('playerSourceSelect')?.value || "0";
-      flashToast("↻ Reloading stream...");
-      changePlayerEngine(currentVal);
     }
 
     async function launchNetflixPlayer(media) {
       activeMediaItem = media;
-      const title = media.title || "Chumbak";
+      const title = media.title || "Squid Game";
       const sNum = media.season || 1;
       const epNum = media.episode || 1;
-      const epTitle = media.episodeTitle || (media.type === "tv" ? `S${sNum}:E${epNum} Episode ${epNum}` : "");
+      const epTitle = media.type === "tv" ? `S${sNum}:E${epNum}` : "";
 
       document.getElementById('playerHeaderTitle').innerText = title;
       document.getElementById('playerHeaderSubtitle').innerText = epTitle;
@@ -2205,283 +1471,51 @@
         window.netflixRouter.navigate('#/watch/' + media.id);
       }
 
-      // Initialize saved Audio and Quality preferences (Defaults: Hindi & 1080p)
-      const savedAudio = localStorage.getItem('netflix_preferred_audio') || 'hi';
-      const savedQuality = localStorage.getItem('netflix_preferred_quality') || '1080p';
-      updateAudioBadges(savedAudio);
-      updateQualityBadges(savedQuality);
+      // Fetch stream metadata
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/streams/direct?type=${media.type || 'movie'}&tmdbId=${media.id}&season=${sNum}&episode=${epNum}`);
+        const json = await res.json();
+        currentVideoData = json.data;
+      } catch (e) {}
 
-      // Reset to Server 0
-      const srvSelect = document.getElementById('playerSourceSelect');
-      if (srvSelect) srvSelect.value = "0";
-      const srvBadge = document.getElementById('playerServerBadge');
-      if (srvBadge) srvBadge.innerText = "Server 1: VidLink 4K";
-      const srvRadio = document.getElementById('radio-srv-0');
-      if (srvRadio) srvRadio.checked = true;
-      document.querySelectorAll('[id^="srvOpt-"]').forEach(el => el.classList.remove('selected'));
-      const srvOpt0 = document.getElementById('srvOpt-0');
-      if (srvOpt0) srvOpt0.classList.add('selected');
+      // Play direct HTML5 video stream
+      const streamUrl = currentVideoData?.directStreamUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+      
+      iframeEl.style.display = "none";
+      videoEl.style.display = "block";
+      videoEl.src = streamUrl;
+      videoEl.currentTime = 0;
+      videoEl.play().catch(() => {});
+      document.getElementById('playPauseActionBtn').innerText = "❚❚";
 
-      // Start player immediately with synchronous fallback calculation
-      changePlayerEngine("0");
-
-      // Fetch fresh multi-source endpoints in background
-      fetch(`${API_BASE}/api/v1/streams/direct?type=${media.type || 'movie'}&tmdbId=${media.id}&season=${sNum}&episode=${epNum}`)
-        .then(r => r.json())
-        .then(json => {
-          if (json && json.data) {
-            currentVideoData = json.data;
-          }
-        })
-        .catch(() => {});
-
-      recordPlaybackState(media);
-      startAutosave();
       resetPlayerIdleTimer();
-
-      // Show Skip Intro button for first 85s of video
-      const skipBtn = document.getElementById('skipIntroBtn');
-      if (skipBtn) {
-        skipBtn.style.display = 'none';
-        setTimeout(() => {
-          if (playerScreen.classList.contains('active')) {
-            skipBtn.style.display = 'flex';
-          }
-        }, 1500);
-        setTimeout(() => {
-          if (skipBtn) skipBtn.style.display = 'none';
-        }, 85000);
-      }
+      document.addEventListener('mousemove', resetPlayerIdleTimer);
     }
 
-    function changePlayerEngine(mode) {
-      const bottomBar = document.getElementById('playerBottomBar');
-      if (mode === "direct") {
-        iframeEl.style.display = "none";
-        iframeEl.src = "";
-        videoEl.style.display = "block";
-        if (bottomBar) bottomBar.style.display = "block";
-        videoEl.play().catch(() => {});
-        document.getElementById('playPauseActionBtn').innerText = "❚❚";
-        dismissBufferingHUD();
-      } else {
-        videoEl.pause();
-        videoEl.style.display = "none";
-        iframeEl.style.display = "block";
-        if (bottomBar) bottomBar.style.display = "none";
-
-        const idx = parseInt(mode) || 0;
-        let streamUrl = "";
-
-        if (currentVideoData && currentVideoData.silentFailoverSources && currentVideoData.silentFailoverSources[idx]) {
-          streamUrl = currentVideoData.silentFailoverSources[idx].streamUrl;
-        } else if (activeMediaItem) {
-          const tmdbId = activeMediaItem.tmdbId || activeMediaItem.id || 66732;
-          const s = activeMediaItem.season || 1;
-          const ep = activeMediaItem.episode || 1;
-          const isTv = activeMediaItem.type === "tv";
-
-          if (idx === 0) {
-            streamUrl = isTv 
-              ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`
-              : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`;
-          } else if (idx === 1) {
-            streamUrl = isTv ? `https://vidsrc.pm/embed/tv/${tmdbId}/${s}/${ep}` : `https://vidsrc.pm/embed/movie/${tmdbId}`;
-          } else if (idx === 2) {
-            streamUrl = isTv ? `https://2embed.skin/embed/tv/${tmdbId}/${s}/${ep}` : `https://2embed.skin/embed/${tmdbId}`;
-          } else if (idx === 4) {
-            streamUrl = isTv ? `https://autoembed.co/tv/tmdb/${tmdbId}-${s}-${ep}` : `https://autoembed.co/movie/tmdb/${tmdbId}`;
-          } else {
-            streamUrl = isTv 
-              ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`
-              : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff&autoplay=true`;
-          }
-        }
-
-        if (streamUrl) {
-          showBufferingHUD(idx);
-          iframeEl.src = streamUrl;
-        }
+    function exitNetflixPlayer() {
+      videoEl.pause();
+      videoEl.src = "";
+      iframeEl.src = "";
+      playerScreen.classList.remove('active');
+      if (window.netflixRouter) {
+        window.netflixRouter.navigate('#/browse');
       }
     }
-
-    // -------------------------------------------------------------
-    // AUDIO & QUALITY SELECTION CONTROLS
-    // -------------------------------------------------------------
-    function toggleAudioSubtitlesModal(e) {
-      if (e) e.stopPropagation();
-      const m = document.getElementById('audioSubsModal');
-      const q = document.getElementById('qualityModal');
-      if (q) q.style.display = 'none';
-      if (m) {
-        m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
-      }
-    }
-
-    function toggleQualityModal(e) {
-      if (e) e.stopPropagation();
-      const q = document.getElementById('qualityModal');
-      const m = document.getElementById('audioSubsModal');
-      if (m) m.style.display = 'none';
-      if (q) {
-        q.style.display = (q.style.display === 'none' || !q.style.display) ? 'block' : 'none';
-      }
-    }
-
-    function selectAudioTrack(lang) {
-      localStorage.setItem('netflix_preferred_audio', lang);
-      updateAudioBadges(lang);
-
-      const labels = {
-        hi: "Hindi [Original / Dubbed] • 5.1 Surround",
-        en: "English [Original] • Dolby Atmos",
-        ta: "Tamil [Original / Dubbed]",
-        te: "Telugu [Original / Dubbed]"
-      };
-
-      // If user chooses Hindi and currently on a non-Hindi server (like VidLink #3), auto-switch to AutoEmbed #0 or VidSrc #1
-      const currentVal = document.getElementById('playerSourceSelect').value;
-      if (lang === 'hi' && currentVal === "3") {
-        document.getElementById('playerSourceSelect').value = "0";
-        changePlayerEngine("0");
-      }
-
-      flashToast(`🔊 Audio Track: ${labels[lang] || lang} (Saved for all titles)`);
-      const m = document.getElementById('audioSubsModal');
-      if (m) m.style.display = 'none';
-    }
-
-    function updateAudioBadges(lang) {
-      const badge = document.getElementById('playerAudioBadge');
-      if (!badge) return;
-      const labels = {
-        hi: "Audio: Hindi [5.1]",
-        en: "Audio: English [Atmos]",
-        ta: "Audio: Tamil [5.1]",
-        te: "Audio: Telugu [5.1]"
-      };
-      badge.innerText = labels[lang] || "Audio: Hindi [5.1]";
-
-      const radio = document.getElementById(`radio-audio-${lang}`);
-      if (radio) radio.checked = true;
-      document.querySelectorAll('[id^="audioOpt-"]').forEach(el => el.classList.remove('selected'));
-      const item = document.getElementById(`audioOpt-${lang}`);
-      if (item) item.classList.add('selected');
-    }
-
-    function selectSubtitleTrack(lang) {
-      const labels = {
-        en: "English [CC]",
-        hi: "Hindi [हिंदी]",
-        off: "Off"
-      };
-      const radio = document.getElementById(`radio-sub-${lang}`);
-      if (radio) radio.checked = true;
-      document.querySelectorAll('[id^="subOpt-"]').forEach(el => el.classList.remove('selected'));
-      const item = document.getElementById(`subOpt-${lang}`);
-      if (item) item.classList.add('selected');
-
-      flashToast(`💬 Subtitles: ${labels[lang] || lang}`);
-      const m = document.getElementById('audioSubsModal');
-      if (m) m.style.display = 'none';
-    }
-
-    function selectQualityRendition(q) {
-      localStorage.setItem('netflix_preferred_quality', q);
-      updateQualityBadges(q);
-
-      const labels = {
-        '1080p': '1080p Full HD (High Bitrate 8.5 Mbps)',
-        '4k': '4K Ultra HD (2160p Cinema Master)',
-        '720p': '720p HD (Data Saver)',
-        'auto': 'Auto (Adaptive Bitrate)'
-      };
-
-      if (q === '4k') {
-        // Switch to VidLink 4K if Hollywood/Global
-        document.getElementById('playerSourceSelect').value = "3";
-        changePlayerEngine("3");
-      } else if (q === '1080p') {
-        // Enforce 1080p high bitrate server
-        const currentVal = document.getElementById('playerSourceSelect').value;
-        if (currentVal === "3") {
-          document.getElementById('playerSourceSelect').value = "0";
-          changePlayerEngine("0");
-        }
-      }
-
-      flashToast(`✨ Quality: ${labels[q] || q}`);
-      const qModal = document.getElementById('qualityModal');
-      if (qModal) qModal.style.display = 'none';
-    }
-
-    function updateQualityBadges(q) {
-      const badge = document.getElementById('playerQualityBadge');
-      if (!badge) return;
-      const labels = {
-        '1080p': '1080p Full HD',
-        '4k': '4K Ultra HD',
-        '720p': '720p HD',
-        'auto': 'Auto Quality'
-      };
-      badge.innerText = labels[q] || "1080p Full HD";
-
-      const radio = document.getElementById(`radio-q-${q}`);
-      if (radio) radio.checked = true;
-      document.querySelectorAll('[id^="qOpt-"]').forEach(el => el.classList.remove('selected'));
-      const item = document.getElementById(`qOpt-${q}`);
-      if (item) item.classList.add('selected');
-    }
-
-    // Close player popovers on outside click
-    document.addEventListener('click', (e) => {
-      const audioBtn = document.getElementById('playerAudioBtn');
-      const audioModal = document.getElementById('audioSubsModal');
-      const qualityBtn = document.getElementById('playerQualityBtn');
-      const qualityModal = document.getElementById('qualityModal');
-      const serverBtn = document.getElementById('playerServerBtn');
-      const serverModal = document.getElementById('serverModal');
-
-      if (audioModal && audioModal.style.display !== 'none' && !audioModal.contains(e.target) && !audioBtn?.contains(e.target)) {
-        audioModal.style.display = 'none';
-      }
-      if (qualityModal && qualityModal.style.display !== 'none' && !qualityModal.contains(e.target) && !qualityBtn?.contains(e.target)) {
-        qualityModal.style.display = 'none';
-      }
-      if (serverModal && serverModal.style.display !== 'none' && !serverModal.contains(e.target) && !serverBtn?.contains(e.target)) {
-        serverModal.style.display = 'none';
-      }
-    });
-
-    videoEl.addEventListener('timeupdate', () => {
-      if (!videoEl.duration) return;
-      const pct = (videoEl.currentTime / videoEl.duration) * 100;
-      document.getElementById('scrubberFill').style.width = `${pct}%`;
-
-      const remainingSecs = Math.max(0, Math.floor(videoEl.duration - videoEl.currentTime));
-      const m = Math.floor(remainingSecs / 60);
-      const s = String(remainingSecs % 60).padStart(2, '0');
-      document.getElementById('playerRemainingTime').innerText = `${m}:${s}`;
-    });
 
     function togglePlayPause() {
-      if (videoEl.style.display !== "none") {
-        if (videoEl.paused) {
-          videoEl.play();
-          document.getElementById('playPauseActionBtn').innerText = "❚❚";
-        } else {
-          videoEl.pause();
-          document.getElementById('playPauseActionBtn').innerText = "▶";
-        }
+      if (videoEl.paused) {
+        videoEl.play();
+        document.getElementById('playPauseActionBtn').innerText = "❚❚";
+      } else {
+        videoEl.pause();
+        document.getElementById('playPauseActionBtn').innerText = "▶";
       }
       resetPlayerIdleTimer();
     }
 
     function skipTime(delta) {
-      if (videoEl.style.display !== "none") {
-        videoEl.currentTime = Math.max(0, Math.min(videoEl.duration || 600, videoEl.currentTime + delta));
-        flashToast(`${delta > 0 ? '+10s' : '-10s'}`);
-      }
+      videoEl.currentTime = Math.max(0, Math.min(videoEl.duration || 600, videoEl.currentTime + delta));
+      flashToast(`${delta > 0 ? '+10s' : '-10s'}`);
       resetPlayerIdleTimer();
     }
 
@@ -2494,6 +1528,17 @@
       }
       resetPlayerIdleTimer();
     }
+
+    videoEl.addEventListener('timeupdate', () => {
+      if (!videoEl.duration) return;
+      const pct = (videoEl.currentTime / videoEl.duration) * 100;
+      document.getElementById('scrubberFill').style.width = `${pct}%`;
+
+      const remainingSecs = Math.max(0, Math.floor(videoEl.duration - videoEl.currentTime));
+      const m = Math.floor(remainingSecs / 60);
+      const s = String(remainingSecs % 60).padStart(2, '0');
+      document.getElementById('playerRemainingTime').innerText = `${m}:${s}`;
+    });
 
     function togglePlayerMute() {
       videoEl.muted = !videoEl.muted;
@@ -2517,75 +1562,6 @@
       resetPlayerIdleTimer();
     }
 
-    function toggleSubtitleLanguage() {
-      const overlay = document.getElementById('netflixSubtitleOverlay');
-      if (overlay.style.display === "none") {
-        overlay.style.display = "block";
-        flashToast("Subtitles: English [Original] Enabled");
-      } else {
-        overlay.style.display = "none";
-        flashToast("Subtitles: Off");
-      }
-      resetPlayerIdleTimer();
-    }
-
-    async function toggleEpisodeDrawer() {
-      const drawer = document.getElementById('episodeDrawerPanel');
-      if (!drawer) return;
-      const isOpen = drawer.classList.contains('open');
-      if (isOpen) {
-        drawer.classList.remove('open');
-      } else {
-        drawer.classList.add('open');
-        const media = activeMediaItem;
-        if (!media) return;
-        document.getElementById('drawerSeriesTitle').innerText = `${media.title || 'Series'} • Episodes`;
-        const list = document.getElementById('drawerEpisodesList');
-        list.innerHTML = '<div style="padding:20px; color:#aaa; font-size:13px;">Loading episodes...</div>';
-
-        try {
-          const res = await fetch(`${API_BASE}/api/v1/tv/${media.id}/season/${media.season || 1}`);
-          const json = await res.json();
-          const eps = json.data || [];
-          list.innerHTML = eps.map(ep => `
-            <div class="drawer-ep-item ${(media.episode || 1) === ep.episodeNumber ? 'active' : ''}" onclick="playDrawerEpisode(${ep.episodeNumber}, '${(ep.name || '').replace(/'/g, "\\'")}')">
-              <img class="drawer-thumb" src="${ep.stillUrl || media.backdropUrl || media.posterUrl}" alt="ep" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-              <div class="drawer-ep-info">
-                <div class="drawer-ep-title">${ep.episodeNumber}. ${ep.name}</div>
-                <div class="drawer-ep-desc">${ep.overview || ''}</div>
-                <div style="font-size:10.5px; color:#888; margin-top:2px;">${ep.runtime || '45m'}</div>
-              </div>
-            </div>
-          `).join('');
-        } catch (e) {
-          list.innerHTML = '<div style="padding:20px; color:#aaa;">Episode list ready.</div>';
-        }
-      }
-      resetPlayerIdleTimer();
-    }
-
-    function playDrawerEpisode(epNum, epTitle) {
-      if (!activeMediaItem) return;
-      activeMediaItem.episode = epNum;
-      activeMediaItem.episodeTitle = epTitle || `Episode ${epNum}`;
-      document.getElementById('episodeDrawerPanel').classList.remove('open');
-      launchNetflixPlayer(activeMediaItem);
-      flashToast(`Playing ${activeMediaItem.title}: Episode ${epNum}`);
-    }
-
-    function skipIntro() {
-      const skipBtn = document.getElementById('skipIntroBtn');
-      if (skipBtn) skipBtn.style.display = 'none';
-      skipTime(85);
-      flashToast('⏭ Intro Skipped');
-    }
-
-    function playNextEpisode() {
-      if (!activeMediaItem) return;
-      const nextEpNum = (activeMediaItem.episode || 1) + 1;
-      playDrawerEpisode(nextEpNum, `Episode ${nextEpNum}`);
-    }
-
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         playerScreen.requestFullscreen().catch(() => {});
@@ -2594,242 +1570,102 @@
       }
     }
 
-    // P0.2 Throttled Progress Autosave (Every 10s + visibilitychange + exit)
-    let autosaveTimer = null;
-    function startAutosave() {
-      clearInterval(autosaveTimer);
-      autosaveTimer = setInterval(saveCurrentProgress, 10000);
-    }
-    function stopAutosave() {
-      clearInterval(autosaveTimer);
-      saveCurrentProgress();
-    }
-    function saveCurrentProgress() {
-      if (!activeMediaItem || !playerScreen.classList.contains('active')) return;
-      const pos = videoEl && !isNaN(videoEl.currentTime) && videoEl.currentTime > 0 
-        ? Math.floor(videoEl.currentTime) 
-        : (activeMediaItem.positionSeconds || 150);
-      const dur = videoEl && !isNaN(videoEl.duration) && videoEl.duration > 0 
-        ? Math.floor(videoEl.duration) 
-        : 3600;
-      recordPlaybackState(activeMediaItem, pos, dur);
-    }
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && playerScreen.classList.contains('active')) {
-        saveCurrentProgress();
-      }
-    });
-
-    function exitNetflixPlayer() {
-      stopAutosave();
-      videoEl.pause();
-      videoEl.src = "";
-      iframeEl.src = "";
-      playerScreen.classList.remove('active');
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-      if (window.netflixRouter && !window.netflixRouter.isNavigatingProgrammatically) {
-        window.netflixRouter.navigate(currentNavCat === 'all' ? '#/browse' : `#/browse?category=${currentNavCat}`);
-      }
+    function resetPlayerIdleTimer() {
+      playerScreen.classList.remove('user-idle');
+      clearTimeout(playerIdleTimer);
+      playerIdleTimer = setTimeout(() => {
+        if (playerScreen.classList.contains('active') && !videoEl.paused) {
+          playerScreen.classList.add('user-idle');
+        }
+      }, 2500);
     }
 
-    function triggerPlayerFeedback() {
-      flashToast("Thank you! Netflix issue report submitted.");
+    // Audio & Quality Modals
+    function toggleAudioSubtitlesModal(e) {
+      if (e) e.stopPropagation();
+      const m = document.getElementById('audioSubsModal');
+      const q = document.getElementById('qualityModal');
+      if (q) q.style.display = 'none';
+      m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+    }
+
+    function toggleQualityModal(e) {
+      if (e) e.stopPropagation();
+      const q = document.getElementById('qualityModal');
+      const m = document.getElementById('audioSubsModal');
+      if (m) m.style.display = 'none';
+      q.style.display = (q.style.display === 'none' || !q.style.display) ? 'block' : 'none';
+    }
+
+    function selectAudioTrack(lang) {
+      const labels = {
+        hi: "Hindi [Original / Dubbed] • 5.1",
+        en: "English [Original] • Atmos 5.1",
+        ta: "Tamil [Dubbed] • 5.1",
+        te: "Telugu [Dubbed] • 5.1"
+      };
+      document.getElementById('playerAudioBadge').innerText = `Audio: ${labels[lang] || lang}`;
+      document.querySelectorAll('[id^="audioOpt-"]').forEach(el => el.classList.remove('selected'));
+      document.getElementById(`audioOpt-${lang}`)?.classList.add('selected');
+      flashToast(`🔊 Audio Track: ${labels[lang] || lang}`);
+      document.getElementById('audioSubsModal').style.display = 'none';
+    }
+
+    function selectSubtitleTrack(lang) {
+      document.querySelectorAll('[id^="subOpt-"]').forEach(el => el.classList.remove('selected'));
+      document.getElementById(`subOpt-${lang}`)?.classList.add('selected');
+      flashToast(`💬 Subtitles: ${lang === 'off' ? 'Off' : lang.toUpperCase()}`);
+      document.getElementById('audioSubsModal').style.display = 'none';
+    }
+
+    function selectQualityRendition(q) {
+      const labels = {
+        '4k': '4K Ultra HD (2160p)',
+        '1080p': '1080p Full HD',
+        '720p': '720p HD',
+        'auto': 'Auto (Adaptive)'
+      };
+      document.getElementById('playerQualityBadge').innerText = labels[q] || q;
+      document.querySelectorAll('[id^="qOpt-"]').forEach(el => el.classList.remove('selected'));
+      document.getElementById(`qOpt-${q}`)?.classList.add('selected');
+
+      // Seamlessly switch video source quality
+      if (currentVideoData?.directStreams) {
+        const streamMap = currentVideoData.directStreams;
+        const newSrc = streamMap[q] || streamMap["1080p"];
+        if (newSrc && videoEl.src !== newSrc) {
+          const currentTime = videoEl.currentTime;
+          videoEl.src = newSrc;
+          videoEl.currentTime = currentTime;
+          videoEl.play().catch(() => {});
+        }
+      }
+
+      flashToast(`✨ Quality: ${labels[q] || q}`);
+      document.getElementById('qualityModal').style.display = 'none';
+    }
+
+    function reloadCurrentStream() {
+      flashToast("↻ Reloading stream...");
+      const currentTime = videoEl.currentTime;
+      videoEl.load();
+      videoEl.currentTime = currentTime;
+      videoEl.play().catch(() => {});
     }
 
     function flashToast(msg) {
       const toast = document.getElementById('playerToastBox');
       toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2800);
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2200);
     }
 
-    // Keyboard Shortcuts (Space, Arrows, M, F, S, Esc)
-    window.addEventListener('keydown', (e) => {
-      if (!playerScreen.classList.contains('active')) return;
-      if (e.code === 'Space' || e.code === 'KeyK') {
-        e.preventDefault();
-        togglePlayPause();
-      } else if (e.code === 'ArrowLeft' || e.code === 'KeyJ') {
-        e.preventDefault();
-        skipTime(-10);
-      } else if (e.code === 'ArrowRight' || e.code === 'KeyL') {
-        e.preventDefault();
-        skipTime(10);
-      } else if (e.code === 'ArrowUp') {
-        e.preventDefault();
-        setPlayerVolume(Math.min(1, (videoEl.volume || 1) + 0.1));
-        flashToast(`Volume: ${Math.round(videoEl.volume * 100)}%`);
-      } else if (e.code === 'ArrowDown') {
-        e.preventDefault();
-        setPlayerVolume(Math.max(0, (videoEl.volume || 1) - 0.1));
-        flashToast(`Volume: ${Math.round(videoEl.volume * 100)}%`);
-      } else if (e.code === 'KeyS') {
-        e.preventDefault();
-        skipIntro();
-      } else if (e.code === 'KeyM') {
-        e.preventDefault();
-        togglePlayerMute();
-      } else if (e.code === 'KeyF') {
-        e.preventDefault();
-        toggleFullscreen();
-      } else if (e.code === 'Escape') {
-        e.preventDefault();
-        exitNetflixPlayer();
-      }
+    document.addEventListener('click', () => {
+      document.getElementById('notifDropdown')?.classList.remove('active');
+      document.getElementById('profileDropdown')?.classList.remove('active');
+      document.getElementById('audioSubsModal')?.style.setProperty('display', 'none');
+      document.getElementById('qualityModal')?.style.setProperty('display', 'none');
     });
-
-    playerScreen.addEventListener('mousemove', resetPlayerIdleTimer);
-    playerScreen.addEventListener('click', resetPlayerIdleTimer);
-    function resetPlayerIdleTimer() {
-      playerScreen.classList.remove('idle-hidden');
-      clearTimeout(playerIdleTimer);
-      playerIdleTimer = setTimeout(() => {
-        if (playerScreen.classList.contains('active') && !videoEl.paused) {
-          playerScreen.classList.add('idle-hidden');
-        }
-      }, 4500);
-    }
-
-    function toggleHeroMute() {
-      const btn = document.getElementById('heroAudioToggleBtn');
-      btn.innerText = btn.innerText === "🔊" ? "🔇" : "🔊";
-    }
-
-    function toggleMyList(item, btnEl) {
-      if (myListIds.has(item.id)) {
-        myListIds.delete(item.id);
-        if (btnEl) btnEl.innerText = "+";
-        flashToast(`Removed "${item.title}" from My List`);
-      } else {
-        myListIds.add(item.id);
-        if (btnEl) btnEl.innerText = "✓";
-        flashToast(`Added "${item.title}" to My List`);
-      }
-    }
-
-    function recordPlaybackState(media, pos = 150, dur = 3000) {
-      if (!media) return;
-      fetch(`${API_BASE}/api/v1/user/progress`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          deviceId: DEVICE_ID,
-          tmdbId: media.id,
-          title: media.title,
-          type: media.type || "tv",
-          season: media.season || 1,
-          episode: media.episode || 1,
-          positionSeconds: pos,
-          durationSeconds: dur,
-          posterUrl: media.posterUrl,
-          backdropUrl: media.backdropUrl
-        })
-      }).catch(() => {});
-    }
-
-    // Live Search Typeahead & Instant Suggestions
-    let searchTimer = null;
-    const searchInput = document.getElementById('navSearchInput');
-    const searchClear = document.getElementById('searchClearBtn');
-    const searchPanel = document.getElementById('searchSuggestionsPanel');
-    const searchList = document.getElementById('searchSuggestionsList');
-
-    searchInput.addEventListener('input', (e) => {
-      const val = e.target.value.trim();
-      searchClear.style.display = val ? 'block' : 'none';
-      clearTimeout(searchTimer);
-
-      if (!val) {
-        if (searchPanel) searchPanel.classList.remove('active');
-        resetSearch();
-        return;
-      }
-
-      searchTimer = setTimeout(async () => {
-        try {
-          const res = await fetch(`${API_BASE}/api/v1/search/suggest?q=${encodeURIComponent(val)}`);
-          const json = await res.json();
-          const items = json.data || [];
-
-          if (items.length > 0 && searchList && searchPanel) {
-            searchList.innerHTML = items.map(it => {
-              catalogCache.set(String(it.id), it);
-              return `
-                <div class="search-suggest-item" onclick="openQuickviewModalById('${it.id}'); searchPanel.classList.remove('active');">
-                  <img class="search-suggest-thumb" src="${it.posterUrl}" alt="${it.title}" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
-                  <div class="search-suggest-info">
-                    <div class="search-suggest-title">${it.title}</div>
-                    <div class="search-suggest-meta">
-                      <span class="search-suggest-match">${it.matchPercentage || '98% Match'}</span>
-                      <span>${it.year || '2026'}</span>
-                      <span class="search-suggest-pill">${it.type === 'tv' ? 'Series' : 'Film'}</span>
-                    </div>
-                  </div>
-                  <button class="hover-btn-round" style="width:28px; height:28px; font-size:12px;" onclick="event.stopPropagation(); launchNetflixPlayerById('${it.id}'); searchPanel.classList.remove('active');" title="Play">▶</button>
-                </div>
-              `;
-            }).join('');
-            searchPanel.classList.add('active');
-          } else if (searchPanel) {
-            searchPanel.classList.remove('active');
-          }
-          // Also update feed in background
-          loadNetflixFeed(currentNavCat, val);
-        } catch (e) {
-          if (searchPanel) searchPanel.classList.remove('active');
-        }
-      }, 250);
-    });
-
-    function resetSearch() {
-      searchInput.value = "";
-      searchClear.style.display = "none";
-      if (searchPanel) searchPanel.classList.remove('active');
-      loadNetflixFeed("all");
-    }
-
-    // Close search dropdown on outside click
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.search-wrap') && !e.target.closest('.search-suggestions-panel')) {
-        if (searchPanel) searchPanel.classList.remove('active');
-      }
-    });
-
-    // Profile Management
-    function switchUserProfile(profileId) {
-      toggleProfilePanel();
-      const avatarBox = document.getElementById('navProfileAvatarBox');
-      const homeLink = document.getElementById('nav-all');
-
-      if (profileId === 'profile_2') {
-        flashToast('Switched to Children & Kids Profile');
-        if (avatarBox) avatarBox.style.backgroundColor = '#ffaa00';
-        if (homeLink) homeLink.innerHTML = 'Home <span class="kids-nav-pill">Kids</span>';
-        loadNetflixFeed('all', '', '&kids=1');
-      } else if (profileId === 'profile_3') {
-        flashToast('Switched to Guest Profile');
-        if (avatarBox) avatarBox.style.backgroundColor = '#0071eb';
-        if (homeLink) homeLink.innerText = 'Home';
-        loadNetflixFeed('all');
-      } else {
-        flashToast('Switched to User 1 (Primary)');
-        if (avatarBox) avatarBox.style.backgroundColor = '#E50914';
-        if (homeLink) homeLink.innerText = 'Home';
-        loadNetflixFeed('all');
-      }
-    }
-
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('mainNavbar');
-      if (window.scrollY > 30) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    });
-
-    // Launch Default Home View & Initialize Client Router
-    loadNetflixFeed("all");
-    if (window.netflixRouter) {
-      window.netflixRouter.init();
-    }
   </script>
 </body>
 </html>

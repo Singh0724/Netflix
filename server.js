@@ -101,11 +101,12 @@ function formatMediaItem(item, defaultType = "movie") {
 // -------------------------------------------------------------
 // CATALOG INITIALIZATION (Zero Cold-Start Seeded Cache)
 // -------------------------------------------------------------
-const seedTrending = (MASTER_CATALOG.rows[0]?.items || []).map(it => formatMediaItem(it));
-const seedLatest = (MASTER_CATALOG.rows[1]?.items || []).map(it => formatMediaItem(it));
-const seedSeries = (MASTER_CATALOG.rows[2]?.items || []).map(it => formatMediaItem(it, "tv"));
-const seedMovies = (MASTER_CATALOG.rows[3]?.items || []).map(it => formatMediaItem(it, "movie"));
+const seedTrending = (MASTER_CATALOG.rows.find(r => r.id === "trending_now")?.items || MASTER_CATALOG.rows[0]?.items || []).map(it => formatMediaItem(it));
+const seedLatest = (MASTER_CATALOG.rows.find(r => r.id === "new_releases")?.items || MASTER_CATALOG.rows[1]?.items || []).map(it => formatMediaItem(it));
+const seedSeries = (MASTER_CATALOG.rows.find(r => r.id === "popular_series")?.items || []).map(it => formatMediaItem(it, "tv"));
+const seedMovies = (MASTER_CATALOG.rows.find(r => r.id === "action_blockbusters")?.items || []).map(it => formatMediaItem(it, "movie"));
 const seedTop10Movies = (MASTER_CATALOG.rows.find(r => r.id === "top_10_movies_india")?.items || []).map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
+const seedTop10TV = (MASTER_CATALOG.rows.find(r => r.id === "top_10_tv_india")?.items || []).map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true }));
 
 let cachedCatalog = {
   lastUpdated: new Date().toISOString(),
@@ -114,10 +115,10 @@ let cachedCatalog = {
   latestDrops: seedLatest,
   netflixSeries: seedSeries,
   netflixMovies: seedMovies,
-  indianCinema: seedMovies,
+  indianCinema: (MASTER_CATALOG.rows.find(r => r.id === "indian_blockbusters")?.items || []).map(it => formatMediaItem(it, "movie")),
   top10Movies: seedTop10Movies,
-  top10TV: seedSeries.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true })),
-  kdramas: seedSeries,
+  top10TV: seedTop10TV,
+  kdramas: (MASTER_CATALOG.rows.find(r => r.id === "kdramas_and_romance")?.items || []).map(it => formatMediaItem(it, "tv")),
   crimeSeries: seedSeries,
   actionMovies: seedMovies,
   comedies: seedMovies,
@@ -508,14 +509,15 @@ app.get("/api/v1/feed/home", async (req, res) => {
       heroItem = MASTER_CATALOG.hero;
       const baseRows = JSON.parse(JSON.stringify(MASTER_CATALOG.rows));
 
-      // Row 1: "Because you watched Newton's 3rd Law"
-      const row1Seed = baseRows[0]?.items || [];
+      // Row 1: "Trending Now on Netflix"
+      const trendingRow = baseRows.find(r => r.id === "trending_now");
+      const row1Seed = (trendingRow ? trendingRow.items : baseRows[0]?.items) || [];
       row1Seed.forEach(it => {
         if (it && it.id) feedSeen.add(String(it.id));
         const n = (it.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
         if (n) feedSeen.add(n);
       });
-      const row1Extra = pickUnique((cachedCatalog.indianCinema || []).concat(cachedCatalog.trending || []), 15);
+      const row1Extra = pickUnique((cachedCatalog.trending || []).concat(cachedCatalog.netflixSeries || []), 15);
       const row1Full = [...row1Seed, ...row1Extra];
 
       // Row 2: "Continue Watching"
@@ -546,27 +548,34 @@ app.get("/api/v1/feed/home", async (req, res) => {
       });
 
       // Row 4: "Top 10 TV Shows in India Today" (Full 10 numbered items)
-      const top10TVFull = (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : pickUnique(cachedCatalog.netflixSeries || [], 10)).slice(0, 10).map((it, idx) => {
+      const top10TVFull = (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : baseRows.find(r => r.id === "top_10_tv_india")?.items || pickUnique(cachedCatalog.netflixSeries || [], 10)).slice(0, 10).map((it, idx) => {
         feedSeen.add(String(it.id));
         return { ...it, rank: idx + 1, isTop10: true };
       });
 
-      // Row 5: "Trending Now in Indian Cinema"
-      const indianTrendingSeed = baseRows.find(r => r.id === "trending_india_cinema")?.items || [];
-      const indianTrendingExtra = pickUnique(cachedCatalog.indianCinema || [], 20);
-      const indianTrendingFull = [...indianTrendingSeed, ...indianTrendingExtra];
+      // Row 5: "Blockbuster Indian Cinema"
+      const indianRow = baseRows.find(r => r.id === "indian_blockbusters");
+      const indianSeed = indianRow ? indianRow.items : (baseRows.find(r => r.id === "trending_india_cinema")?.items || []);
+      const indianExtra = pickUnique(cachedCatalog.indianCinema || [], 20);
+      const indianFull = [...indianSeed, ...indianExtra];
 
-      // Row 6: "Popular on Netflix"
+      // Row 6: "Binge-Worthy TV Series"
+      const seriesRow = baseRows.find(r => r.id === "popular_series");
+      const seriesSeed = seriesRow ? seriesRow.items : [];
+      const tvHitsFull = [...seriesSeed, ...pickUnique((cachedCatalog.crimeSeries || []).concat(cachedCatalog.netflixSeries || []), 25)];
+
+      // Row 7: "Action & Adventure Blockbusters"
+      const actionRow = baseRows.find(r => r.id === "action_blockbusters");
+      const actionSeed = actionRow ? actionRow.items : [];
+      const actionFull = [...actionSeed, ...pickUnique(cachedCatalog.actionMovies || [], 25)];
+
+      // Row 8: "Romantic K-Dramas & International Hits"
+      const kdramaRow = baseRows.find(r => r.id === "kdramas_and_romance");
+      const kdramaSeed = kdramaRow ? kdramaRow.items : [];
+      const kdramasFull = [...kdramaSeed, ...pickUnique((cachedCatalog.kdramas || []).concat(cachedCatalog.romance || []), 25)];
+
+      // Row 9: "Popular on Netflix"
       const popularFull = pickUnique(cachedCatalog.trending || [], 25);
-
-      // Row 7: "Binge-Worthy TV Shows & Crime Thrillers"
-      const tvHitsFull = pickUnique((cachedCatalog.crimeSeries || []).concat(cachedCatalog.netflixSeries || []), 25);
-
-      // Row 8: "Action & Adventure Blockbusters"
-      const actionFull = pickUnique(cachedCatalog.actionMovies || [], 25);
-
-      // Row 9: "Romantic K-Dramas & International Hits"
-      const kdramasFull = pickUnique((cachedCatalog.kdramas || []).concat(cachedCatalog.romance || []), 25);
 
       // Row 10: "Comedies & Feel-Good Cinema"
       const comediesFull = pickUnique(cachedCatalog.comedies || [], 25);
@@ -577,18 +586,13 @@ app.get("/api/v1/feed/home", async (req, res) => {
       // Row 12: "Critically Acclaimed Documentaries"
       const docsFull = pickUnique(cachedCatalog.documentaries || [], 20);
 
-      // Row 13: "We Think You'll Love"
-      const loveSeed = baseRows.find(r => r.id === "we_think_youll_love")?.items || [];
-      const loveExtra = pickUnique(cachedCatalog.latestDrops || [], 15);
-      const loveFull = [...loveSeed, ...loveExtra];
-
-      // Row 14: "New Releases & Recently Added"
+      // Row 13: "New Releases & Recently Added"
       const newReleasesFull = pickUnique(cachedCatalog.latestDrops || [], 25);
 
       rows.push(
         {
-          id: "because_newton",
-          title: "Because you watched Newton's 3rd Law",
+          id: "trending_now",
+          title: "Trending Now on Netflix",
           items: row1Full
         },
         {
@@ -610,18 +614,13 @@ app.get("/api/v1/feed/home", async (req, res) => {
           items: top10TVFull
         },
         {
-          id: "trending_india_cinema",
-          title: "Trending Now in Indian Cinema",
-          items: indianTrendingFull
+          id: "indian_blockbusters",
+          title: "Blockbuster Indian Cinema (Hindi, Tamil, Telugu)",
+          items: indianFull
         },
         {
-          id: "popular_on_netflix",
-          title: "Popular on Netflix",
-          items: popularFull
-        },
-        {
-          id: "binge_worthy_tv",
-          title: "Binge-Worthy TV Shows & Crime Thrillers",
+          id: "popular_series",
+          title: "Binge-Worthy TV Series & Netflix Originals",
           items: tvHitsFull
         },
         {
@@ -630,9 +629,14 @@ app.get("/api/v1/feed/home", async (req, res) => {
           items: actionFull
         },
         {
-          id: "romantic_kdramas",
+          id: "kdramas_and_romance",
           title: "Romantic K-Dramas & International Hits",
           items: kdramasFull
+        },
+        {
+          id: "popular_on_netflix",
+          title: "Popular on Netflix",
+          items: popularFull
         },
         {
           id: "feel_good_comedies",
@@ -648,11 +652,6 @@ app.get("/api/v1/feed/home", async (req, res) => {
           id: "acclaimed_docs",
           title: "Critically Acclaimed Documentaries & Real Stories",
           items: docsFull
-        },
-        {
-          id: "we_think_youll_love",
-          title: "We Think You'll Love",
-          items: loveFull
         },
         {
           id: "new_releases",
