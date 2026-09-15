@@ -155,39 +155,149 @@ async function fetchNetflixMovies() {
       watch_region: "IN",
       sort_by: "popularity.desc",
       "vote_count.gte": 10
-    }, 3),
+    }, 4),
     fetchMultiPage("/discover/movie", {
       with_watch_providers: "8",
       watch_region: "US",
       sort_by: "popularity.desc",
       "vote_count.gte": 10
-    }, 3),
+    }, 4),
     fetchMultiPage("/discover/movie", {
       with_watch_providers: "8",
       watch_region: "IN",
       sort_by: "vote_average.desc",
       "vote_count.gte": 500
-    }, 2)
+    }, 3)
   ]);
 
   return deduplicateMediaList([...inMovies, ...usMovies, ...topRated]);
 }
 
-// 5. Search Across All Titles
+// 5. Popular Indian Cinema (Bollywood & South Indian Blockbusters)
+async function fetchIndianCinema() {
+  const [hindi, south] = await Promise.all([
+    fetchMultiPage("/discover/movie", {
+      with_original_language: "hi",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 5
+    }, 3),
+    fetchMultiPage("/discover/movie", {
+      with_original_language: "ta|te|ml|kn",
+      sort_by: "popularity.desc",
+      "vote_count.gte": 5
+    }, 3)
+  ]);
+  return deduplicateMediaList([...hindi, ...south]);
+}
+
+// 6. Top 10 Indian Movies Today
+async function fetchTop10IndiaMovies() {
+  const movies = await fetchMultiPage("/discover/movie", {
+    with_watch_providers: "8",
+    watch_region: "IN",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 5
+  }, 2);
+  const deduped = deduplicateMediaList(movies);
+  return deduped.slice(0, 10).map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
+}
+
+// 7. Top 10 Indian TV Shows Today
+async function fetchTop10IndiaTV() {
+  const tv = await fetchMultiPage("/discover/tv", {
+    with_watch_providers: "8",
+    watch_region: "IN",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 5
+  }, 2);
+  const deduped = deduplicateMediaList(tv);
+  return deduped.slice(0, 10).map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
+}
+
+// 8. K-Dramas & Asian Dramas
+async function fetchKDramas() {
+  const shows = await fetchMultiPage("/discover/tv", {
+    with_original_language: "ko",
+    sort_by: "popularity.desc"
+  }, 3);
+  return deduplicateMediaList(shows);
+}
+
+// 9. Binge-Worthy Crime & Thriller Series
+async function fetchCrimeSeries() {
+  const shows = await fetchMultiPage("/discover/tv", {
+    with_genres: "80,9648",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 15
+  }, 3);
+  return deduplicateMediaList(shows);
+}
+
+// 10. Action & Adventure Blockbusters
+async function fetchActionMovies() {
+  const movies = await fetchMultiPage("/discover/movie", {
+    with_genres: "28,12",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 20
+  }, 4);
+  return deduplicateMediaList(movies);
+}
+
+// 11. Laugh-Out-Loud Comedies
+async function fetchComedies() {
+  const movies = await fetchMultiPage("/discover/movie", {
+    with_genres: "35",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 15
+  }, 3);
+  return deduplicateMediaList(movies);
+}
+
+// 12. Sci-Fi & Fantasy Epics
+async function fetchSciFiFantasy() {
+  const items = await fetchMultiPage("/discover/movie", {
+    with_genres: "878,14",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 20
+  }, 3);
+  return deduplicateMediaList(items);
+}
+
+// 13. Acclaimed Documentaries & Real Stories
+async function fetchDocumentaries() {
+  const docs = await fetchMultiPage("/discover/movie", {
+    with_genres: "99",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 5
+  }, 3);
+  return deduplicateMediaList(docs);
+}
+
+// 14. Romance & Emotional Hits
+async function fetchRomanceTitles() {
+  const items = await fetchMultiPage("/discover/movie", {
+    with_genres: "10749",
+    sort_by: "popularity.desc",
+    "vote_count.gte": 15
+  }, 3);
+  return deduplicateMediaList(items);
+}
+
+// 15. Search Across All Titles
 async function searchAllMedia(query) {
   const data = await fetchEndpoint("/search/multi", { query });
   if (!data || !data.results) return [];
   return data.results.filter(item => item.media_type === "movie" || item.media_type === "tv");
 }
 
-// 6. Full Item Details
+// 16. Full Item Details
 async function fetchItemDetails(type, id) {
   return fetchEndpoint(`/${type}/${id}`, {
     append_to_response: "credits,similar,videos"
   });
 }
 
-// 7. Season Episodes
+// 17. Season Episodes
 async function fetchSeasonEpisodes(tvId, seasonNumber) {
   const data = await fetchEndpoint(`/tv/${tvId}/season/${seasonNumber}`);
   return data ? data.episodes || [] : [];
@@ -199,6 +309,16 @@ module.exports = {
   fetchLatestNetflixReleases,
   fetchNetflixIndiaSeries,
   fetchNetflixMovies,
+  fetchIndianCinema,
+  fetchTop10IndiaMovies,
+  fetchTop10IndiaTV,
+  fetchKDramas,
+  fetchCrimeSeries,
+  fetchActionMovies,
+  fetchComedies,
+  fetchSciFiFantasy,
+  fetchDocumentaries,
+  fetchRomanceTitles,
   searchAllMedia,
   fetchItemDetails,
   fetchSeasonEpisodes

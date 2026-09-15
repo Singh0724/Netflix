@@ -9,6 +9,16 @@ const {
   fetchLatestNetflixReleases,
   fetchNetflixIndiaSeries,
   fetchNetflixMovies,
+  fetchIndianCinema,
+  fetchTop10IndiaMovies,
+  fetchTop10IndiaTV,
+  fetchKDramas,
+  fetchCrimeSeries,
+  fetchActionMovies,
+  fetchComedies,
+  fetchSciFiFantasy,
+  fetchDocumentaries,
+  fetchRomanceTitles,
   searchAllMedia,
   fetchItemDetails,
   fetchSeasonEpisodes
@@ -95,6 +105,7 @@ const seedTrending = (MASTER_CATALOG.rows[0]?.items || []).map(it => formatMedia
 const seedLatest = (MASTER_CATALOG.rows[1]?.items || []).map(it => formatMediaItem(it));
 const seedSeries = (MASTER_CATALOG.rows[2]?.items || []).map(it => formatMediaItem(it, "tv"));
 const seedMovies = (MASTER_CATALOG.rows[3]?.items || []).map(it => formatMediaItem(it, "movie"));
+const seedTop10Movies = (MASTER_CATALOG.rows.find(r => r.id === "top_10_movies_india")?.items || []).map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
 
 let cachedCatalog = {
   lastUpdated: new Date().toISOString(),
@@ -102,17 +113,52 @@ let cachedCatalog = {
   trending: seedTrending,
   latestDrops: seedLatest,
   netflixSeries: seedSeries,
-  netflixMovies: seedMovies
+  netflixMovies: seedMovies,
+  indianCinema: seedMovies,
+  top10Movies: seedTop10Movies,
+  top10TV: seedSeries.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true })),
+  kdramas: seedSeries,
+  crimeSeries: seedSeries,
+  actionMovies: seedMovies,
+  comedies: seedMovies,
+  sciFi: seedMovies,
+  documentaries: seedMovies,
+  romance: seedMovies
 };
 
 async function refreshCatalog() {
   console.log("[Engine] ⚡ Refreshing live multi-region Netflix catalog...");
   try {
-    const [trending, latest, series, movies] = await Promise.all([
+    const [
+      trending,
+      latest,
+      series,
+      movies,
+      indian,
+      top10Mov,
+      top10Tv,
+      kdrama,
+      crime,
+      action,
+      comedy,
+      scifi,
+      docs,
+      romance
+    ] = await Promise.all([
       fetchTrendingAll(),
       fetchLatestNetflixReleases(),
       fetchNetflixIndiaSeries(),
-      fetchNetflixMovies()
+      fetchNetflixMovies(),
+      fetchIndianCinema(),
+      fetchTop10IndiaMovies(),
+      fetchTop10IndiaTV(),
+      fetchKDramas(),
+      fetchCrimeSeries(),
+      fetchActionMovies(),
+      fetchComedies(),
+      fetchSciFiFantasy(),
+      fetchDocumentaries(),
+      fetchRomanceTitles()
     ]);
 
     if (trending && trending.length > 0) {
@@ -127,15 +173,48 @@ async function refreshCatalog() {
     if (movies && movies.length > 0) {
       cachedCatalog.netflixMovies = deduplicateMediaList(movies.map(it => formatMediaItem(it, "movie")));
     }
-
-    // Ensure Hero is prominent and has valid backdrop
-    const heroCandidate = cachedCatalog.trending.find(it => it.backdropUrl) || cachedCatalog.netflixSeries[0];
-    if (heroCandidate) {
-      cachedCatalog.hero = heroCandidate;
+    if (indian && indian.length > 0) {
+      cachedCatalog.indianCinema = deduplicateMediaList(indian.map(it => formatMediaItem(it, "movie")));
     }
+    if (top10Mov && top10Mov.length > 0) {
+      cachedCatalog.top10Movies = top10Mov.map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
+    }
+    if (top10Tv && top10Tv.length > 0) {
+      cachedCatalog.top10TV = top10Tv.map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true }));
+    }
+    if (kdrama && kdrama.length > 0) {
+      cachedCatalog.kdramas = deduplicateMediaList(kdrama.map(it => formatMediaItem(it, "tv")));
+    }
+    if (crime && crime.length > 0) {
+      cachedCatalog.crimeSeries = deduplicateMediaList(crime.map(it => formatMediaItem(it, "tv")));
+    }
+    if (action && action.length > 0) {
+      cachedCatalog.actionMovies = deduplicateMediaList(action.map(it => formatMediaItem(it, "movie")));
+    }
+    if (comedy && comedy.length > 0) {
+      cachedCatalog.comedies = deduplicateMediaList(comedy.map(it => formatMediaItem(it, "movie")));
+    }
+    if (scifi && scifi.length > 0) {
+      cachedCatalog.sciFi = deduplicateMediaList(scifi.map(it => formatMediaItem(it, "movie")));
+    }
+    if (docs && docs.length > 0) {
+      cachedCatalog.documentaries = deduplicateMediaList(docs.map(it => formatMediaItem(it, "movie")));
+    }
+    if (romance && romance.length > 0) {
+      cachedCatalog.romance = deduplicateMediaList(romance.map(it => formatMediaItem(it, "movie")));
+    }
+
+    // Preserve Master Hero (Turning Point: Generation 9/11)
+    cachedCatalog.hero = MASTER_CATALOG.hero;
     cachedCatalog.lastUpdated = new Date().toISOString();
 
-    console.log(`[Engine] ✅ Catalog Synchronized: ${cachedCatalog.trending.length} titles ready.`);
+    const totalTitles = (cachedCatalog.trending?.length || 0) + 
+                        (cachedCatalog.latestDrops?.length || 0) + 
+                        (cachedCatalog.netflixSeries?.length || 0) + 
+                        (cachedCatalog.netflixMovies?.length || 0) + 
+                        (cachedCatalog.indianCinema?.length || 0);
+
+    console.log(`[Engine] ✅ Massive Catalog Synchronized: ${totalTitles} active titles ready across 14 rich categories.`);
   } catch (err) {
     console.error("[Engine] Refresh failure:", err.message);
   }
@@ -191,25 +270,6 @@ app.get("/api/v1/feed/home", async (req, res) => {
     const continueWatchingItems = progressStore.getContinueWatching(deviceId);
     const rows = [];
 
-    if (continueWatchingItems.length > 0) {
-      rows.push({
-        id: "continue_watching",
-        title: "Continue Watching",
-        isContinueWatching: true,
-        items: continueWatchingItems.map(item => ({
-          id: item.tmdbId,
-          title: item.title,
-          type: item.type,
-          posterUrl: item.posterUrl,
-          backdropUrl: item.backdropUrl,
-          season: item.season,
-          episode: item.episode,
-          positionSeconds: item.positionSeconds,
-          progressPercentage: item.progressPercentage
-        }))
-      });
-    }
-
     let heroItem = cachedCatalog.hero;
     if (category === "tv") {
       heroItem = cachedCatalog.netflixSeries[0] || cachedCatalog.hero;
@@ -254,7 +314,7 @@ app.get("/api/v1/feed/home", async (req, res) => {
     }
 
     if (category === "tv") {
-      const tvTop10 = pickUnique(cachedCatalog.netflixSeries, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
+      const tvTop10 = (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : pickUnique(cachedCatalog.netflixSeries, 10)).map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
       rows.push(
         {
           id: "top_10_tv",
@@ -263,18 +323,43 @@ app.get("/api/v1/feed/home", async (req, res) => {
           items: tvTop10
         },
         {
-          id: "popular_series",
-          title: "Binge-Worthy TV Shows",
-          items: pickUnique(cachedCatalog.netflixSeries, 30)
+          id: "trending_series",
+          title: "Trending TV Shows Worldwide",
+          items: pickUnique(cachedCatalog.trending.filter(it => it.type === "tv"), 25)
         },
         {
-          id: "trending_series",
-          title: "Trending Dramas & Crime Series",
-          items: pickUnique(cachedCatalog.trending.filter(it => it.type === "tv"), 25)
+          id: "popular_series",
+          title: "Binge-Worthy TV Series & Netflix Originals",
+          items: pickUnique(cachedCatalog.netflixSeries, 25)
+        },
+        {
+          id: "crime_thrillers_tv",
+          title: "Gripping Crime & Mystery Series",
+          items: pickUnique(cachedCatalog.crimeSeries || [], 25)
+        },
+        {
+          id: "kdramas_tv",
+          title: "Popular Korean Dramas & Asian Hits",
+          items: pickUnique(cachedCatalog.kdramas || [], 25)
+        },
+        {
+          id: "comedy_series",
+          title: "Laugh-Out-Loud Comedy Shows",
+          items: pickUnique((cachedCatalog.comedies || []).filter(it => it.type === "tv" || it.type === "movie"), 25)
+        },
+        {
+          id: "scifi_fantasy_tv",
+          title: "Sci-Fi, Supernatural & Fantasy Series",
+          items: pickUnique(cachedCatalog.sciFi || [], 25)
+        },
+        {
+          id: "docuseries_tv",
+          title: "Compelling Docuseries & Real Life",
+          items: pickUnique(cachedCatalog.documentaries || [], 20)
         }
       );
     } else if (category === "movie") {
-      const movieTop10 = pickUnique(cachedCatalog.netflixMovies, 10).map((it, idx) => ({ ...it, rank: idx + 1 }));
+      const movieTop10 = (cachedCatalog.top10Movies?.length >= 10 ? cachedCatalog.top10Movies.slice(0, 10) : pickUnique(cachedCatalog.netflixMovies, 10)).map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
       rows.push(
         {
           id: "top_10_movies",
@@ -283,27 +368,121 @@ app.get("/api/v1/feed/home", async (req, res) => {
           items: movieTop10
         },
         {
-          id: "hit_movies",
-          title: "Blockbuster Movies on Netflix",
-          items: pickUnique(cachedCatalog.netflixMovies, 30)
+          id: "blockbuster_indian",
+          title: "Blockbuster Indian Cinema (Hindi, Tamil, Telugu)",
+          items: pickUnique(cachedCatalog.indianCinema || [], 25)
         },
         {
-          id: "trending_movies",
-          title: "Trending Feature Films",
-          items: pickUnique(cachedCatalog.trending.filter(it => it.type === "movie"), 25)
+          id: "hit_movies",
+          title: "Popular Blockbusters on Netflix",
+          items: pickUnique(cachedCatalog.netflixMovies, 25)
+        },
+        {
+          id: "action_movies",
+          title: "Adrenaline-Fueled Action & Adventure",
+          items: pickUnique(cachedCatalog.actionMovies || [], 25)
+        },
+        {
+          id: "comedy_movies",
+          title: "Comedies & Feel-Good Movies",
+          items: pickUnique(cachedCatalog.comedies || [], 25)
+        },
+        {
+          id: "romance_movies",
+          title: "Romantic Movies & Emotional Dramas",
+          items: pickUnique(cachedCatalog.romance || [], 25)
+        },
+        {
+          id: "scifi_movies",
+          title: "Mind-Bending Sci-Fi & Fantasy Spectacles",
+          items: pickUnique(cachedCatalog.sciFi || [], 25)
+        },
+        {
+          id: "doc_movies",
+          title: "Award-Winning Documentaries",
+          items: pickUnique(cachedCatalog.documentaries || [], 20)
         }
       );
     } else if (category === "new") {
+      heroItem = MASTER_CATALOG.hero;
       rows.push(
         {
-          id: "new_on_netflix",
-          title: "New on Netflix (Released This Week)",
-          items: pickUnique(cachedCatalog.latestDrops, 30)
+          id: "new_this_week",
+          title: "New on Netflix (This Week)",
+          items: pickUnique(cachedCatalog.latestDrops, 25)
         },
         {
-          id: "trending_now",
-          title: "Trending Now Globally",
-          items: pickUnique(cachedCatalog.trending, 30)
+          id: "top_10_movies_today",
+          title: "Top 10 Movies in India Today",
+          isTop10: true,
+          items: (cachedCatalog.top10Movies?.length >= 10 ? cachedCatalog.top10Movies.slice(0, 10) : MASTER_CATALOG.rows.find(r => r.id === "top_10_movies_india")?.items || []).slice(0, 10)
+        },
+        {
+          id: "top_10_tv_today",
+          title: "Top 10 TV Shows in India Today",
+          isTop10: true,
+          items: (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : pickUnique(cachedCatalog.netflixSeries, 10)).map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }))
+        },
+        {
+          id: "coming_next_week",
+          title: "Coming Next Week",
+          items: MASTER_CATALOG.newAndPopular[1]?.items || []
+        },
+        {
+          id: "worth_the_wait",
+          title: "Worth the Wait (Coming Soon)",
+          items: MASTER_CATALOG.newAndPopular[2]?.items || []
+        }
+      );
+    } else if (category === "games") {
+      heroItem = {
+        id: 9002,
+        title: "Squid Game: Unleashed",
+        heroTitleUpper: "NETFLIX GAMES",
+        heroTitleLower: "SQUID GAME: UNLEASHED",
+        type: "game",
+        overview: "Compete with friends or foes in chaotic high-stakes challenges inspired by the hit series. Play exclusively with your Netflix membership.",
+        posterUrl: "https://image.tmdb.org/t/p/w500/dDlG1m7n92Z23E3gO758sY8Nf6A.jpg",
+        backdropUrl: "https://image.tmdb.org/t/p/original/oaGvjB0DvdurWhf9IhSJ15VvEhu.jpg",
+        rating: 9.2,
+        badge: "Mobile Game • Action • 2026",
+        matchPercentage: "99% Match",
+        maturityRating: "16+",
+        duration: "Mobile Edition",
+        year: "2026",
+        genres: ["Action", "Battle Royale", "Multiplayer"]
+      };
+      rows.push(
+        {
+          id: "trending_games",
+          title: "Trending Mobile & Interactive Games on Netflix",
+          items: MASTER_CATALOG.games || []
+        },
+        {
+          id: "based_on_shows",
+          title: "Games Based on Netflix Series",
+          items: [
+            MASTER_CATALOG.games[0], // Stranger Things
+            MASTER_CATALOG.games[1], // Squid Game
+            MASTER_CATALOG.games[3]  // Dead Cells
+          ].filter(Boolean)
+        }
+      );
+    } else if (category === "languages") {
+      const lang = req.query.lang || "Hindi";
+      heroItem = MASTER_CATALOG.hero;
+      const allItems = MASTER_CATALOG.rows.flatMap(r => r.items || []);
+      const filtered = allItems.filter(it => !lang || (it.language && it.language.toLowerCase() === lang.toLowerCase()));
+      rows.push(
+        {
+          id: "browse_language_row",
+          title: `Titles Available with ${lang} Audio & Subtitles (${filtered.length > 0 ? filtered.length : allItems.length} titles)`,
+          items: filtered.length > 0 ? filtered : allItems
+        },
+        {
+          id: "trending_multilingual",
+          title: "Trending Multi-Language Hits",
+          items: allItems.slice(0, 8)
         }
       );
     } else if (category === "mylist") {
@@ -315,37 +494,160 @@ app.get("/api/v1/feed/home", async (req, res) => {
         items: userList.length > 0 ? userList : pickUnique(cachedCatalog.trending, 8)
       });
     } else {
-      const top10 = pickUnique(cachedCatalog.trending, 10).map((it, idx) => ({
-        ...it,
-        rank: idx + 1
-      }));
+      // 1:1 Exact Netflix India Sequence from user screenshots + Massive 300+ Deep Catalog
+      heroItem = MASTER_CATALOG.hero;
+      const baseRows = JSON.parse(JSON.stringify(MASTER_CATALOG.rows));
+
+      // Row 1: "Because you watched Newton's 3rd Law"
+      const row1Seed = baseRows[0]?.items || [];
+      row1Seed.forEach(it => {
+        if (it && it.id) feedSeen.add(String(it.id));
+        const n = (it.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+        if (n) feedSeen.add(n);
+      });
+      const row1Extra = pickUnique((cachedCatalog.indianCinema || []).concat(cachedCatalog.trending || []), 15);
+      const row1Full = [...row1Seed, ...row1Extra];
+
+      // Row 2: "Continue Watching"
+      const cwRow = baseRows.find(r => r.id === "continue_watching");
+      let cwFull = cwRow?.items || [];
+      if (continueWatchingItems.length > 0) {
+        const userItems = continueWatchingItems.map(item => ({
+          id: item.tmdbId,
+          title: item.title,
+          type: item.type,
+          posterUrl: item.posterUrl,
+          backdropUrl: item.backdropUrl,
+          season: item.season,
+          episode: item.episode,
+          positionSeconds: item.positionSeconds,
+          progressPercentage: item.progressPercentage || 40,
+          maturityRating: item.maturityRating || "U/A 16+",
+          genres: item.genres || ["Drama"]
+        }));
+        const existingIds = new Set(userItems.map(it => String(it.id)));
+        cwFull = [...userItems, ...cwFull.filter(it => !existingIds.has(String(it.id)))];
+      }
+
+      // Row 3: "Top 10 Movies in India Today" (Full 10 numbered items)
+      const top10MoviesFull = (cachedCatalog.top10Movies?.length >= 10 ? cachedCatalog.top10Movies.slice(0, 10) : baseRows.find(r => r.id === "top_10_movies_india")?.items || []).slice(0, 10).map((it, idx) => {
+        feedSeen.add(String(it.id));
+        return { ...it, rank: idx + 1, isTop10: true };
+      });
+
+      // Row 4: "Top 10 TV Shows in India Today" (Full 10 numbered items)
+      const top10TVFull = (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : pickUnique(cachedCatalog.netflixSeries || [], 10)).slice(0, 10).map((it, idx) => {
+        feedSeen.add(String(it.id));
+        return { ...it, rank: idx + 1, isTop10: true };
+      });
+
+      // Row 5: "Trending Now in Indian Cinema"
+      const indianTrendingSeed = baseRows.find(r => r.id === "trending_india_cinema")?.items || [];
+      const indianTrendingExtra = pickUnique(cachedCatalog.indianCinema || [], 20);
+      const indianTrendingFull = [...indianTrendingSeed, ...indianTrendingExtra];
+
+      // Row 6: "Popular on Netflix"
+      const popularFull = pickUnique(cachedCatalog.trending || [], 25);
+
+      // Row 7: "Binge-Worthy TV Shows & Crime Thrillers"
+      const tvHitsFull = pickUnique((cachedCatalog.crimeSeries || []).concat(cachedCatalog.netflixSeries || []), 25);
+
+      // Row 8: "Action & Adventure Blockbusters"
+      const actionFull = pickUnique(cachedCatalog.actionMovies || [], 25);
+
+      // Row 9: "Romantic K-Dramas & International Hits"
+      const kdramasFull = pickUnique((cachedCatalog.kdramas || []).concat(cachedCatalog.romance || []), 25);
+
+      // Row 10: "Comedies & Feel-Good Cinema"
+      const comediesFull = pickUnique(cachedCatalog.comedies || [], 25);
+
+      // Row 11: "Sci-Fi & Fantasy Epics"
+      const sciFiFull = pickUnique(cachedCatalog.sciFi || [], 25);
+
+      // Row 12: "Critically Acclaimed Documentaries"
+      const docsFull = pickUnique(cachedCatalog.documentaries || [], 20);
+
+      // Row 13: "We Think You'll Love"
+      const loveSeed = baseRows.find(r => r.id === "we_think_youll_love")?.items || [];
+      const loveExtra = pickUnique(cachedCatalog.latestDrops || [], 15);
+      const loveFull = [...loveSeed, ...loveExtra];
+
+      // Row 14: "New Releases & Recently Added"
+      const newReleasesFull = pickUnique(cachedCatalog.latestDrops || [], 25);
 
       rows.push(
         {
-          id: "top_10_today",
-          title: "Top 10 in India Today",
+          id: "because_newton",
+          title: "Because you watched Newton's 3rd Law",
+          items: row1Full
+        },
+        {
+          id: "continue_watching",
+          title: "Continue Watching for User",
+          isContinueWatching: true,
+          items: cwFull
+        },
+        {
+          id: "top_10_movies_india",
+          title: "Top 10 Movies in India Today",
           isTop10: true,
-          items: top10
+          items: top10MoviesFull
         },
         {
-          id: "new_on_netflix",
-          title: "New on Netflix (Released This Week)",
-          items: pickUnique(cachedCatalog.latestDrops, 25)
+          id: "top_10_tv_india",
+          title: "Top 10 TV Shows in India Today",
+          isTop10: true,
+          items: top10TVFull
         },
         {
-          id: "trending_now",
-          title: "Trending Now Globally",
-          items: pickUnique(cachedCatalog.trending, 25)
+          id: "trending_india_cinema",
+          title: "Trending Now in Indian Cinema",
+          items: indianTrendingFull
         },
         {
-          id: "popular_series",
-          title: "Binge-Worthy TV Shows",
-          items: pickUnique(cachedCatalog.netflixSeries, 25)
+          id: "popular_on_netflix",
+          title: "Popular on Netflix",
+          items: popularFull
         },
         {
-          id: "hit_movies",
-          title: "Blockbuster Movies on Netflix",
-          items: pickUnique(cachedCatalog.netflixMovies, 25)
+          id: "binge_worthy_tv",
+          title: "Binge-Worthy TV Shows & Crime Thrillers",
+          items: tvHitsFull
+        },
+        {
+          id: "action_blockbusters",
+          title: "Action & Adventure Blockbusters",
+          items: actionFull
+        },
+        {
+          id: "romantic_kdramas",
+          title: "Romantic K-Dramas & International Hits",
+          items: kdramasFull
+        },
+        {
+          id: "feel_good_comedies",
+          title: "Comedies & Feel-Good Cinema",
+          items: comediesFull
+        },
+        {
+          id: "scifi_fantasy_epics",
+          title: "Sci-Fi & Fantasy Epics",
+          items: sciFiFull
+        },
+        {
+          id: "acclaimed_docs",
+          title: "Critically Acclaimed Documentaries & Real Stories",
+          items: docsFull
+        },
+        {
+          id: "we_think_youll_love",
+          title: "We Think You'll Love",
+          items: loveFull
+        },
+        {
+          id: "new_releases",
+          title: "New Releases & Recently Added",
+          items: newReleasesFull
         }
       );
     }
@@ -389,6 +691,14 @@ app.post("/api/v1/user/progress", (req, res) => {
   res.json({ status: "success", data: saved });
 });
 
+// User Notifications Endpoint
+app.get("/api/v1/user/notifications", (req, res) => {
+  res.json({
+    status: "success",
+    data: MASTER_CATALOG.notifications || []
+  });
+});
+
 // User My List Endpoints
 app.get("/api/v1/user/mylist", (req, res) => {
   const deviceId = req.query.deviceId || "global_user";
@@ -412,6 +722,38 @@ app.delete("/api/v1/user/mylist/:id", (req, res) => {
 // Media Details Endpoint
 app.get("/api/v1/media/:type/:id", async (req, res) => {
   const { type, id } = req.params;
+
+  // 1. Check MASTER_CATALOG first for 1:1 fidelity with user screenshots
+  const allMaster = [
+    MASTER_CATALOG.hero,
+    ...MASTER_CATALOG.rows.flatMap(r => r.items || [])
+  ];
+  const masterMatch = allMaster.find(it => it && String(it.id) === String(id));
+  if (masterMatch) {
+    const isTv = masterMatch.type === "tv" || type === "tv";
+    return res.json({
+      status: "success",
+      data: {
+        id: masterMatch.id,
+        title: masterMatch.title,
+        type: masterMatch.type || type,
+        overview: masterMatch.overview || "A celebrated story on Netflix.",
+        posterUrl: masterMatch.posterUrl,
+        backdropUrl: masterMatch.backdropUrl,
+        rating: masterMatch.rating || 8.8,
+        matchPercentage: masterMatch.matchPercentage || "98% Match",
+        maturityRating: masterMatch.maturityRating || "U/A 16+",
+        genres: masterMatch.genres || ["Drama"],
+        duration: masterMatch.duration || masterMatch.runtimeDisplay || (isTv ? "1 Season" : "1h 56m"),
+        numberOfSeasons: isTv ? 2 : 1,
+        seasons: isTv ? [
+          { seasonNumber: 1, name: "Season 1", episodeCount: 5 },
+          { seasonNumber: 2, name: "Season 2", episodeCount: 5 }
+        ] : []
+      }
+    });
+  }
+
   let details = await fetchItemDetails(type, id);
 
   // If details not reachable from network, lookup from seeded/cached catalog
@@ -482,6 +824,50 @@ app.get("/api/v1/media/:type/:id", async (req, res) => {
 
 app.get("/api/v1/tv/:tvId/season/:seasonNumber", async (req, res) => {
   const { tvId, seasonNumber } = req.params;
+
+  // Specific 1:1 authentic episodes for Chumbak (from Screenshot 4: "Chumbak E1 Episode 1")
+  if (String(tvId) === "82061016") {
+    return res.json({
+      status: "success",
+      data: [
+        {
+          episodeNumber: 1,
+          name: "Episode 1",
+          overview: "Don't grin like an idiot at her stupid joke. An awkward encounter at the cafe kicks off an unforgettable sequence of comedic missteps.",
+          stillUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
+          runtime: "42m"
+        },
+        {
+          episodeNumber: 2,
+          name: "Episode 2: The Highway Confession",
+          overview: "When their broken-down car strands them on a remote bypass, old memories and unfiltered revelations start spilling over hot tea.",
+          stillUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80",
+          runtime: "45m"
+        },
+        {
+          episodeNumber: 3,
+          name: "Episode 3: The Golden Plan",
+          overview: "A mistaken delivery sparks an audacious idea that promises quick fortune but brings triple the trouble.",
+          stillUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
+          runtime: "49m"
+        },
+        {
+          episodeNumber: 4,
+          name: "Episode 4: The Comedy of Errors",
+          overview: "Disguised as wedding guests, the trio must perform an improvised dance of deception to escape caught red-handed.",
+          stillUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+          runtime: "51m"
+        },
+        {
+          episodeNumber: 5,
+          name: "Episode 5: Season Finale",
+          overview: "All the threads converge in a heartfelt, uproarious finale where friendship proves far stronger than their blunders.",
+          stillUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
+          runtime: "55m"
+        }
+      ]
+    });
+  }
   const episodesRaw = await fetchSeasonEpisodes(tvId, seasonNumber);
 
   let formatted = (episodesRaw || []).map(ep => ({

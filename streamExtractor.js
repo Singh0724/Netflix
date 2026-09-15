@@ -9,43 +9,62 @@
 
 class StreamExtractor {
   constructor() {
-    // Verified Embed & Stream Provider Cascade Pool
+    // Verified Embed & Stream Provider Cascade Pool (Multi-Audio & 1080p Prioritized)
     this.providers = [
       {
-        id: "vidlink",
-        name: "VidLink 4K UHD",
-        badge: "4K ULTRA HD",
-        priority: 1,
-        buildUrl: (tmdbId, s, ep, isTv) => isTv 
-          ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
-          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
-      },
-      {
         id: "autoembed",
-        name: "AutoEmbed Multi-Source",
-        badge: "1080P FULL HD",
-        priority: 2,
+        name: "Server 1: AutoEmbed VIP (1080p Multi-Audio / Hindi)",
+        badge: "1080P FULL HD • MULTI-AUDIO",
+        priority: 1,
+        supportsHindi: true,
+        quality: "1080p",
         buildUrl: (tmdbId, s, ep, isTv) => isTv 
           ? `https://autoembed.co/tv/tmdb/${tmdbId}-${s}-${ep}`
           : `https://autoembed.co/movie/tmdb/${tmdbId}`
       },
       {
         id: "vidsrc",
-        name: "VidSrc Master Mirror",
-        badge: "1080P HQ",
-        priority: 3,
+        name: "Server 2: VidSrc Pro (1080p Ultra HD / Multi-Lang)",
+        badge: "1080P HQ • DUAL AUDIO",
+        priority: 2,
+        supportsHindi: true,
+        quality: "1080p",
         buildUrl: (tmdbId, s, ep, isTv) => isTv 
           ? `https://vidsrc.pm/embed/tv/${tmdbId}/${s}/${ep}`
           : `https://vidsrc.pm/embed/movie/${tmdbId}`
       },
       {
         id: "twoembed",
-        name: "2Embed Fast Reserve",
-        badge: "HD ADAPTIVE",
-        priority: 4,
+        name: "Server 3: 2Embed Ultra (1080p Fast Stream)",
+        badge: "1080P HIGH BITRATE",
+        priority: 3,
+        supportsHindi: true,
+        quality: "1080p",
         buildUrl: (tmdbId, s, ep, isTv) => isTv 
           ? `https://2embed.skin/embed/tv/${tmdbId}/${s}/${ep}`
           : `https://2embed.skin/embed/${tmdbId}`
+      },
+      {
+        id: "vidlink",
+        name: "Server 4: VidLink 4K UHD (Global / Hollywood)",
+        badge: "4K ULTRA HD",
+        priority: 4,
+        supportsHindi: false,
+        quality: "4K",
+        buildUrl: (tmdbId, s, ep, isTv) => isTv 
+          ? `https://vidlink.pro/tv/${tmdbId}/${s}/${ep}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
+          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=e50914&secondaryColor=141414&iconColor=ffffff`
+      },
+      {
+        id: "multiembed",
+        name: "Server 5: SuperStream (Direct Multi-Audio Hindi/Eng)",
+        badge: "1080P DUAL AUDIO",
+        priority: 5,
+        supportsHindi: true,
+        quality: "1080p",
+        buildUrl: (tmdbId, s, ep, isTv) => isTv
+          ? `https://multiembed.mov/directstream.php?video_id=${tmdbId}&s=${s}&e=${ep}&tmdb=1`
+          : `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`
       }
     ];
   }
@@ -123,6 +142,7 @@ class StreamExtractor {
       type: isTv ? "tv" : "movie",
       season: s,
       episode: ep,
+      directStreamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
       primaryStream: silentFailoverSources[0].streamUrl,
       silentFailoverSources,
       qualityRenditions,
