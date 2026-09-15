@@ -178,16 +178,13 @@ async function refreshCatalog() {
       cachedCatalog.indianCinema = deduplicateMediaList(indian.map(it => formatMediaItem(it, "movie")));
     }
     const todayDate = new Date().toISOString().slice(0, 10);
-    if (!cachedCatalog.top10LastUpdatedDate || cachedCatalog.top10LastUpdatedDate !== todayDate || !cachedCatalog.top10Movies || cachedCatalog.top10Movies.length === 0) {
-      if (top10Mov && top10Mov.length > 0) {
-        cachedCatalog.top10Movies = top10Mov.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "movie"), rank: idx + 1, isTop10: true }));
-      }
-      if (top10Tv && top10Tv.length > 0) {
-        cachedCatalog.top10TV = top10Tv.slice(0, 10).map((it, idx) => ({ ...formatMediaItem(it, "tv"), rank: idx + 1, isTop10: true }));
-      }
-      cachedCatalog.top10LastUpdatedDate = todayDate;
-      console.log(`[Engine] 🏆 Top 10 Today Frozen for date: ${todayDate}`);
-    }
+    const masterTop10TV = MASTER_CATALOG.rows.find(r => r.id === "top_10_tv_india")?.items || [];
+    const masterTop10Movies = MASTER_CATALOG.rows.find(r => r.id === "top_10_movies_india")?.items || [];
+
+    cachedCatalog.top10TV = masterTop10TV.map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
+    cachedCatalog.top10Movies = masterTop10Movies.map((it, idx) => ({ ...it, rank: idx + 1, isTop10: true }));
+    cachedCatalog.top10LastUpdatedDate = todayDate;
+    console.log(`[Engine] 🏆 Top 10 Today Active: Netflix India 2024-2026 Edition`);
 
     if (kdrama && kdrama.length > 0) {
       cachedCatalog.kdramas = deduplicateMediaList(kdrama.map(it => formatMediaItem(it, "tv")));
@@ -505,102 +502,52 @@ app.get("/api/v1/feed/home", async (req, res) => {
         items: userList.length > 0 ? userList : pickUnique(cachedCatalog.trending, 8)
       });
     } else {
-      // 1:1 Exact Netflix India Sequence from user screenshots + Massive 300+ Deep Catalog
+      // 1:1 Exact Netflix India Sequence matching user's live reference screenshots
       heroItem = MASTER_CATALOG.hero;
       const baseRows = JSON.parse(JSON.stringify(MASTER_CATALOG.rows));
 
-      // Row 1: "Trending Now on Netflix"
-      const trendingRow = baseRows.find(r => r.id === "trending_now");
-      const row1Seed = (trendingRow ? trendingRow.items : baseRows[0]?.items) || [];
-      row1Seed.forEach(it => {
-        if (it && it.id) feedSeen.add(String(it.id));
-        const n = (it.title || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
-        if (n) feedSeen.add(n);
-      });
-      const row1Extra = pickUnique((cachedCatalog.trending || []).concat(cachedCatalog.netflixSeries || []), 15);
-      const row1Full = [...row1Seed, ...row1Extra];
-
-      // Row 2: "Continue Watching"
-      const cwRow = baseRows.find(r => r.id === "continue_watching");
-      let cwFull = cwRow?.items || [];
-      if (continueWatchingItems.length > 0) {
-        const userItems = continueWatchingItems.map(item => ({
-          id: item.tmdbId,
-          title: item.title,
-          type: item.type,
-          posterUrl: item.posterUrl,
-          backdropUrl: item.backdropUrl,
-          season: item.season,
-          episode: item.episode,
-          positionSeconds: item.positionSeconds,
-          progressPercentage: item.progressPercentage || 40,
-          maturityRating: item.maturityRating || "U/A 16+",
-          genres: item.genres || ["Drama"]
-        }));
-        const existingIds = new Set(userItems.map(it => String(it.id)));
-        cwFull = [...userItems, ...cwFull.filter(it => !existingIds.has(String(it.id)))];
-      }
-
-      // Row 3: "Top 10 Movies in India Today" (Full 10 numbered items)
-      const top10MoviesFull = (cachedCatalog.top10Movies?.length >= 10 ? cachedCatalog.top10Movies.slice(0, 10) : baseRows.find(r => r.id === "top_10_movies_india")?.items || []).slice(0, 10).map((it, idx) => {
+      // Row 1: "Top 10 Movies in India Today" (Image 2)
+      const top10MoviesRow = baseRows.find(r => r.id === "top_10_movies_india");
+      const top10MoviesFull = (top10MoviesRow?.items || []).slice(0, 10).map((it, idx) => {
         feedSeen.add(String(it.id));
         return { ...it, rank: idx + 1, isTop10: true };
       });
 
-      // Row 4: "Top 10 TV Shows in India Today" (Full 10 numbered items)
-      const top10TVFull = (cachedCatalog.top10TV?.length >= 10 ? cachedCatalog.top10TV.slice(0, 10) : baseRows.find(r => r.id === "top_10_tv_india")?.items || pickUnique(cachedCatalog.netflixSeries || [], 10)).slice(0, 10).map((it, idx) => {
+      // Row 2: "Top 10 Shows in India Today" (Image 2)
+      const top10ShowsRow = baseRows.find(r => r.id === "top_10_shows_india") || baseRows.find(r => r.id === "top_10_tv_india");
+      const top10ShowsFull = (top10ShowsRow?.items || []).slice(0, 10).map((it, idx) => {
         feedSeen.add(String(it.id));
         return { ...it, rank: idx + 1, isTop10: true };
       });
 
-      // Row 5: "Blockbuster Indian Cinema"
-      const indianRow = baseRows.find(r => r.id === "indian_blockbusters");
-      const indianSeed = indianRow ? indianRow.items : (baseRows.find(r => r.id === "trending_india_cinema")?.items || []);
-      const indianExtra = pickUnique(cachedCatalog.indianCinema || [], 20);
-      const indianFull = [...indianSeed, ...indianExtra];
+      // Row 3: "Popular TV Shows in India" (Image 3 - Landscape with Top 10 badges & New Episode tags)
+      const showcaseRow = baseRows.find(r => r.id === "trending_shows_showcase");
+      const showcaseItems = showcaseRow ? showcaseRow.items : [];
 
-      // Row 6: "Binge-Worthy TV Series"
-      const seriesRow = baseRows.find(r => r.id === "popular_series");
-      const seriesSeed = seriesRow ? seriesRow.items : [];
-      const tvHitsFull = [...seriesSeed, ...pickUnique((cachedCatalog.crimeSeries || []).concat(cachedCatalog.netflixSeries || []), 25)];
+      // Row 4: "Crime TV Thrillers" (Image 3)
+      const crimeRow = baseRows.find(r => r.id === "crime_tv_thrillers");
+      const crimeItems = crimeRow ? crimeRow.items : [];
 
-      // Row 7: "Action & Adventure Blockbusters"
-      const actionRow = baseRows.find(r => r.id === "action_blockbusters");
-      const actionSeed = actionRow ? actionRow.items : [];
-      const actionFull = [...actionSeed, ...pickUnique(cachedCatalog.actionMovies || [], 25)];
+      // Row 5: "Because you watched Dangal" (Image 3)
+      const dangalRow = baseRows.find(r => r.id === "because_you_watched_dangal");
+      const dangalItems = dangalRow ? dangalRow.items : [];
 
-      // Row 8: "Romantic K-Dramas & International Hits"
-      const kdramaRow = baseRows.find(r => r.id === "kdramas_and_romance");
-      const kdramaSeed = kdramaRow ? kdramaRow.items : [];
-      const kdramasFull = [...kdramaSeed, ...pickUnique((cachedCatalog.kdramas || []).concat(cachedCatalog.romance || []), 25)];
-
-      // Row 9: "Popular on Netflix"
-      const popularFull = pickUnique(cachedCatalog.trending || [], 25);
-
-      // Row 10: "Comedies & Feel-Good Cinema"
-      const comediesFull = pickUnique(cachedCatalog.comedies || [], 25);
-
-      // Row 11: "Sci-Fi & Fantasy Epics"
-      const sciFiFull = pickUnique(cachedCatalog.sciFi || [], 25);
-
-      // Row 12: "Critically Acclaimed Documentaries"
-      const docsFull = pickUnique(cachedCatalog.documentaries || [], 20);
-
-      // Row 13: "New Releases & Recently Added"
-      const newReleasesFull = pickUnique(cachedCatalog.latestDrops || [], 25);
+      // Optional Continue Watching (if user has active history)
+      const userContinueWatching = continueWatchingItems.length > 0 ? continueWatchingItems.map(item => ({
+        id: item.tmdbId,
+        title: item.title,
+        type: item.type,
+        posterUrl: item.posterUrl || "/assets/exact/chumbak.jpg",
+        backdropUrl: item.backdropUrl || item.posterUrl || "/assets/exact/chumbak.jpg",
+        season: item.season || 1,
+        episode: item.episode || 1,
+        positionSeconds: item.positionSeconds || 120,
+        progressPercentage: item.progressPercentage || 45,
+        maturityRating: item.maturityRating || "U/A 16+",
+        genres: item.genres || ["Drama"]
+      })) : [];
 
       rows.push(
-        {
-          id: "trending_now",
-          title: "Trending Now on Netflix",
-          items: row1Full
-        },
-        {
-          id: "continue_watching",
-          title: "Continue Watching for User",
-          isContinueWatching: true,
-          items: cwFull
-        },
         {
           id: "top_10_movies_india",
           title: "Top 10 Movies in India Today",
@@ -608,55 +555,38 @@ app.get("/api/v1/feed/home", async (req, res) => {
           items: top10MoviesFull
         },
         {
-          id: "top_10_tv_india",
-          title: "Top 10 TV Shows in India Today",
+          id: "top_10_shows_india",
+          title: "Top 10 Shows in India Today",
           isTop10: true,
-          items: top10TVFull
+          items: top10ShowsFull
+        }
+      );
+
+      if (userContinueWatching.length > 0) {
+        rows.push({
+          id: "continue_watching",
+          title: "Continue Watching for User",
+          isContinueWatching: true,
+          items: userContinueWatching
+        });
+      }
+
+      rows.push(
+        {
+          id: "trending_shows_showcase",
+          title: "Popular TV Shows in India",
+          isLandscape: true,
+          items: showcaseItems
         },
         {
-          id: "indian_blockbusters",
-          title: "Blockbuster Indian Cinema (Hindi, Tamil, Telugu)",
-          items: indianFull
+          id: "crime_tv_thrillers",
+          title: "Crime TV Thrillers",
+          items: crimeItems
         },
         {
-          id: "popular_series",
-          title: "Binge-Worthy TV Series & Netflix Originals",
-          items: tvHitsFull
-        },
-        {
-          id: "action_blockbusters",
-          title: "Action & Adventure Blockbusters",
-          items: actionFull
-        },
-        {
-          id: "kdramas_and_romance",
-          title: "Romantic K-Dramas & International Hits",
-          items: kdramasFull
-        },
-        {
-          id: "popular_on_netflix",
-          title: "Popular on Netflix",
-          items: popularFull
-        },
-        {
-          id: "feel_good_comedies",
-          title: "Comedies & Feel-Good Cinema",
-          items: comediesFull
-        },
-        {
-          id: "scifi_fantasy_epics",
-          title: "Sci-Fi & Fantasy Epics",
-          items: sciFiFull
-        },
-        {
-          id: "acclaimed_docs",
-          title: "Critically Acclaimed Documentaries & Real Stories",
-          items: docsFull
-        },
-        {
-          id: "new_releases",
-          title: "New Releases & Recently Added",
-          items: newReleasesFull
+          id: "because_you_watched_dangal",
+          title: "Because you watched Dangal",
+          items: dangalItems
         }
       );
     }

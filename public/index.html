@@ -60,15 +60,15 @@
       user-select: none; display: flex; align-items: center;
     }
 
-    .nav-pills-list { display: flex; align-items: center; gap: 20px; list-style: none; }
+    .nav-pills-list { display: flex; align-items: center; gap: 14px; list-style: none; }
     .nav-pills-list li a {
       color: #e5e5e5; text-decoration: none; font-size: 14px; font-weight: 400;
-      padding: 0; border-radius: 0; transition: color 0.25s ease; cursor: pointer;
-      user-select: none; display: inline-block; background: none;
+      padding: 6px 16px; border-radius: 9999px; transition: color 0.2s ease, background-color 0.2s ease; cursor: pointer;
+      user-select: none; display: inline-block; background: transparent;
     }
-    .nav-pills-list li a:hover { color: #b3b3b3; background: none; }
+    .nav-pills-list li a:hover { color: #fff; }
     .nav-pills-list li a.active {
-      color: #fff; font-weight: 700; cursor: default; background: none;
+      color: #fff; font-weight: 700; cursor: default; background-color: #2a2a2a;
     }
 
     .header-right { display: flex; align-items: center; gap: 22px; position: relative; }
@@ -111,13 +111,13 @@
       line-height: 1.2; box-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
 
-    /* Red Smiley Profile Avatar */
+    /* Cyan Robot Profile Avatar (Image 1) */
     .profile-pill-wrap { display: flex; align-items: center; gap: 7px; cursor: pointer; }
     .profile-smiley-box {
-      width: 32px; height: 32px; border-radius: 4px; background-color: #e50914;
-      display: flex; align-items: center; justify-content: center; position: relative;
+      width: 32px; height: 32px; border-radius: 4px; background-color: #0080ff;
+      display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
     }
-    .profile-smiley-svg { width: 20px; height: 20px; fill: #000; }
+    .profile-smiley-svg { width: 22px; height: 22px; fill: #fff; }
     .profile-caret-icon { font-size: 10px; color: #fff; transition: transform 0.2s; }
 
     /* ============================================================= */
@@ -218,71 +218,88 @@
     /* ============================================================= */
     /* 3. 100% FULL-BLEED NETFLIX HERO BILLBOARD                     */
     /* ============================================================= */
+    /* 3. 2026 FLOATING FRAMED NETFLIX HERO BILLBOARD               */
+    /* ============================================================= */
     .hero-container-outer {
-      padding: 0; position: relative; z-index: 10; width: 100vw; margin: 0; left: 50%; right: 50%;
-      margin-left: -50vw; margin-right: -50vw;
+      padding: 0 3%; position: relative; z-index: 10; width: 100%; margin: 8px 0 0;
     }
     .billboard-framed-card {
-      position: relative; height: 85vh; min-height: 600px; max-height: 850px;
-      width: 100%; overflow: hidden; background-size: cover; background-position: center 20%;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 4% 120px 4%;
+      position: relative; height: 82vh; min-height: 520px; max-height: 780px;
+      width: 100%; overflow: hidden; background-size: cover; background-position: center 25%;
+      border-radius: 24px; display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 60px 4% 90px; box-shadow: 0 16px 45px rgba(0,0,0,0.85);
     }
     .billboard-vignette-overlay {
       position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(77deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 85%),
-                  linear-gradient(180deg, rgba(20,20,20,0.7) 0%, transparent 15%, transparent 55%, rgba(20,20,20,0.9) 85%, #141414 100%);
+      background: linear-gradient(77deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 45%, transparent 85%),
+                  linear-gradient(180deg, rgba(20,20,20,0.4) 0%, transparent 20%, transparent 60%, rgba(20,20,20,0.85) 85%, #141414 100%);
     }
 
-    .billboard-inner-content { position: relative; z-index: 20; max-width: 650px; }
+    .billboard-inner-content { position: relative; z-index: 20; max-width: 600px; }
     
-    .billboard-title-group { margin-bottom: 14px; }
-    .title-upper-tag {
-      font-size: 14px; font-weight: 800; letter-spacing: 3px;
-      text-transform: uppercase; color: #e50914; margin-bottom: 4px;
+    .hero-brand-top-n {
+      display: flex; align-items: center; margin-bottom: 12px;
     }
+    .hero-n-badge-red {
+      color: #e50914; font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; line-height: 1;
+    }
+    .hero-series-lettering {
+      font-size: 13px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
+      color: #fff; margin-left: 8px;
+    }
+
+    .billboard-title-group { margin-bottom: 12px; }
     .title-lower-bold {
       font-family: 'Outfit', sans-serif;
-      font-size: clamp(38px, 5vw, 64px); font-weight: 900; line-height: 1.05;
-      text-transform: uppercase; color: #fff; text-shadow: 2px 2px 14px rgba(0,0,0,0.8);
+      font-size: clamp(38px, 4.8vw, 64px); font-weight: 900; line-height: 1.05;
+      text-transform: uppercase; color: #fff; text-shadow: 2px 2px 14px rgba(0,0,0,0.85);
+      letter-spacing: -0.5px;
     }
 
     .billboard-meta-bullets {
-      display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600;
-      color: #e5e5e5; margin-bottom: 16px; flex-wrap: wrap; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-    }
-    .meta-bullet-dot { color: #888; font-size: 12px; }
-    .meta-maturity-pill {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 3px; padding: 1px 6px; font-size: 12px; font-weight: 800; color: #fff;
+      display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
+      color: #d8d8d8; margin-bottom: 16px; flex-wrap: wrap; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
     }
 
     .billboard-overview-text {
-      font-size: 15px; line-height: 1.5; color: #ddd; margin-bottom: 24px; max-width: 600px;
+      font-size: 15px; line-height: 1.48; color: #e6e6e6; margin-bottom: 24px; max-width: 540px;
       text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
     }
 
     .billboard-btns-row { display: flex; align-items: center; gap: 14px; }
     
-    /* Authentic 4px Rounded Netflix Buttons */
+    /* 2026 Authentic Capsule Pill Buttons */
     .btn-netflix-play {
-      display: inline-flex; align-items: center; gap: 10px; padding: 10px 26px; border-radius: 4px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 11px 28px; border-radius: 9999px;
       font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease, transform 0.15s;
       text-decoration: none; user-select: none; outline: none; background-color: #fff; color: #000;
     }
-    .btn-netflix-play:hover { background-color: rgba(255,255,255,0.75); transform: scale(1.02); }
+    .btn-netflix-play:hover { background-color: rgba(255,255,255,0.75); transform: scale(1.03); }
 
     .btn-netflix-info {
-      display: inline-flex; align-items: center; gap: 10px; padding: 10px 26px; border-radius: 4px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 11px 28px; border-radius: 9999px;
       font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease, transform 0.15s;
       text-decoration: none; user-select: none; outline: none; background-color: rgba(109,109,110,0.7); color: #fff;
       backdrop-filter: blur(8px);
     }
-    .btn-netflix-info:hover { background-color: rgba(109,109,110,0.4); transform: scale(1.02); }
+    .btn-netflix-info:hover { background-color: rgba(109,109,110,0.4); transform: scale(1.03); }
 
-    /* Right Edge Maturity & Audio Bar */
+    /* Right Edge Tenure Bar (Image 1) */
     .billboard-right-edge-controls {
-      position: absolute; right: 0; bottom: 130px; display: flex; align-items: center; gap: 14px; z-index: 25;
+      position: absolute; right: 0; bottom: 90px; display: flex; align-items: center; gap: 14px; z-index: 25;
+    }
+    .hero-tenure-badge {
+      display: flex; align-items: center; background: rgba(30,30,30,0.75);
+      backdrop-filter: blur(8px); border-radius: 4px; overflow: hidden;
+      color: #fff; font-size: 11.5px; font-weight: 700;
+    }
+    .tenure-top10-box {
+      background-color: var(--netflix-red); color: #fff; font-size: 9px; font-weight: 900;
+      padding: 4px 6px; line-height: 1.1; text-align: center; text-transform: uppercase;
+    }
+    .tenure-top10-box span { display: block; }
+    .tenure-text {
+      padding: 4px 12px; font-size: 12px; color: #fff;
     }
     .sound-circle-btn {
       width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4);
@@ -291,15 +308,67 @@
       transition: all 0.25s ease;
     }
     .sound-circle-btn:hover { background: rgba(0,0,0,0.7); border-color: #fff; }
-    .billboard-maturity-stripe {
-      background: rgba(51,51,51,0.6); border-left: 3px solid #dcdcdc; color: #fff;
-      font-size: 13.5px; font-weight: 700; padding: 6px 14px 6px 10px;
+
+    /* Dynamic Card Badging System */
+    .card-badge-bottom {
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      z-index: 5; text-align: center; white-space: nowrap; pointer-events: none;
     }
+    .badge-recently-added {
+      background-color: var(--netflix-red); color: #fff; font-size: 10px;
+      font-weight: 800; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
+      letter-spacing: 0.3px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+    .badge-new-season {
+      background-color: var(--netflix-red); color: #fff; font-size: 10px;
+      font-weight: 800; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
+      letter-spacing: 0.3px; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+    .badge-dual-episode {
+      display: inline-flex; align-items: center; border-radius: 2px; overflow: hidden;
+      font-size: 10px; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+    .badge-dual-red {
+      background-color: var(--netflix-red); color: #fff; padding: 2px 6px; text-transform: uppercase;
+    }
+    .badge-dual-white {
+      background-color: #fff; color: #000; padding: 2px 6px; text-transform: uppercase;
+    }
+    .badge-live-tag {
+      background-color: var(--netflix-red); color: #fff; font-size: 10px;
+      font-weight: 800; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
+    }
+
+    /* Top Left Corner Ribbon */
+    .badge-top10-ribbon {
+      position: absolute; top: 0; left: 8px; z-index: 6; background-color: var(--netflix-red);
+      color: #fff; font-size: 8.5px; font-weight: 900; line-height: 1.1; padding: 3px 5px 4px;
+      text-align: center; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6); pointer-events: none; text-transform: uppercase;
+    }
+    .badge-top10-ribbon span { display: block; }
+
+    /* Section Title & Pagination Dash Indicators */
+    .section-header-wrap {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .section-explore-arrow {
+      font-size: 13px; color: #54b9c5; opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.2s, transform 0.2s; font-weight: 800; margin-left: 6px;
+    }
+    .section-title:hover .section-explore-arrow { opacity: 1; transform: translateX(0); }
+    .section-pagination-dashes {
+      display: flex; align-items: center; gap: 3px;
+    }
+    .pagination-dash {
+      width: 12px; height: 2px; background: #4d4d4d; border-radius: 1px;
+    }
+    .pagination-dash.active { background: #aaaaaa; }
 
     /* ============================================================= */
     /* 4. MAIN ROWS CONTAINER & CARD STYLING                         */
     /* ============================================================= */
-    .netflix-content-body { padding: 0 4% 80px; position: relative; z-index: 30; margin-top: -60px; }
+    .netflix-content-body { padding: 0 3% 80px; position: relative; z-index: 30; margin-top: -30px; }
     .category-section-row { margin-bottom: 48px; position: relative; }
     .section-title {
       font-size: 20px; font-weight: 700; color: #e5e5e5; margin-bottom: 12px;
@@ -329,7 +398,15 @@
     .standard-media-card {
       flex: 0 0 var(--poster-w); height: var(--poster-h); border-radius: 4px;
       position: relative; cursor: pointer; background-color: var(--netflix-card-bg);
-      transition: transform 0.25s ease; overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease; overflow: hidden;
+    }
+    .standard-media-card.landscape-card {
+      flex: 0 0 255px; height: 145px;
+    }
+    .standard-media-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+      z-index: 10;
     }
     .standard-media-card img {
       width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block;
@@ -350,6 +427,12 @@
       flex: 0 0 245px; height: 165px; border-radius: 4px; position: relative;
       background-color: var(--netflix-card-bg); cursor: pointer; overflow: hidden;
       box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .continue-watch-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+      z-index: 10;
     }
     .continue-watch-card img {
       width: 100%; height: 135px; object-fit: cover; display: block;
@@ -375,14 +458,21 @@
       -webkit-text-stroke: 4.5px #595959; text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
       position: relative; z-index: 1; user-select: none; margin-right: -32px;
       letter-spacing: -12px; flex-shrink: 0;
+      transition: -webkit-text-stroke 0.25s ease;
     }
     .top10-poster-card {
       width: 135px; height: 200px; border-radius: 4px; overflow: hidden;
       position: relative; z-index: 2; box-shadow: 0 8px 25px rgba(0,0,0,0.9);
       background-color: var(--netflix-card-bg); margin-bottom: 12px;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
     }
     .top10-poster-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .top10-numbered-item:hover .top10-huge-num { -webkit-text-stroke: 4.5px var(--netflix-red); }
+    .top10-numbered-item:hover .top10-poster-card {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.95);
+      z-index: 10;
+    }
 
     /* ============================================================= */
     /* 5. INTERACTIVE HOVER PREVIEW POPOVER                           */
@@ -652,7 +742,7 @@
       <!-- Notifications -->
       <button class="bell-btn-wrap" onclick="toggleNotificationsDropdown()" title="Notifications">
         <span>🔔</span>
-        <span class="bell-badge-count" id="notifBadge">4</span>
+        <span class="bell-badge-count" id="notifBadge">11</span>
       </button>
 
       <!-- Profile Avatar -->
@@ -722,30 +812,25 @@
   <!-- 3. FULL-BLEED HERO BILLBOARD                                  -->
   <!-- ============================================================= -->
   <div class="hero-container-outer" id="heroSection">
-    <div class="billboard-framed-card" id="billboardCard" style="background-image: url('https://image.tmdb.org/t/p/original/2meX1nMdScFOoV4370rqHWKmXhY.jpg');">
+    <div class="billboard-framed-card" id="billboardCard" style="background-image: url('/assets/exact/teach_you_lesson_hero.jpg');">
       <div class="billboard-vignette-overlay"></div>
       
       <div class="billboard-inner-content">
+        <div class="hero-brand-top-n">
+          <span class="hero-n-badge-red">N</span>
+          <span class="hero-series-lettering" id="heroSeriesLettering">S E R I E S</span>
+        </div>
+
         <div class="billboard-title-group">
-          <div class="title-upper-tag" id="heroUpperTag">NETFLIX ORIGINAL</div>
-          <h1 class="title-lower-bold" id="heroLowerTitle">SQUID GAME</h1>
+          <h1 class="title-lower-bold" id="heroLowerTitle">TEACH YOU A LESSON</h1>
         </div>
 
         <div class="billboard-meta-bullets" id="heroMetaBullets">
-          <span style="color: #46d369; font-weight: 800;" id="heroMatchPct">99% Match</span>
-          <span class="meta-bullet-dot">•</span>
-          <span id="heroYear">2024</span>
-          <span class="meta-bullet-dot">•</span>
-          <span class="meta-maturity-pill" id="heroMaturity">U/A 16+</span>
-          <span class="meta-bullet-dot">•</span>
-          <span id="heroDuration">2 Seasons</span>
-          <span class="meta-bullet-dot">•</span>
-          <span class="hover-hd-badge">4K ULTRA HD</span>
-          <span class="hover-hd-badge">DOLBY ATMOS</span>
+          <span id="heroMetaTagsText">Series • Drama • 2026 • Limited Series • A</span>
         </div>
 
         <p class="billboard-overview-text" id="heroOverview">
-          Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.
+          When bullies take over schools, special inspectors step in to teach them a lesson in this action comedy that reached Top 10 Shows in over 48 countries.
         </p>
 
         <div class="billboard-btns-row">
@@ -759,8 +844,12 @@
       </div>
 
       <div class="billboard-right-edge-controls">
+        <div class="hero-tenure-badge" id="heroTenureBadge">
+          <span class="tenure-top10-box"><span>TOP</span><span>10</span></span>
+          <span class="tenure-text" id="heroTenureText">Spent 11 weeks in the Top 10</span>
+        </div>
         <button class="sound-circle-btn" id="heroSoundBtn" onclick="toggleHeroMute()" title="Mute/Unmute">🔊</button>
-        <div class="billboard-maturity-stripe" id="heroMaturityStripe">U/A 16+</div>
+        <div class="billboard-maturity-stripe" id="heroMaturityStripe">A</div>
       </div>
     </div>
   </div>
@@ -1114,15 +1203,72 @@
       activeMediaItem = hero;
       catalogCache.set(String(hero.id), hero);
 
-      document.getElementById('billboardCard').style.backgroundImage = `url('${hero.backdropUrl}')`;
-      document.getElementById('heroUpperTag').innerText = hero.heroTitleUpper || "NETFLIX ORIGINAL";
+      if (hero.backdropUrl) {
+        document.getElementById('billboardCard').style.backgroundImage = `url('${hero.backdropUrl}')`;
+      }
+      
+      const letteringEl = document.getElementById('heroSeriesLettering');
+      if (letteringEl) {
+        letteringEl.innerText = hero.heroTitleUpper || (hero.type === "tv" ? "S E R I E S" : "F I L M");
+      }
+
       document.getElementById('heroLowerTitle').innerText = hero.heroTitleLower || hero.title;
-      document.getElementById('heroMatchPct').innerText = hero.matchPercentage || "99% Match";
-      document.getElementById('heroYear').innerText = hero.year || "2024";
-      document.getElementById('heroMaturity').innerText = hero.maturityRating || "U/A 16+";
-      document.getElementById('heroMaturityStripe').innerText = hero.maturityRating || "U/A 16+";
-      document.getElementById('heroDuration').innerText = hero.duration || (hero.type === "tv" ? "2 Seasons" : "2h 10m");
+      
+      // Tenure badge
+      const tenureBadgeEl = document.getElementById('heroTenureBadge');
+      const tenureTextEl = document.getElementById('heroTenureText');
+      if (hero.tenureText && tenureTextEl) {
+        tenureTextEl.innerText = hero.tenureText;
+        if (tenureBadgeEl) tenureBadgeEl.style.display = 'flex';
+      } else if (tenureBadgeEl) {
+        tenureBadgeEl.style.display = 'none';
+      }
+
+      // Metadata bullets
+      const metaBulletsEl = document.getElementById('heroMetaBullets');
+      if (hero.subtitleTags) {
+        metaBulletsEl.innerHTML = `
+          <span>${hero.subtitleTags}</span>
+        `;
+      } else {
+        metaBulletsEl.innerHTML = `
+          <span style="color: #46d369; font-weight: 800;" id="heroMatchPct">${hero.matchPercentage || "99% Match"}</span>
+          <span class="meta-bullet-dot">•</span>
+          <span id="heroYear">${hero.year || "2026"}</span>
+          <span class="meta-bullet-dot">•</span>
+          <span class="meta-maturity-pill" id="heroMaturity">${hero.maturityRating || "A"}</span>
+          <span class="meta-bullet-dot">•</span>
+          <span id="heroDuration">${hero.duration || (hero.type === "tv" ? "Limited Series" : "2h 10m")}</span>
+        `;
+      }
+
+      document.getElementById('heroMaturityStripe').innerText = hero.maturityRating || "A";
       document.getElementById('heroOverview').innerText = hero.overview || "";
+    }
+
+    function renderCardBadge(item) {
+      if (!item) return '';
+      const bType = item.badgeType || (item.isRecentlyAdded ? 'recently_added' : '');
+      if (bType === 'recently_added') {
+        return `<div class="card-badge-bottom"><span class="badge-recently-added">Recently added</span></div>`;
+      }
+      if (bType === 'dual_episode' || item.hasNewEpisode) {
+        return `
+          <div class="card-badge-bottom">
+            <span class="badge-dual-episode">
+              <span class="badge-dual-red">New Episode</span>
+              <span class="badge-dual-white">Watch Now</span>
+            </span>
+          </div>
+        `;
+      }
+      if (bType === 'new_season') {
+        return `<div class="card-badge-bottom"><span class="badge-new-season">New Season</span></div>`;
+      }
+      if (bType === 'live_tag' || bType === 'live') {
+        return `<div class="card-badge-bottom"><span class="badge-live-tag">${item.badgeText || "Live 22/09"}</span></div>`;
+      }
+      return '';
     }
 
     function renderCatalogRows(rows) {
@@ -1147,6 +1293,7 @@
                 <div class="top10-huge-num">${idx + 1}</div>
                 <div class="top10-poster-card">
                   <img src="${item.posterUrl}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'">
+                  ${renderCardBadge(item)}
                 </div>
               </div>
             `;
@@ -1154,12 +1301,13 @@
         } else if (row.isContinueWatching) {
           cardsHtml = (row.items || []).map(item => {
             catalogCache.set(String(item.id), item);
+            const imgSrc = item.backdropUrl || item.posterUrl || 'https://image.tmdb.org/t/p/w780/2meX1nMdScFOoV4370rqHWKmXhY.jpg';
             return `
               <div class="continue-watch-card" 
                    onmouseenter="showHoverCard(event, '${item.id}')" 
                    onmouseleave="startHoverLeaveTimer()"
                    onclick="launchNetflixPlayerById('${item.id}')">
-                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy">
+                <img src="${imgSrc}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w780/2meX1nMdScFOoV4370rqHWKmXhY.jpg'">
                 <div class="continue-progress-track">
                   <div class="continue-progress-red" style="width: ${item.progressPercentage || 45}%;"></div>
                 </div>
@@ -1173,12 +1321,15 @@
         } else {
           cardsHtml = (row.items || []).map(item => {
             catalogCache.set(String(item.id), item);
+            const imgSrc = item.backdropUrl || item.posterUrl || 'https://image.tmdb.org/t/p/w780/2meX1nMdScFOoV4370rqHWKmXhY.jpg';
             return `
-              <div class="standard-media-card" 
+              <div class="standard-media-card ${row.isLandscape ? 'landscape-card' : ''}" 
                    onmouseenter="showHoverCard(event, '${item.id}')" 
                    onmouseleave="startHoverLeaveTimer()"
                    onclick="openQuickviewModalById('${item.id}')">
-                <img src="${item.backdropUrl || item.posterUrl}" alt="${item.title}" loading="lazy">
+                ${item.isTop10Badge ? '<div class="badge-top10-ribbon"><span>TOP</span><span>10</span></div>' : ''}
+                <img src="${imgSrc}" alt="${item.title}" loading="lazy" onerror="this.onerror=null; this.src='https://image.tmdb.org/t/p/w780/2meX1nMdScFOoV4370rqHWKmXhY.jpg'">
+                ${renderCardBadge(item)}
                 <div class="card-title-overlay">
                   <div class="card-title-caption">${item.title}</div>
                 </div>
@@ -1188,7 +1339,18 @@
         }
 
         section.innerHTML = `
-          <h2 class="section-title">${row.title}</h2>
+          <div class="section-header-wrap">
+            <h2 class="section-title">
+              ${row.title}
+              <span class="section-explore-arrow">Explore All ›</span>
+            </h2>
+            <div class="section-pagination-dashes">
+              <span class="pagination-dash active"></span>
+              <span class="pagination-dash"></span>
+              <span class="pagination-dash"></span>
+              <span class="pagination-dash"></span>
+            </div>
+          </div>
           <div class="slider-track-container">
             <button class="scroll-arrow-nav scroll-arrow-left" onclick="scrollRowTrack('${row.id}', -1)">‹</button>
             <div class="slider-scroll-track" id="track-${row.id}">
@@ -1455,7 +1617,57 @@
       if (item) launchNetflixPlayer(item);
     }
 
+    function playNetflixTaDum() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        
+        // Tone 1: Low deep resonant boom (90Hz)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(90, now);
+        osc1.frequency.exponentialRampToValueAtTime(75, now + 1.2);
+        
+        gain1.gain.setValueAtTime(0.01, now);
+        gain1.gain.linearRampToValueAtTime(0.35, now + 0.05);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, now);
+
+        osc1.connect(filter);
+        filter.connect(gain1);
+        gain1.connect(ctx.destination);
+
+        // Tone 2: Brassy impact (135Hz)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(135, now + 0.08);
+        osc2.frequency.exponentialRampToValueAtTime(115, now + 1.4);
+
+        gain2.gain.setValueAtTime(0.01, now + 0.08);
+        gain2.gain.linearRampToValueAtTime(0.3, now + 0.15);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+
+        osc1.start(now);
+        osc1.stop(now + 1.6);
+        osc2.start(now + 0.08);
+        osc2.stop(now + 1.6);
+      } catch (e) {}
+    }
+
     async function launchNetflixPlayer(media) {
+      playNetflixTaDum();
       activeMediaItem = media;
       const title = media.title || "Squid Game";
       const sNum = media.season || 1;
